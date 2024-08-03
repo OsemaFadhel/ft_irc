@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/07/29 16:39:14 by ofadhel          ###   ########.fr       */
+/*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
+/*   Updated: 2024/08/03 19:08:53 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#ifndef CHANNEL_HPP
+# define CHANNEL_HPP
 
-#include <vector>
 #include <iostream>
+#include <map>
 #include <string>
-#include "./client/Client.hpp"
-#include <fcntl.h>
-#include <poll.h>
-#include <sys/socket.h>
+#include "../client/Client.hpp"
+#include "../server/Server.hpp"
 
-class Server
+class Client;
+
+class Channel
 {
 	private:
-		int _port;
+		std::map < std::string, Client* , std::string > _clients; //thinking name, client, operator or not
+		std::string _name;
+		std::string _topic;
+		std::string _mode;
+		std::string _password;
+		int _limit;
 	public:
-		Server();
-		~Server();
+		Channel();
+		~Channel();
 };
 
 #endif
