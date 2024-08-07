@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:43:18 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/03 18:53:30 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/03 19:11:06 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int main(int ac, char **av)
 	// Try to run the server
 	try
 	{
-		std::string password = av[2];
 		std::string port = av[1];
 		Server server;
 		server.setPort(std::atoi(port.c_str()));

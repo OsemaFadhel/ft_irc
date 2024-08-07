@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/03 19:08:47 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/07 13:25:36 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ class Server
 {
 	private:
 		int _port;
-
-		std::string _hashedpassword;
-
+		int _socket;
+		std::string _password;
 		std::vector < Client* > _clients;
 		std::vector < Channel* > _channels;
 		std::string hashPassword(const std::string& password) const;
+		struct sockaddr_in _addr;
 
 		//std::map < std::string, *Cmd > Commands; //to fix
 	public:
