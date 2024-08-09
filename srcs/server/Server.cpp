@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/09 16:26:57 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/09 17:48:56 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void Server::run()
 			if (clientSocket == -1)
 				throw std::runtime_error("Failed to accept the connection");
 				std::cout << "new client accepted" << std::endl;
-			_clients.push_back(new Client(clientSocket);
+			_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
 			std::cout << "new client accepted. FD is: " << clientSocket << std::endl;
 		}
 		/*Then we start receiving the data from the client.
