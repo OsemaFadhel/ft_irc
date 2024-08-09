@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/07 13:27:23 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/09 15:52:25 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ std::string Server::hashPassword(const std::string& password) const
 {
 	unsigned long hash = 5381;
 	for (size_t i = 0; i < password.size(); ++i) {
-		hash = ((hash << 5) + hash) + passw ord[i]; // hash * 33 + c
+		hash = ((hash << 5) + hash) + password[i]; // hash * 33 + c
 	}
 
 	std::ostringstream oss;
@@ -63,52 +63,80 @@ std::string Server::hashPassword(const std::string& password) const
 
 void Server::run()
 {
-	/* ORDER OF WHAT IT SHOULD HAPPEN IN THE RUN FUNCTION
+	//ORDER OF WHAT IT SHOULD HAPPEN IN THE RUN FUNCTION
+	/*tcp_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+	DESCRIPTION
+	This is an implementation of the TCP protocol defined in RFC 793,
+	RFC 1122 and RFC 2001 with the NewReno and SACK extensions.
+	It provides a reliable, stream-oriented, full-duplex connection
+	between two sockets on top of ip(7), for both v4 and v6 versions.
+	TCP guarantees that the data arrives in order and retransmits lost packets.
+	It generates and checks a per-packet checksum to catch transmission errors.
+	TCP does not preserve record boundaries.
+	A newly created TCP socket has no remote or local address and is not fully specified.
+	To create an outgoing TCP connection use connect(2) to establish a connection to another TCP socket.
+ 	To receive new incoming connections, first bind(2) the socket to a local address and port and then call listen(2)
+	to put the socket into the listening state. After that a new socket for each incoming connection
+	can be accepted using accept(2). A socket which has had accept(2) or connect(2) successfully
+	called on it is fully specified and may transmit data.
+	Data cannot be transmitted on listening or not yet connected sockets.*/
+
 	// Create the socket
-	_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socket == -1)
+	// socketfd: It is the file descriptor for the socket.
+	// AF_INET6: It specifies the IPv6 protocol family.
+	// SOCK_STREAM: It defines that the TCP type socket.
+
+	_serverSocket = socket(AF_INET, SOCK_STREAM, 0); //tcp socket v6
+	if (_serverSocket == -1)
 		throw std::runtime_error("Failed to create the socket");
-	// Bind the socket
-	_addr.sin_family = AF_INET;
-	_addr.sin_addr.s_addr = INADDR_ANY;
-	_addr.sin_port = htons(_port);
-	if (bind(_socket, (struct sockaddr*)&_addr, sizeof(_addr)) == -1)
+
+	//We then define the server address using the following set of statements
+	/*sockaddr_in: It is the data type that is used to store the address of the socket. SEE SERVER.HPP
+	htons(): This function is used to convert the unsigned int from machine byte order to network byte order.
+	INADDR_ANY: It is used when we don’t want to bind our socket to any particular IP and instead make it listen to all the available IPs.*/
+
+	_serverAddr.sin_family = AF_INET;
+	_serverAddr.sin_addr.s_addr = INADDR_ANY;
+	_serverAddr.sin_port = htons(_port);
+
+	//Then we bind the socket using the bind() call as shown.
+
+	if (bind(_serverSocket, (struct sockaddr*)&_serverAddr, sizeof(_serverAddr)) == -1)
 		throw std::runtime_error("Failed to bind the socket");
-	// Listen for connections
-	if (listen(_socket, 10) == -1)
+
+	// We then tell the application to listen to the socket refffered by the serverSocket.
+
+	if (listen(_serverSocket, 50) == -1)
 		throw std::runtime_error("Failed to listen for connections");
-	// Accept connections
-	struct sockaddr_in clientAddr;
-	socklen_t clientAddrSize = sizeof(clientAddr);
-	int clientSocket = accept(_socket, (struct sockaddr*)&clientAddr, &clientAddrSize);
-	if (clientSocket == -1)
-		throw std::runtime_error("Failed to accept the connection");
-	// Receive data
-	char buffer[1024];
-	int bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
-	if (bytesRead == -1)
-		throw std::runtime_error("Failed to receive data");
-	// Send data
-	if (send(clientSocket, buffer, bytesRead, 0) == -1)
-		throw std::runtime_error("Failed to send data");
-	// Close the connection
-	close(clientSocket);
-	// Close the socket
-	close(_socket);*/
+
+	// Accepting a Client Connection
+	char buffer[56643];
 
 	while (1)
 	{
-		// Accept new connections
-		socket();
-		bind();
-		listen();
-		accept();
-		receive();
-		send();
-		close();
-		// Read from the connections
-		// Parse the commands
-		// Execute the commands
-		// Send the response
+		//The accept() call is used to accept the connection request that is recieved on the socket the application was listening to.
+
+		struct sockaddr_in clientAddr;
+		socklen_t clientAddrSize = sizeof(clientAddr);
+
+		int clientSocket = accept(_serverSocket, (struct sockaddr*)&clientAddr, &clientAddrSize);
+		if (clientSocket == -1)
+			throw std::runtime_error("Failed to accept the connection");
+		std::cout << "new client accepted" << std::endl;
+
+		/*Then we start receiving the data from the client.
+		We can specify the required buffer size so that it has enough space
+		to receive the data sent the the client. The example of this is shown below.
+		*/
+
+		while (recv(clientSocket, buffer, sizeof(buffer), 0) > 0)
+		{
+			std::cout << "received: " << buffer << std::endl;
+			send(clientSocket, buffer, sizeof(buffer), 0);
+		}
+
 	}
+	// Close the socket
+	close(_serverSocket);
 }
