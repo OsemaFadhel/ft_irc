@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/09 15:52:25 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/09 16:26:57 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,13 @@ void Server::run()
 	if (_serverSocket == -1)
 		throw std::runtime_error("Failed to create the socket");
 
+	//setting server to allow multiple connections
+
+	int opt = 1;
+	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)) == -1)
+		throw std::runtime_error("Failed to set socket options");
+
+
 	//We then define the server address using the following set of statements
 	/*sockaddr_in: It is the data type that is used to store the address of the socket. SEE SERVER.HPP
 	htons(): This function is used to convert the unsigned int from machine byte order to network byte order.
@@ -113,30 +120,49 @@ void Server::run()
 	// Accepting a Client Connection
 	char buffer[56643];
 
+	fd_set readfds;
+
 	while (1)
 	{
+		std::cout << "waiting for a client to connect" << std::endl;
+
+		FD_ZERO(&readfds);
+		FD_SET(_serverSocket, &readfds);
+
+		if (select(_serverSocket + 1, &readfds, NULL, NULL, NULL) == -1)
+			throw std::runtime_error("Failed to select the socket");
+
 		//The accept() call is used to accept the connection request that is recieved on the socket the application was listening to.
 
-		struct sockaddr_in clientAddr;
-		socklen_t clientAddrSize = sizeof(clientAddr);
-
-		int clientSocket = accept(_serverSocket, (struct sockaddr*)&clientAddr, &clientAddrSize);
-		if (clientSocket == -1)
-			throw std::runtime_error("Failed to accept the connection");
-		std::cout << "new client accepted" << std::endl;
-
+		if (FD_ISSET(_serverSocket, &readfds))
+		{
+			int clientSocket = accept(_serverSocket, (struct sockaddr*) NULL, &clientAddrSize);
+			if (clientSocket == -1)
+				throw std::runtime_error("Failed to accept the connection");
+				std::cout << "new client accepted" << std::endl;
+			_clients.push_back(new Client(clientSocket);
+			std::cout << "new client accepted. FD is: " << clientSocket << std::endl;
+		}
 		/*Then we start receiving the data from the client.
 		We can specify the required buffer size so that it has enough space
 		to receive the data sent the the client. The example of this is shown below.
 		*/
 
-		while (recv(clientSocket, buffer, sizeof(buffer), 0) > 0)
-		{
-			std::cout << "received: " << buffer << std::endl;
-			send(clientSocket, buffer, sizeof(buffer), 0);
-		}
+		int readSize = recv(clientSocket, buffer, 1024, 0);
+		if (readSize == -1)
+			throw std::runtime_error("Failed to read from the socket");
+
+		std::cout << "received: " << buffer << std::endl;
+
+		//We can also send the data to the client using the send() call as shown below.
+
+		if (send(clientSocket, buffer, readSize, 0) == -1)
+			throw std::runtime_error("Failed to send to the socket");
+
+		//We can also close the connection using the close() call as shown below.
+
+		close(clientSocket);
 
 	}
-	// Close the socket
 	close(_serverSocket);
 }

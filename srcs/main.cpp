@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:43:18 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/03 19:11:06 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/09 16:15:14 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,5 @@ int main(int ac, char **av)
 		std::cerr << e.what() << std::endl;
 		return 1;
 	}
-
 	return 0;
 }
