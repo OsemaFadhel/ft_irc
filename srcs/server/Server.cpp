@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/11 20:31:56 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/11 21:25:15 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void Server::run()
 	htons(): This function is used to convert the unsigned int from machine byte order to network byte order.
 	INADDR_ANY: It is used when we don’t want to bind our socket to any particular IP and instead make it listen to all the available IPs.*/
 
+	std::memset(&_serverAddr, 0, sizeof(_serverAddr));
 	_serverAddr.sin_family = AF_INET;
 	_serverAddr.sin_addr.s_addr = INADDR_ANY;
 	_serverAddr.sin_port = htons(_port);
@@ -125,70 +126,92 @@ void Server::run()
 	// Accepting a Client Connection
 
 	fd_set readfds;
+	int maxfds = _serverSocket;
 
+	std::cout << "waiting for a client to connect" << std::endl;
 	while (1)
 	{
-		std::cout << "waiting for a client to connect" << std::endl;
-
 		FD_ZERO(&readfds);
 		FD_SET(_serverSocket, &readfds);
+
+		// Add all client sockets to the fd_set
+		for (size_t i = 0; i < _newfds.size(); ++i)
+		{
+			FD_SET(_newfds[i], &readfds);
+			if (_newfds[i] > maxfds)
+				maxfds = _newfds[i];
+		}
 
 		//The select() call is used to monitor multiple file descriptors,
 		//waiting until one or more of the file descriptors become "ready" for some class of I/O operation.
 
-		if (select(_serverSocket + 1, &readfds, NULL, NULL, NULL) == -1)
+		if (select(maxfds + 1, &readfds, NULL, NULL, NULL) == -1)
 			throw std::runtime_error("Failed to select the socket");
 
+		// Check if there is activity on the server socket (new connection)
+		//The FD_ISSET() macro is used to check if a file descriptor is part of the set of file descriptors passed to the select() call.
 		//The accept() call is used to accept the connection request that is recieved on the socket the application was listening to.
-
-		struct sockaddr_in _clientAddr;
-		socklen_t clientAddrSize = sizeof(_clientAddr);
-
-		int clientSocket = accept(_serverSocket, (struct sockaddr*)&_clientAddr, &clientAddrSize);
 		if (FD_ISSET(_serverSocket, &readfds))
 		{
+			struct sockaddr_in _clientAddr;
+			socklen_t clientAddrSize = sizeof(_clientAddr);
+			int clientSocket = accept(_serverSocket, (struct sockaddr*)&_clientAddr, &clientAddrSize);
 			if (clientSocket == -1)
 				throw std::runtime_error("Failed to accept the connection");
-			std::cout << "new client accepted" << std::endl;
 
 			_newfds.push_back(clientSocket);
 			//_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
 			std::cout << "new client accepted. FD is: " << clientSocket << std::endl;
 		}
+
+
+		// Check activity on client sockets
 		/*Then we start receiving the data from the client.
 		We can specify the required buffer size so that it has enough space
 		to receive the data sent the the client. The example of this is shown below.
 		*/
 
-		char buffer[1024];
-		int readSize = recv(clientSocket, buffer, sizeof(buffer), 0);
-		if (readSize == -1)
-			throw std::runtime_error("Failed to read from the socket");
-		else if (readSize == 0)
+		for (size_t i = 0; i < _newfds.size(); ++i)
 		{
-			std::cout << "client disconnected. FD = " << clientSocket << std::endl;
-			close(clientSocket);
-		}
-		else
-		{
-			std::cout << "received: " << buffer << std::endl;
-			//habdle the data EXAMPLE: PASS ciao123 this will be splitted in 2 parts command and data
-			std::string command;
-			std::string data;
-			if (command == "PASS")
+			int clientSocket = _newfds[i];
+			if (FD_ISSET(clientSocket, &readfds))
 			{
-				if (verifyPassword(data))
+				char buffer[1024];
+				int readSize = recv(clientSocket, buffer, sizeof(buffer), 0);
+
+				if (readSize == -1)
+					throw std::runtime_error("Failed to read from the socket");
+				else if (readSize == 0)
 				{
-					std::cout << "password correct" << std::endl; //needs to send it to the client
+					std::cout << "Client disconnected. FD = " << clientSocket << std::endl;
+					close(clientSocket);
+					_newfds.erase(_newfds.begin() + i);
+					--i; // Adjust index after removal
 				}
 				else
 				{
-					std::cout << "password incorrect" << std::endl; //needs to send it to the client
+					buffer[readSize] = '\0'; // Null-terminate the buffer
+					std::cout << "Received: " << buffer << " from client " << clientSocket << std::endl;
+					std::string response = "SEVER RESPONSE: got it\n";
+					send(clientSocket, response.c_str(), response.size(), 0);
+					std::string command(buffer); // Example command handling
+					std::string data; // Parse data from command as needed
+
+					if (command.substr(0, 4) == "PASS")
+					{
+						data = command.substr(5); // Extract data after "PASS "
+						if (verifyPassword(data))
+							std::cout << "Password correct" << std::endl;
+								// Send confirmation to client
+						else
+							std::cout << "Password incorrect" << std::endl;
+							// Send error message to client
+					}
+					else
+					{
+						// Handle other commands
+					}
 				}
-			}
-			else
-			{
-				//handle logged client commands
 			}
 		}
 
