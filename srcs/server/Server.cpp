@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/11 20:24:34 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/11 20:31:56 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,8 +199,6 @@ void Server::run()
 
 		//We can also close the connection using the close() call as shown below.
 		*/
-
-		close(clientSocket);
 	}
 	close(_serverSocket);
 }
