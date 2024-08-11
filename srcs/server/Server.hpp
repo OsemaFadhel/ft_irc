@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/09 17:40:59 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/11 20:24:05 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Server
 		std::string _password;
 		std::vector < Client* > _clients;
 		std::vector < Channel* > _channels;
+		std::vector < int > _newfds;
 		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
 
