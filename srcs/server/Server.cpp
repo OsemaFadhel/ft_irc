@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/11 21:25:15 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/13 13:21:37 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void Server::run()
 
 			_newfds.push_back(clientSocket);
 			//_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
-			std::cout << "new client accepted. FD is: " << clientSocket << std::endl;
+			std::cout << "new client accepted. FD is: " << clientSocket << " from : " << inet_ntoa(_clientAddr.sin_addr) << ":" << ntohs(_clientAddr.sin_port) << std::endl;
 		}
 
 
@@ -199,13 +199,25 @@ void Server::run()
 
 					if (command.substr(0, 4) == "PASS")
 					{
+						for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+						{
+							if ((*it)->getSocket() == clientSocket)
+							{
+								send(clientSocket, "You're already logged in\n", 26, 0);
+								break;
+							}
+						}
+
 						data = command.substr(5); // Extract data after "PASS "
 						if (verifyPassword(data))
-							std::cout << "Password correct" << std::endl;
-								// Send confirmation to client
+						{
+							send(clientSocket, "Password correct. You're now logged in\n", 38, 0);
+							_clients.push_back(new Client(clientSocket));
+						}
 						else
-							std::cout << "Password incorrect" << std::endl;
-							// Send error message to client
+						{
+							send(clientSocket, "Password incorrect\n", 19, 0);
+						}
 					}
 					else
 					{

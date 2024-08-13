@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/11 20:24:05 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/13 12:56:16 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 #include <sys/socket.h>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
+#include <arpa/inet.h>
 
 class Client;
 class Channel;
