@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/13 13:21:37 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/13 15:18:21 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Server::setPassword(const std::string& password)
 
 bool Server::verifyPassword(const std::string& password) const
 {
-	return hashPassword(password) == _password;
+	return hashPassword(password) ==_password;
 }
 
 std::string Server::hashPassword(const std::string& password) const
@@ -186,37 +186,49 @@ void Server::run()
 					std::cout << "Client disconnected. FD = " << clientSocket << std::endl;
 					close(clientSocket);
 					_newfds.erase(_newfds.begin() + i);
+					for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+						{
+							if ((*it)->getFd() == clientSocket)
+							{
+								_clients.erase(it);
+								break;
+							}
+						}
 					--i; // Adjust index after removal
 				}
 				else
 				{
-					buffer[readSize] = '\0'; // Null-terminate the buffer
-					std::cout << "Received: " << buffer << " from client " << clientSocket << std::endl;
-					std::string response = "SEVER RESPONSE: got it\n";
-					send(clientSocket, response.c_str(), response.size(), 0);
+					buffer[readSize - 1] = '\0'; // Null-terminate the buffer
+
+					//std::cout << "Received: " << buffer << " from client " << clientSocket << std::endl;
+
 					std::string command(buffer); // Example command handling
 					std::string data; // Parse data from command as needed
 
 					if (command.substr(0, 4) == "PASS")
 					{
+						int logged = -1;
 						for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 						{
-							if ((*it)->getSocket() == clientSocket)
+							if ((*it)->getFd() == clientSocket)
 							{
 								send(clientSocket, "You're already logged in\n", 26, 0);
+								logged = 0;
 								break;
 							}
 						}
-
-						data = command.substr(5); // Extract data after "PASS "
-						if (verifyPassword(data))
+						if (logged == -1)
 						{
-							send(clientSocket, "Password correct. You're now logged in\n", 38, 0);
-							_clients.push_back(new Client(clientSocket));
-						}
-						else
-						{
-							send(clientSocket, "Password incorrect\n", 19, 0);
+							data = command.substr(5);
+							if (verifyPassword(data))
+							{
+								send(clientSocket, "Password correct. You're now logged in\n", 39, 0);
+								_clients.push_back(new Client(clientSocket));
+							}
+							else
+							{
+								send(clientSocket, "Password incorrect\n", 19, 0);
+							}
 						}
 					}
 					else
