@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/13 15:18:21 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/15 16:17:31 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void Server::run()
 	// AF_INET6: It specifies the IPv6 protocol family.
 	// SOCK_STREAM: It defines that the TCP type socket.
 
-	_serverSocket = socket(AF_INET, SOCK_STREAM, 0); //tcp socket v6
+	_serverSocket = socket(AF_INET6, SOCK_STREAM, 0); //tcp socket v6
 	if (_serverSocket == -1)
 		throw std::runtime_error("Failed to create the socket");
 
@@ -104,9 +104,9 @@ void Server::run()
 	INADDR_ANY: It is used when we don’t want to bind our socket to any particular IP and instead make it listen to all the available IPs.*/
 
 	std::memset(&_serverAddr, 0, sizeof(_serverAddr));
-	_serverAddr.sin_family = AF_INET;
-	_serverAddr.sin_addr.s_addr = INADDR_ANY;
-	_serverAddr.sin_port = htons(_port);
+	_serverAddr.sin6_family = AF_INET6;
+	_serverAddr.sin6_addr = in6addr_any;
+	_serverAddr.sin6_port = htons(_port);
 
 	//fcntl(_serverSocket, F_SETFL, O_NONBLOCK); //non blocking
 
@@ -134,106 +134,129 @@ void Server::run()
 		FD_ZERO(&readfds);
 		FD_SET(_serverSocket, &readfds);
 
+
 		// Add all client sockets to the fd_set
+		/*In the context of network programming, file descriptors are used to identify sockets.
+		The select() system call, which is used later in the code, requires knowing the range of file descriptors to monitor.
+		This range is determined by the highest file descriptor value plus one.
+
+		The line if (_newfds[i] > maxfds) checks if the current client socket's file descriptor (_newfds[i]) is greater than the current value of maxfds.
+		If it is, the maxfds variable is updated to this higher value. This ensures that maxfds always holds
+		the highest file descriptor value among all the sockets being monitored. This is crucial for the select() call to function correctly,
+		as it needs to know the upper limit of the file descriptors to check for activity.
+
+		In summary, this line of code ensures that the maxfds variable is always set to the highest file descriptor value,
+		which is necessary for the proper operation of the select() system call used to monitor multiple sockets
+		for incoming data or connection requests.*/
 		for (size_t i = 0; i < _newfds.size(); ++i)
 		{
 			FD_SET(_newfds[i], &readfds);
-			if (_newfds[i] > maxfds)
+			if (_newfds[i] > maxfds) //this checks if
 				maxfds = _newfds[i];
 		}
 
+
 		//The select() call is used to monitor multiple file descriptors,
 		//waiting until one or more of the file descriptors become "ready" for some class of I/O operation.
+		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
-		if (select(maxfds + 1, &readfds, NULL, NULL, NULL) == -1)
+		if (selectfd == -1)
 			throw std::runtime_error("Failed to select the socket");
-
-		// Check if there is activity on the server socket (new connection)
-		//The FD_ISSET() macro is used to check if a file descriptor is part of the set of file descriptors passed to the select() call.
-		//The accept() call is used to accept the connection request that is recieved on the socket the application was listening to.
-		if (FD_ISSET(_serverSocket, &readfds))
+		else if (selectfd == 0)
+			std::cout << "Timeout expired before any file descriptors became ready" << std::endl;
+		else
 		{
-			struct sockaddr_in _clientAddr;
-			socklen_t clientAddrSize = sizeof(_clientAddr);
-			int clientSocket = accept(_serverSocket, (struct sockaddr*)&_clientAddr, &clientAddrSize);
-			if (clientSocket == -1)
-				throw std::runtime_error("Failed to accept the connection");
+			// Check if the fd with event is the server fd
+			// Check if there is activity on the server socket (new connection)
+			//The FD_ISSET() macro is used to check if a file descriptor is part of the set of file descriptors passed to the select() call.
+			//The accept() call is used to accept the connection request that is recieved on the socket the application was listening to.
 
-			_newfds.push_back(clientSocket);
-			//_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
-			std::cout << "new client accepted. FD is: " << clientSocket << " from : " << inet_ntoa(_clientAddr.sin_addr) << ":" << ntohs(_clientAddr.sin_port) << std::endl;
-		}
-
-
-		// Check activity on client sockets
-		/*Then we start receiving the data from the client.
-		We can specify the required buffer size so that it has enough space
-		to receive the data sent the the client. The example of this is shown below.
-		*/
-
-		for (size_t i = 0; i < _newfds.size(); ++i)
-		{
-			int clientSocket = _newfds[i];
-			if (FD_ISSET(clientSocket, &readfds))
+			if (FD_ISSET(_serverSocket, &readfds))
 			{
-				char buffer[1024];
-				int readSize = recv(clientSocket, buffer, sizeof(buffer), 0);
+				struct sockaddr_in _clientAddr;
+				socklen_t clientAddrSize = sizeof(_clientAddr);
+				int clientSocket = accept(_serverSocket, (struct sockaddr*)&_clientAddr, &clientAddrSize);
+				if (clientSocket == -1)
+					throw std::runtime_error("Failed to accept the connection");
 
-				if (readSize == -1)
-					throw std::runtime_error("Failed to read from the socket");
-				else if (readSize == 0)
+				_newfds.push_back(clientSocket);
+				//_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
+				std::cout << "new client accepted. FD is: " << clientSocket << std::endl;
+				selectfd--;
+				if (!selectfd)
+					continue;
+			}
+
+			// Check activity on client sockets
+			/*Then we start receiving the data from the client.
+			We can specify the required buffer size so that it has enough space
+			to receive the data sent the the client. The example of this is shown below.
+			*/
+
+			for (size_t i = 0; i < _newfds.size(); ++i)
+			{
+				int clientSocket = _newfds[i];
+				if (FD_ISSET(clientSocket, &readfds))
 				{
-					std::cout << "Client disconnected. FD = " << clientSocket << std::endl;
-					close(clientSocket);
-					_newfds.erase(_newfds.begin() + i);
-					for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-						{
-							if ((*it)->getFd() == clientSocket)
-							{
-								_clients.erase(it);
-								break;
-							}
-						}
-					--i; // Adjust index after removal
-				}
-				else
-				{
-					buffer[readSize - 1] = '\0'; // Null-terminate the buffer
+					char buffer[50225];
+					int readSize = recv(clientSocket, buffer, sizeof(buffer), 0);
 
-					//std::cout << "Received: " << buffer << " from client " << clientSocket << std::endl;
-
-					std::string command(buffer); // Example command handling
-					std::string data; // Parse data from command as needed
-
-					if (command.substr(0, 4) == "PASS")
+					if (readSize == -1)
+						throw std::runtime_error("Failed to read from the socket");
+					else if (readSize == 0)
 					{
-						int logged = -1;
+						std::cout << "Client disconnected. FD = " << clientSocket << std::endl;
+						close(clientSocket);
+						_newfds.erase(_newfds.begin() + i);
 						for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-						{
-							if ((*it)->getFd() == clientSocket)
 							{
-								send(clientSocket, "You're already logged in\n", 26, 0);
-								logged = 0;
-								break;
+								if ((*it)->getFd() == clientSocket)
+								{
+									_clients.erase(it);
+									break;
+								}
 							}
-						}
-						if (logged == -1)
-						{
-							data = command.substr(5);
-							if (verifyPassword(data))
-							{
-								send(clientSocket, "Password correct. You're now logged in\n", 39, 0);
-								_clients.push_back(new Client(clientSocket));
-							}
-							else
-							{
-								send(clientSocket, "Password incorrect\n", 19, 0);
-							}
-						}
+						--i; // Adjust index after removal
 					}
-					else
+					else //here starts the handler of the client message. other functions to create
 					{
-						// Handle other commands
+						buffer[readSize - 1] = '\0'; // Null-terminate the buffer
+
+						std::cout << "Received: " << buffer << " from client " << clientSocket << std::endl;
+
+						std::string command(buffer); // Example command handling
+						std::string data; // Parse data from command as needed
+
+						if (command.substr(0, 4) == "PASS")
+						{
+							int logged = -1;
+							for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+							{
+								if ((*it)->getFd() == clientSocket)
+								{
+									send(clientSocket, "You're already logged in\n", 26, 0);
+									logged = 0;
+									break;
+								}
+							}
+							if (logged == -1)
+							{
+								data = command.substr(5);
+								if (verifyPassword(data))
+								{
+									send(clientSocket, "Password correct. You're now logged in\n", 39, 0);
+									_clients.push_back(new Client(clientSocket));
+								}
+								else
+								{
+									send(clientSocket, "Password incorrect\n", 19, 0);
+								}
+							}
+						}
+						else
+						{
+							// Handle other commands
+						}
 					}
 				}
 			}

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/13 14:49:45 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/15 16:16:46 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@
 #include <arpa/inet.h>
 
 class Client;
-
 class Channel;
 
 class Server
@@ -51,7 +50,7 @@ class Server
 		std::vector < Channel* > _channels;
 		std::vector < int > _newfds;
 		std::string hashPassword(const std::string& password) const;
-		struct sockaddr_in _serverAddr;
+		struct sockaddr_in6 _serverAddr;
 
 		//std::map < std::string, *Cmd > Commands; //to fix
 	public:
