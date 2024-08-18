@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/18 13:44:00 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/18 16:49:48 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ Server::~Server()
 void Server::setPort(int port)
 {
 	_port = port;
+}
+
+int Server::getPort() const
+{
+	return _port;
 }
 
 void Server::setPassword(const std::string& password)
