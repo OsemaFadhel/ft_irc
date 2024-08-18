@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/13 14:54:52 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/18 21:05:09 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class Client
 {
 	private:
 		int _fd;
+		std::string _buffer;
 		std::string _nickname;
 		std::string _username;
 
@@ -36,11 +37,14 @@ class Client
 		int getFd() const;
 		std::string getNickname() const;
 		std::string getUsername() const;
+		std::string getBuffer() const;
 		//std::string getPassword() const;
 
 		void setNickname(const std::string& nickname);
 		void setUsername(const std::string& username);
+		void setBuffer(const std::string& buffer);
 
+		void appendBuffer(const char *buffer);
 		//void setPassword(const std::string& password);
 		//bool verifyPassword(const std::string& password) const;
 };
