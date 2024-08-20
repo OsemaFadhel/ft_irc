@@ -6,12 +6,12 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:43:18 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/18 18:15:14 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/20 14:54:45 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server/Server.hpp"
-#include "client/Client.hpp"
+#include "../include/Server.hpp"
+#include "../include/Client.hpp"
 
 int main(int ac, char **av)
 {

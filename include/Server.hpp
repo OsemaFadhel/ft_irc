@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/18 21:11:24 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/20 17:15:36 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@
 #include <netinet/in.h>
 #include <fstream>
 #include <sys/socket.h>
-#include "../client/Client.hpp"
-#include "../channel/Channel.hpp"
+#include "Client.hpp"
+#include "Channel.hpp"
 #include "Replies.hpp"
 #include <arpa/inet.h>
 
@@ -64,10 +64,13 @@ class Server
 		void run();
 		void createSocket();
 		void setMaxfds(int &maxfds, fd_set &readfds);
+		void startLoop(fd_set &readfds, int &maxfds);
 		int acceptClient(int *selectfd);
-		void ClientDisconnect(int clientSocket, size_t &i);
-		void handleMessage(char* buffer, int readSize, int clientSocket);
-		int handleCarriageReturn(char* buffer, int fd);
+		void clientDisconnect(int clientSocket, size_t &i);
+		void checkClientActivity(fd_set& readfds);
+		void handleMessage(char* buffer, int readSize, int clientSocket, size_t &i);
+		int findCarriageReturn(char* buffer, int readSize);
+		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
 		void processCommand(std::string buffer, int clientSocket);
 
 };

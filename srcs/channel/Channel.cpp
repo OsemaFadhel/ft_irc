@@ -6,11 +6,11 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/03 18:14:01 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/20 14:53:03 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
+#include "../../include/Channel.hpp"
 
 Channel::Channel()
 {

@@ -6,11 +6,11 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/18 21:04:59 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/20 14:54:07 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.hpp"
+#include "../../include/Client.hpp"
 
 Client::Client(int fd) : _fd(fd)
 {
@@ -55,9 +55,14 @@ void Client::setBuffer(const std::string& buffer)
 	_buffer = buffer;
 }
 
-void Client::appendBuffer(const char *buffer)
+void Client::clearBuffer()
 {
-	if (std::string(_buffer).length() + std::string(buffer).length() > 512)
+	_buffer.clear();
+}
+
+void Client::appendBuffer(const char* buffer, int readsize)
+{
+	if (_buffer.size() + readsize > 512)
 	{
 		std::cerr << "Error: Buffediscarding excess data.r overflow detected. Message to long" << std::endl;
 		return;

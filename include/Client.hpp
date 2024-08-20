@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/18 21:05:09 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/20 16:54:46 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define CLIENT_HPP
 
 #include "iostream"
-#include "../server/Server.hpp"
-#include "../channel/Channel.hpp"
+#include "Server.hpp"
+#include "Channel.hpp"
 
 class Channel;
 
@@ -26,7 +26,8 @@ class Client
 		std::string _buffer;
 		std::string _nickname;
 		std::string _username;
-
+		int isRegistered; // 0 if not registered (only pass inserted), 1 if registered (nick and user inserted)
+		//for all other commands, check if registered.
 		//std::string _password;
 		//std::string hashPassword(const std::string& password) const;
 		//std::string _role; dont know if we need this here or in channel
@@ -43,8 +44,9 @@ class Client
 		void setNickname(const std::string& nickname);
 		void setUsername(const std::string& username);
 		void setBuffer(const std::string& buffer);
+		void clearBuffer();
 
-		void appendBuffer(const char *buffer);
+		void appendBuffer(const char* buffer, int readsize);
 		//void setPassword(const std::string& password);
 		//bool verifyPassword(const std::string& password) const;
 };

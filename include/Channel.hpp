@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/05 12:29:48 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/20 14:53:28 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include "../client/Client.hpp"
-#include "../server/Server.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
 
 class Client;
 
