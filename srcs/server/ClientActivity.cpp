@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/21 14:55:32 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:08:44 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void Server::checkClientActivity(fd_set& readfds)
 		int clientSocket = _newfds[i];
 		if (FD_ISSET(clientSocket, &readfds))
 		{
-			char buffer[512];
+			char buffer[1024];
 			int readSize = 0;
 			std::string command;
 
