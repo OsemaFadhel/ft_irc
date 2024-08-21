@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/20 17:42:43 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/21 14:55:32 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,43 +27,65 @@ void Server::checkClientActivity(fd_set& readfds)
 		if (FD_ISSET(clientSocket, &readfds))
 		{
 			char buffer[512];
-			std::memset(buffer, 0, sizeof(buffer));
-			int readSize = recv(clientSocket, buffer, sizeof(buffer), 0); //maybe implement carriage here.
-
-			/*
+			int readSize = 0;
 			std::string command;
-			while ((readsize = recv(clientSocket, buffer, sizeof(buffer), 0)
-					&& findCarriageReturn(buffer, readSize) == 0)
-			{
-				command.append(buffer);
-				if (bytesRead <= 0)
-				{
-					std::cout << RED << "[DEBUG LOOP] Client disconnected. FD = " << fd << std::endl;
-					_newfds.erase(_newfds.begin() + i);
-					for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-					{
-						if ((*it)->getFd() == fd)
-						{
-							_clients.erase(it);
-							break;
-						}
-					}
-					close(fd);
-					--i;
-					return 1;
+
+			while (1) {
+				std::memset(buffer, 0, sizeof(buffer)); // Clear the buffer
+				readSize = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+
+				if (readSize < 0) {
+					throw std::runtime_error("Failed to read from the socket");
 				}
-				// Check if buffer size exceeds 512
-				if (command.size() >= 512)
-				{
-					// Handle buffer overflow
-					return 1;
+				if (readSize == 0) {
+					std::cout << RED << "[DEBUG LOOP] Client disconnected. FD = " << clientSocket << std::endl;
+					clientDisconnect(clientSocket, i);
+					break;
+				}
+
+				buffer[readSize] = '\0'; // Null-terminate the received data
+
+				command.append(buffer, readSize); // Append the received data to the command string
+
+				if (findCarriageReturn(buffer, readSize) != 0) { // Check if carriage return is found
+					break; // Exit the loop once the full command is received
+				}
+
+				// Check if the command length exceeds 512
+				if (command.size() >= 512) {
+					std::cout << RED << "[DEBUG LOOP] Buffer overflow. FD = " << clientSocket << std::endl;
+					break; // Handle buffer overflow scenario
 				}
 			}
-			command.append(buffer.substr(0, readsize -1));
 
-			*/
+			/*readSize = recv(clientSocket, buffer, sizeof(buffer), 0);
+			if (findCarriageReturn(buffer,readSize) == 0)
+			{
+				while ((recv(clientSocket, buffer, sizeof(buffer), 0)
+						&& findCarriageReturn(buffer, std::string(buffer).length()) == 0))
+				{
+					command.append(buffer);
+					std::memset(buffer, 0, sizeof(buffer));
+					if (readSize == -1)
+					throw std::runtime_error("Failed to read from the socket");
+					if (readSize == 0)
+					{
+						std::cout << RED << "[DEBUG LOOP] Client disconnected. FD = " << clientSocket << std::endl;
+						clientDisconnect(clientSocket, i);
+						break;
+					}
+					// Check if buffer size exceeds 512
+					if (command.size() >= 512)
+					{
+						// Handle buffer overflow
+						std::cout << RED << "[DEBUG LOOP] Buffer overflow. FD = " << clientSocket << std::endl;
+						break;
+					}
+				}
+			}
+			command.append(buffer);*/
 
-			/*DEBUG CARRIAGE REMOVE LATER ************************************ */
+			/*DEBUG CARRIAGE REMOVE LATER ************************************
 
 			std::cout << YELLOW << "[DEBUG LOOP] readsize:" << readSize << std::endl;
 			for (int i = 0; buffer[i]; i++)
@@ -73,17 +95,17 @@ void Server::checkClientActivity(fd_set& readfds)
 			}
 			std::cout << std::endl;
 
-			/************************************************************** */
+			************************************************************** */
 
-			if (readSize == -1)
+			/*if (readSize == -1)
 				throw std::runtime_error("Failed to read from the socket");
 			else if (readSize == 0)
 			{
-				std::cout << RED << "[DEBUG LOOP] Client disconnected. FD = " << clientSocket << std::endl;
+				std::cout << RED << "[DEBUG LOOP 2] Client disconnected. FD = " << clientSocket << std::endl;
 				clientDisconnect(clientSocket, i);
-			}
-			else //here starts the handler of the client message. other functions to create
-				handleMessage(buffer, readSize, clientSocket, i); // Handle the message
+			}*/
+			if (!command.empty()) //here starts the handler of the client message. other functions to create
+				handleMessage(command, command.length(), clientSocket); // Handle the message
 		}
 	}
 }

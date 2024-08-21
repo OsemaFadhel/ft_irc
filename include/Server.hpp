@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/20 17:15:36 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/21 14:50:57 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,9 @@ class Server
 		int acceptClient(int *selectfd);
 		void clientDisconnect(int clientSocket, size_t &i);
 		void checkClientActivity(fd_set& readfds);
-		void handleMessage(char* buffer, int readSize, int clientSocket, size_t &i);
+
+		void handleMessage(std::string buffer, int readSize, int clientSocket);
+		void trimCommand(std::string &command);
 		int findCarriageReturn(char* buffer, int readSize);
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
 		void processCommand(std::string buffer, int clientSocket);

@@ -6,21 +6,24 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/20 17:34:09 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/21 14:55:47 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 
-void Server::handleMessage(char* buffer, int readSize ,int clientSocket, size_t &i)
+void Server::trimCommand(std::string &command)
+{
+	// Trim the command
+	command.erase(command.find_last_not_of(" \n\r\t") + 1);
+}
+
+void Server::handleMessage(std::string buffer, int readSize ,int clientSocket)
 {
 	(void)readSize;
-	//buffer[readSize - 1] = '\0'; // Null-terminate the buffer
-	//handleCarriageReturn(buffer, clientSocket); // Handle the message carriage return
-	buffer[readSize] = '\0';
-	//buffer[readSize - 1] = '\0';
-	if (handleCarriageReturn(buffer, clientSocket, readSize, i) == 1)
-		return;
+	trimCommand(buffer);
+	std::cout << YELLOW << "[DEBUG] Command: " << buffer << std::endl;
+	processCommand(buffer, clientSocket);
 }
 
 int Server::findCarriageReturn(char* buffer, int readSize)
@@ -33,12 +36,6 @@ int Server::findCarriageReturn(char* buffer, int readSize)
 			return 1; //found
 	}
 	return 0; //not found
-}
-
-void trimCommand(std::string command)
-{
-	(void) command;
-	//end_last_of('\r''\n');
 }
 
 int Server::handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i)
