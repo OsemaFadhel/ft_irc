@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/20 17:11:34 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/22 15:33:48 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ void Server::setMaxfds(int &maxfds, fd_set &readfds)
 
 	for (size_t i = 0; i < _newfds.size(); ++i)
 	{
-		FD_SET(_newfds[i], &readfds);
-		if (_newfds[i] > maxfds)
-			maxfds = _newfds[i];
+		FD_SET(this->_newfds[i].id, &readfds);
+		if (_newfds[i].id > maxfds)
+			maxfds = _newfds[i].id;
 	}
 }
 

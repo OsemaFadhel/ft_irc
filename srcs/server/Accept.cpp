@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:57:35 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/20 14:57:49 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/22 15:37:35 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int Server::acceptClient(int *selectfd)
 	if (clientSocket == -1)
 		throw std::runtime_error("Failed to accept the connection");
 
-	_newfds.push_back(clientSocket);
+	socketdata newfd;
+	newfd.id = clientSocket;
+	_newfds.push_back(newfd);
+	
 	//_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
 	std::cout << GREEN << "[DEBUG] New client accepted. FD is: " << BOLD << clientSocket << std::endl;
 	selectfd--;

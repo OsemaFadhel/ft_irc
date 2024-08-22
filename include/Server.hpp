@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/21 14:50:57 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/22 15:33:14 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@
 class Client;
 class Channel;
 
+typedef struct socketdata
+{
+	int id;
+	std::string buffer;
+} socketdata;
+
 class Server
 {
 	private:
@@ -49,7 +55,7 @@ class Server
 		std::string _password;
 		std::vector < Client* > _clients;
 		std::vector < Channel* > _channels;
-		std::vector < int > _newfds;
+		std::vector < socketdata > _newfds;
 		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in6 _serverAddr;
 

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/22 12:37:26 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/22 15:39:55 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void Server::handleMessage(std::string buffer, int readSize ,int clientSocket)
 	{
 		processCommand(vector[i], clientSocket);
 	}*/
-	processCommand(buffer, clientSocket); // now here splits the command everytime it finds a \r\n inside, and then process it in order.
+	//processCommand(buffer, clientSocket); // now here splits the command everytime it finds a \r\n inside, and then process it in order.
 }
 
 int Server::findCarriageReturn(char* buffer, int readSize)
