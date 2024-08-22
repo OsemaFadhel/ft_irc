@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/22 15:38:32 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/22 16:03:48 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void Server::checkClientActivity(fd_set& readfds)
 			int readSize = 0;
 			std::string command;
 
+			//append buffer to socket struct buffer, till it finds \r\n. if not goes to other client then comes back and continues to append. once found, process command
 			while (1)
 			{
 				std::memset(buffer, 0, sizeof(buffer)); // Clear the buffer
