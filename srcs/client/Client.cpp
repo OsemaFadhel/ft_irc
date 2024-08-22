@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/20 14:54:07 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/22 12:44:57 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 Client::Client(int fd) : _fd(fd)
 {
+	_isRegistered = 0;
 }
 
 Client::~Client()
@@ -40,6 +41,11 @@ std::string Client::getBuffer() const
 	return _buffer;
 }
 
+int Client::getIsRegistered() const
+{
+	return _isRegistered;
+}
+
 void Client::setNickname(const std::string& nickname)
 {
 	_nickname = nickname;
@@ -53,6 +59,11 @@ void Client::setUsername(const std::string& username)
 void Client::setBuffer(const std::string& buffer)
 {
 	_buffer = buffer;
+}
+
+void Client::setIsRegistered(int isRegistered)
+{
+	_isRegistered = isRegistered;
 }
 
 void Client::clearBuffer()

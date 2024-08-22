@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/21 16:30:35 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/22 12:37:26 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@ void Server::handleMessage(std::string buffer, int readSize ,int clientSocket)
 	}
 	std::cout << std::endl;
 	trimCommand(buffer);
+	/*maybe put while loop like
+	split messsage and fill a list o other container
+	vector = split(buffer) \r\n
+	for (vector it++)
+	{
+		processCommand(vector[i], clientSocket);
+	}*/
 	processCommand(buffer, clientSocket); // now here splits the command everytime it finds a \r\n inside, and then process it in order.
 }
 
