@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 18:43:29 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 19:31:40 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void Server::checkClientActivity(fd_set& readfds)
 				//buffer[readSize] = '\0'; // Null-terminate the received data
 
 				// Append the received data to the command string
-				std::cout << "readSize: " << readSize << std::endl;
+				//std::cout << "readSize: " << readSize << std::endl;
 				this->_newfds[i].buffer.append(buffer);
-				std::cout << "buffer FD " << clientSocket << ": " << this->_newfds[i].buffer << std::endl;
+				//std::cout << "buffer FD " << clientSocket << ": " << this->_newfds[i].buffer << std::endl;
 				if (findCarriageReturn(buffer, readSize) != 0) // Check if carriage return is found
 				{
 					//carriageReturn = findCarriageReturn(buffer, readSize); //pos of \r\n

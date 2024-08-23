@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 18:47:35 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 19:55:16 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void Server::trimCommand(std::string &command)
 {
 	// Trim the command
-	command.erase(command.find_last_not_of(" \n\r\t \\r") + 1);
+	command.erase(command.find_last_not_of(" \n\r\t") + 1);
 }
 
 void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
@@ -24,13 +24,17 @@ void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
 	(void)clientSocket;
 	std::cout << YELLOW << "[DEBUG] Command: " << buffer << std::endl;
 
-	printf("char: %c ", buffer[readSize - 1]);
-	printf("hex: %x ", buffer[readSize - 1]);
-	printf("dec: %d ", buffer[readSize - 2]);
-	printf("char: %c ", buffer[readSize - 2]);
+	printf("char: %c \n", buffer[readSize - 1]);
+	printf("hex: %x \n", buffer[readSize - 1]);
+	printf("char: %c \n", buffer[readSize - 2]);
+	printf("hex: %x \n", buffer[readSize - 2]);
 	std::cout << std::endl;
 	trimCommand(buffer);
 	std::cout << "buffer after trim: " << buffer << std::endl;
+	std::string cap = ":" + SERVERNAME + " CAP * LS \r\n";
+	std::string ping = "PONG " + SERVERNAME + "\r\n";
+	send(clientSocket, cap.c_str(), cap.length(), 0);
+	send(clientSocket, ping.c_str(), ping.length(), 0);
 	/*maybe put while loop like
 	split messsage and fill a list o other container
 	vector = split(buffer) \r\n

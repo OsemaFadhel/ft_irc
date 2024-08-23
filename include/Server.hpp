@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/22 15:33:14 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 20:12:47 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@
 #include "Replies.hpp"
 #include <arpa/inet.h>
 
+# define SERVERNAME std::string("ircserv")
+# define VERSION std::string("1.0.0")
+
 class Client;
 class Channel;
 
@@ -67,6 +70,9 @@ class Server
 		int getPort() const;
 		void setPassword(const std::string& password);
 		bool verifyPassword(const std::string& password) const;
+		Client* getClient(int clientSocket);
+		int getClientIndex(int clientSocket);;
+
 		void run();
 		void createSocket();
 		void setMaxfds(int &maxfds, fd_set &readfds);
@@ -80,6 +86,12 @@ class Server
 		int findCarriageReturn(char* buffer, int readSize);
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
 		void processCommand(std::string buffer, int clientSocket);
+
+
+
+		/*commands maybe create static class*/
+		void CapLs(int clientSocket);
+		void Pong(Client *client, int clientSocket, std::string &message);
 
 };
 

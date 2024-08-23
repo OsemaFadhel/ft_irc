@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/20 15:32:13 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 20:12:10 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,26 @@ void Server::setPort(int port)
 int Server::getPort() const
 {
 	return _port;
+}
+
+Client* Server::getClient(int clientSocket)
+{
+	for (size_t i = 0; i < _clients.size(); ++i)
+	{
+		if (_clients[i]->getFd() == clientSocket)
+			return _clients[i];
+	}
+	return NULL;
+}
+
+int Server::getClientIndex(int clientSocket)
+{
+	for (size_t i = 0; i < _clients.size(); ++i)
+	{
+		if (_clients[i]->getFd() == clientSocket)
+			return i;
+	}
+	return -1;
 }
 
 void Server::setPassword(const std::string& password)

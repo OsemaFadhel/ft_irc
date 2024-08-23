@@ -6,22 +6,24 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 15:17:25 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 20:01:40 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REPLIES_HPP
 #define REPLIES_HPP
 
+#include "Server.hpp"
+
 // The server sends Replies 001 to 004 to a user upon successful registration.
 
 #define RPL_WELCOME(nick, user, host) ":ft_irc 001 " nick " :Welcome to the Internet Relay Network " nick "!" user "@" host "\r\n"
 
-#define RPL_YOURHOST(servername, version) ":ft_irc 002 " servername " :Your host is " servername ", running version " version "\r\n"
+#define RPL_YOURHOST(nick) ":ft_irc 002 " nick " :Your host is " SERVERNAME ", running version " VERSION "\r\n"
 
-#define RPL_CREATED(date) ":ft_irc 003 :This server was created " date "\r\n"
+#define RPL_CREATED(nick, date) ":ft_irc 003 " nick ":This server was created " date "\r\n"
 
-#define RPL_MYINFO(servername, version, user_modes, channel_modes) ":ft_irc 004 " servername " " version " " user_modes " " channel_modes "\r\n"
+#define RPL_MYINFO(nick, user_modes, channel_modes) ":ft_irc 004 " nick " " SERVERNAME " " VERSION " " user_modes " " channel_modes "\r\n"
 
 // ERROR REPLIES
 
