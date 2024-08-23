@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 18:38:50 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 18:43:29 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Server::checkClientActivity(fd_set& readfds)
 			std::string command;
 			//int carriageReturn = 0;
 			//append buffer to socket struct buffer, till it finds \r\n. if not goes to other client then comes back and continues to append. once found, process command
-			while (1)
+			while (1) //think i can remove this loop
 			{
 				std::memset(buffer, 0, sizeof(buffer)); // Clear the buffer
 				readSize = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
@@ -70,6 +70,7 @@ void Server::checkClientActivity(fd_set& readfds)
 					std::cout << RED << "[DEBUG LOOP] Buffer overflow. FD = " << clientSocket << std::endl;
 					break; // Handle buffer overflow scenario
 				}
+				break;
 			}
 
 			//to change, maybe not needed check above: if (findCarriageReturn(buffer, readSize) != 0) // Check if carriage return is found
