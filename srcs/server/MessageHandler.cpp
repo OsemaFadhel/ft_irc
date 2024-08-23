@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/22 15:39:55 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 15:45:21 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@ void Server::trimCommand(std::string &command)
 	command.erase(command.find_last_not_of(" \n\r\t") + 1);
 }
 
-void Server::handleMessage(std::string buffer, int readSize ,int clientSocket)
+void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
 {
 	(void)readSize;
+	(void)clientSocket;
 	std::cout << YELLOW << "[DEBUG] Command: " << buffer << std::endl;
 	for (int i = 0; buffer[i]; i++)
 	{
@@ -43,11 +44,19 @@ void Server::handleMessage(std::string buffer, int readSize ,int clientSocket)
 int Server::findCarriageReturn(char* buffer, int readSize)
 {
 	// Check if \r\n is found in the buffer
+	/*
 	for (int i = 0; i < readSize; i++)
 	{
-		if ((buffer[i] == '\\' && i+1 && buffer[i + 1] == 'r' && buffer[i + 2] == '\n')
-				|| (buffer[i] == '\r' && buffer[i + 1] == '\n') || (buffer[i] == '\n'))
-			return 1; //found
+		if ((buffer[i] == '\\' && i + 1 && buffer[i + 1] == 'r' && i + 2 && buffer[i + 2] == '\n')
+				|| (buffer[i] == '\r' && i + 1 && buffer[i + 1] == '\n'))
+			return i;
 	}
+	*/
+	for (int i = readSize - 1; i >= 0; i--)
+    {
+        if ((buffer[i] == '\n' && i - 1 > 0 && buffer[i - 1] == 'r' && buffer[i - 2] == '\\')
+            || (buffer[i] == '\n' && i - 1 < readSize && buffer[i - 1] == '\r'))
+            return i;
+    }
 	return 0; //not found
 }

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/22 13:00:47 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/23 15:17:49 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 					{
 						if ((*itnick)->getNickname() == data)
 						{
-							send(clientSocket, ERR_NICKNAMEINUSE(data), 55 + data.size(), 0);
+							send(clientSocket, ERR_NICKNAMEINUSE("nick"), 55 + data.size(), 0);
 							return;
 						}
 					}
@@ -72,7 +72,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 					if  ((*it)->getUsername() != "")
 					{
 						(*it)->setIsRegistered(1);
-						send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
+						//send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
 					}
 					break;
 				}
@@ -103,13 +103,13 @@ void Server::processCommand(std::string buffer, int clientSocket)
 					return;
 				}
 				(*it)->setUsername(data);
-				send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
+				//send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
 				break;
 			}
 			if  ((*it)->getNickname() != "")
 			{
 				(*it)->setIsRegistered(1);
-				send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
+				//send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
 			}
 		}
 	}
