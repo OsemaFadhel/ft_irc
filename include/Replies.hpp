@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 20:01:40 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/24 22:03:37 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,6 @@
 
 // 502 ERR_USERSDONTMATCH ":Cannot change mode for other users"
 #define ERR_USERSDONTMATCH() ":ft_irc 502 :Cannot change mode for other users\r\n"
-
 
 
 #endif
