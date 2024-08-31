@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/24 21:51:18 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/29 15:43:11 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@
 
 # define SERVERNAME std::string("ircserv")
 # define VERSION std::string("1.0.0")
+# define DATE std::string("2024/08/01")
+
 
 class Client;
 class Channel;
@@ -83,6 +85,7 @@ class Server
 
 		void handleMessage(std::string buffer, int readSize, int clientSocket);
 		void trimCommand(std::string &command);
+		std::vector<std::string> splitCommand(std::string &command);
 		int findCarriageReturn(char* buffer, int readSize);
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
 		void processCommand(std::string buffer, int clientSocket);

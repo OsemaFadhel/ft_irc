@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 19:55:16 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/08/31 15:49:39 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,28 @@ void Server::trimCommand(std::string &command)
 {
 	// Trim the command
 	command.erase(command.find_last_not_of(" \n\r\t") + 1);
+	command.erase(0, command.find_first_not_of(" \n\r\t"));
+}
+
+std::vector<std::string> Server::splitCommand(std::string &command)
+{
+	std::vector<std::string> vector;
+	std::string delimiter = "\r\n";
+	size_t pos = 0;
+	std::string token;
+
+	while ((pos = command.find(delimiter)) != std::string::npos)
+	{
+		token = command.substr(0, pos);
+		vector.push_back(token);
+		command.erase(0, pos + delimiter.length());
+	}
+
+	for (size_t i = 0; i < vector.size(); i++)
+	{
+		std::cout << BLUE << "vector[" << i << "]: " << vector[i] << std::endl;
+	}
+	return vector;
 }
 
 void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
@@ -24,43 +46,34 @@ void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
 	(void)clientSocket;
 	std::cout << YELLOW << "[DEBUG] Command: " << buffer << std::endl;
 
+	/*
 	printf("char: %c \n", buffer[readSize - 1]);
 	printf("hex: %x \n", buffer[readSize - 1]);
 	printf("char: %c \n", buffer[readSize - 2]);
 	printf("hex: %x \n", buffer[readSize - 2]);
-	std::cout << std::endl;
-	trimCommand(buffer);
-	std::cout << "buffer after trim: " << buffer << std::endl;
+	std::cout << std::endl; */
+
+	/*trimCommand(buffer);
+	std::cout << "buffer after trim: " << buffer << std::endl;*/
+
 	std::string cap = ":" + SERVERNAME + " CAP * LS \r\n";
 	std::string ping = "PONG " + SERVERNAME + "\r\n";
 	send(clientSocket, cap.c_str(), cap.length(), 0);
 	send(clientSocket, ping.c_str(), ping.length(), 0);
-	/*maybe put while loop like
-	split messsage and fill a list o other container
-	vector = split(buffer) \r\n
-	for (vector it++)
-	{
+
+	std::vector<std::string> vector = splitCommand(buffer);
+
+	for (size_t i = 0; i < vector.size(); i++)
 		processCommand(vector[i], clientSocket);
-	}*/
-	//processCommand(buffer, clientSocket); // now here splits the command everytime it finds a \r\n inside, and then process it in order.
 }
 
 int Server::findCarriageReturn(char* buffer, int readSize)
 {
-	// Check if \r\n is found in the buffer
-	/*
-	for (int i = 0; i < readSize; i++)
+	for (int i = readSize - 1; i >= 0; i--)
 	{
-		if ((buffer[i] == '\\' && i + 1 && buffer[i + 1] == 'r' && i + 2 && buffer[i + 2] == '\n')
-				|| (buffer[i] == '\r' && i + 1 && buffer[i + 1] == '\n'))
+		if ((buffer[i] == '\n' && i - 1 > 0 && buffer[i - 1] == 'r' && buffer[i - 2] == '\\')
+			|| (buffer[i] == '\n' && i - 1 < readSize && buffer[i - 1] == '\r'))
 			return i;
 	}
-	*/
-	for (int i = readSize - 1; i >= 0; i--)
-    {
-        if ((buffer[i] == '\n' && i - 1 > 0 && buffer[i - 1] == 'r' && buffer[i - 2] == '\\')
-            || (buffer[i] == '\n' && i - 1 < readSize && buffer[i - 1] == '\r'))
-            return i;
-    }
 	return 0; //not found
 }
