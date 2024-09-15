@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/22 12:32:05 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/15 18:27:46 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Client
 		//std::string _password;
 		//std::string hashPassword(const std::string& password) const;
 		//std::string _role; dont know if we need this here or in channel
-		std::vector < Channel* > _channels;
+		std::vector < Channel* > _channels; //lo dovrebbe gestire il server
 	public:
 		Client(int fd);
 		~Client();
