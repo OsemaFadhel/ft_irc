@@ -5,7 +5,6 @@ Create your own IRC server in C++, fully compatible with an official client.
 
 <h2 align="center"> Description </h2>
 
-The following functions implement a simple server using socket programming, managing connections and handling client communication through file descriptors.
 
 <h3>Run Function</h3>
 
@@ -24,9 +23,9 @@ void Server::run()
 
 ```
 
-createSocket: Sets up the server socket.
-fd_set: Initializes the set of file descriptors to be monitored for activity.
-startLoop: Enters a loop to handle incoming client connections and monitor file descriptor activity.
+- createSocket: Sets up the server socket.
+- fd_set: Initializes the set of file descriptors to be monitored for activity.
+- startLoop: Enters a loop to handle incoming client connections and monitor file descriptor activity.
 
 <h3>Create Socket Function</h3>
 
