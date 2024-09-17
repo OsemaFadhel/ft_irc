@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/24 22:03:37 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 19:24:30 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,156 +14,136 @@
 #define REPLIES_HPP
 
 #include "Server.hpp"
+#include <cstdarg>
+
+std::string constructMessage(const std::string& format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	char buffer[512];  // Adjust size as necessary
+	vsnprintf(buffer, sizeof(buffer), format.c_str(), args);
+
+	va_end(args);
+	return std::string(buffer);
+}
 
 // The server sends Replies 001 to 004 to a user upon successful registration.
 
-#define RPL_WELCOME(nick, user, host) ":ft_irc 001 " nick " :Welcome to the Internet Relay Network " nick "!" user "@" host "\r\n"
+#define RPL_WELCOME ":ft_irc 001 %s :Welcome to the Internet Relay Network %s!%s@%s\r\n" //size of string = 66
 
-#define RPL_YOURHOST(nick) ":ft_irc 002 " nick " :Your host is " SERVERNAME ", running version " VERSION "\r\n"
+#define RPL_YOURHOST ":ft_irc 002 %s :Your host is " SERVERNAME ", running version " VERSION "\r\n" // Static size: 48 + length of SERVERNAME + length of VERSION
 
-#define RPL_CREATED(nick, date) ":ft_irc 003 " nick ":This server was created " date "\r\n"
+#define RPL_CREATED ":ft_irc 003 %s :This server was created %s\r\n" // Static size: 39
 
-#define RPL_MYINFO(nick, user_modes, channel_modes) ":ft_irc 004 " nick " " SERVERNAME " " VERSION " " user_modes " " channel_modes "\r\n"
+#define RPL_MYINFO ":ft_irc 004 %s " SERVERNAME " " VERSION " %s %s\r\n" // Static size: 40 + length of SERVERNAME + length of VERSION
 
-// ERROR REPLIES
+//ERROR REPLIES
 
-#define ERR_NOSUCHNICK(nick) ":ft_irc 401 " nick " :No such nick/channel\r\n"
+#define ERR_NOSUCHNICK ":ft_irc 401 %s :No such nick/channel\r\n" // Static size: 31
 
-#define ERR_NOSUCHSERVER(server) ":ft_irc 402 " server " :No such server\r\n"
+#define ERR_NOSUCHSERVER ":ft_irc 402 %s :No such server\r\n" // Static size: 26
 
-#define ERR_NOSUCHCHANNEL(channel) ":ft_irc 403 " channel " :No such channel\r\n"
+#define ERR_NOSUCHCHANNEL ":ft_irc 403 %s :No such channel\r\n" // Static size: 34
 
-#define ERR_CANNOTSENDTOCHAN(channel) ":ft_irc 404 " channel " :Cannot send to channel\r\n"
+#define ERR_CANNOTSENDTOCHAN ":ft_irc 404 %s :Cannot send to channel\r\n" // Static size: 33
 
-#define ERR_TOOMANYCHANNELS(channel) ":ft_irc 405 " channel " :You have joined too many channels\r\n"
+#define ERR_TOOMANYCHANNELS ":ft_irc 405 %s :You have joined too many channels\r\n" // Static size: 43
 
-#define ERR_WASNOSUCHNICK(nick) ":ft_irc 406 " nick " :There was no such nickname\r\n"
+#define ERR_WASNOSUCHNICK ":ft_irc 406 %s :There was no such nickname\r\n" // Static size: 34
 
-#define ERR_TOOMANYTARGETS(target, error_code, abort_msg) ":ft_irc 407 " target " :" error_code " recipients. " abort_msg "\r\n"
+#define ERR_TOOMANYTARGETS ":ft_irc 407 %s :%s recipients. %s\r\n" // Static size: 34
 
-#define ERR_NOSUCHSERVICE(service) ":ft_irc 408 " service " :No such service\r\n"
+#define ERR_NOSUCHSERVICE ":ft_irc 408 %s :No such service\r\n" // Static size: 31
 
-#define ERR_NOORIGIN ":ft_irc 409 :No origin specified\r\n"
+#define ERR_NOORIGIN ":ft_irc 409 :No origin specified\r\n" // Static size: 30
 
-#define ERR_NORECIPIENT(command) ":ft_irc 411 :No recipient given (" command ")\r\n"
+#define ERR_NORECIPIENT ":ft_irc 411 :No recipient given (%s)\r\n" // Static size: 37
 
-#define ERR_NOTEXTTOSEND ":ft_irc 412 :No text to send\r\n"
+#define ERR_NOTEXTTOSEND ":ft_irc 412 :No text to send\r\n" // Static size: 26
 
-#define ERR_NOTOPLEVEL(mask) ":ft_irc 413 " mask " :No toplevel domain specified\r\n"
+#define ERR_NOTOPLEVEL ":ft_irc 413 %s :No toplevel domain specified\r\n" // Static size: 35
 
-#define ERR_WILDTOPLEVEL(mask) ":ft_irc 414 " mask " :Wildcard in toplevel domain\r\n"
+#define ERR_WILDTOPLEVEL ":ft_irc 414 %s :Wildcard in toplevel domain\r\n" // Static size: 39
 
-#define ERR_BADMASK(mask) ":ft_irc 415 " mask " :Bad Server/host mask\r\n"
+#define ERR_BADMASK ":ft_irc 415 %s :Bad Server/host mask\r\n" // Static size: 29
 
-#define ERR_UNKNOWNCOMMAND(command) ":ft_irc 421 " command " :Unknown command\r\n"
+#define ERR_UNKNOWNCOMMAND ":ft_irc 421 %s :Unknown command\r\n" // Static size: 30
 
-#define ERR_NOMOTD ":ft_irc 422 :MOTD File is missing\r\n"
+#define ERR_NOMOTD ":ft_irc 422 :MOTD File is missing\r\n" // Static size: 29
 
-#define ERR_NOADMININFO(server) ":ft_irc 423 " server " :No administrative info available\r\n"
+#define ERR_NOADMININFO ":ft_irc 423 %s :No administrative info available\r\n" // Static size: 43
 
-#define ERR_FILEERROR(file_op, file) ":ft_irc 424 :File error doing " file_op " on " file "\r\n"
+#define ERR_FILEERROR ":ft_irc 424 :File error doing %s on %s\r\n" // Static size: 35
 
-#define ERR_NONICKNAMEGIVEN ":ft_irc 431 :No nickname given\r\n"
+#define ERR_NONICKNAMEGIVEN ":ft_irc 431 :No nickname given\r\n" // Static size: 28
 
-#define ERR_ERRONEUSNICKNAME(nick) ":ft_irc 432 " nick " :Erroneous nickname\r\n"
+#define ERR_ERRONEUSNICKNAME ":ft_irc 432 %s :Erroneous nickname\r\n" // Static size: 31
 
-#define ERR_NICKNAMEINUSE(nick) ":ft_irc 433 " nick " :Nickname is already in use\r\n"
+#define ERR_NICKNAMEINUSE ":ft_irc 433 %s :Nickname is already in use\r\n" // Static size: 36
 
-// 436 ERR_NICKCOLLISION "<nick> :Nickname collision KILL from <user>@<host>"
-#define ERR_NICKCOLLISION(nick, user, host) ":ft_irc 436 " nick " :Nickname collision KILL from " user "@" host "\r\n"
+#define ERR_NICKCOLLISION ":ft_irc 436 %s :Nickname collision KILL from %s@%s\r\n" // Static size: 45
 
-// 437 ERR_UNAVAILRESOURCE "<nick/channel> :Nick/channel is temporarily unavailable"
-#define ERR_UNAVAILRESOURCE(target) ":ft_irc 437 " target " :Nick/channel is temporarily unavailable\r\n"
+#define ERR_UNAVAILRESOURCE ":ft_irc 437 %s :Nick/channel is temporarily unavailable\r\n" // Static size: 45
 
-// 441 ERR_USERNOTINCHANNEL "<nick> <channel> :They aren't on that channel"
-#define ERR_USERNOTINCHANNEL(nick, channel) ":ft_irc 441 " nick " " channel " :They aren't on that channel\r\n"
+#define ERR_USERNOTINCHANNEL ":ft_irc 441 %s %s :They aren't on that channel\r\n" // Static size: 39
 
-// 442 ERR_NOTONCHANNEL "<channel> :You're not on that channel"
-#define ERR_NOTONCHANNEL(channel) ":ft_irc 442 " channel " :You're not on that channel\r\n"
+#define ERR_NOTONCHANNEL ":ft_irc 442 %s :You're not on that channel\r\n" // Static size: 33
 
-// 443 ERR_USERONCHANNEL "<user> <channel> :is already on channel"
-#define ERR_USERONCHANNEL(user, channel) ":ft_irc 443 " user " " channel " :is already on channel\r\n"
+#define ERR_USERONCHANNEL ":ft_irc 443 %s %s :is already on channel\r\n" // Static size: 33
 
-// 444 ERR_NOLOGIN "<user> :User not logged in"
-#define ERR_NOLOGIN(user) ":ft_irc 444 " user " :User not logged in\r\n"
+#define ERR_NOLOGIN ":ft_irc 444 %s :User not logged in\r\n" // Static size: 28
 
-// 445 ERR_SUMMONDISABLED ":SUMMON has been disabled"
-#define ERR_SUMMONDISABLED() ":ft_irc 445 :SUMMON has been disabled\r\n"
+#define ERR_SUMMONDISABLED ":ft_irc 445 :SUMMON has been disabled\r\n" // Static size: 33
 
-// 446 ERR_USERSDISABLED ":USERS has been disabled"
-#define ERR_USERSDISABLED() ":ft_irc 446 :USERS has been disabled\r\n"
+#define ERR_USERSDISABLED ":ft_irc 446 :USERS has been disabled\r\n" // Static size: 29
 
-// 451 ERR_NOTREGISTERED ":You have not registered"
-#define ERR_NOTREGISTERED() ":ft_irc 451 :You have not registered\r\n"
+#define ERR_NOTREGISTERED ":ft_irc 451 :You have not registered\r\n" // Static size: 30
 
-// 461 ERR_NEEDMOREPARAMS "<command> :Not enough parameters"
-#define ERR_NEEDMOREPARAMS(command) ":ft_irc 461 " command " :Not enough parameters\r\n"
+#define ERR_NEEDMOREPARAMS ":ft_irc 461 %s :Not enough parameters\r\n" // Static size: 33
 
-// 462 ERR_ALREADYREGISTRED ":Unauthorized command (already registered)"
-#define ERR_ALREADYREGISTRED() ":ft_irc 462 :Unauthorized command (already registered)\r\n"
+#define ERR_ALREADYREGISTRED ":ft_irc 462 :Unauthorized command (already registered)\r\n" // Static size: 44
 
-// 463 ERR_NOPERMFORHOST ":Your host isn't among the privileged"
-#define ERR_NOPERMFORHOST() ":ft_irc 463 :Your host isn't among the privileged\r\n"
+#define ERR_NOPERMFORHOST ":ft_irc 463 :Your host isn't among the privileged\r\n" // Static size: 43
 
-// 464 ERR_PASSWDMISMATCH ":Password incorrect"
-#define ERR_PASSWDMISMATCH() ":ft_irc 464 :Password incorrect\r\n"
+#define ERR_PASSWDMISMATCH ":ft_irc 464 :Password incorrect\r\n" // Static size: 31
 
-// 465 ERR_YOUREBANNEDCREEP ":You are banned from this server"
-#define ERR_YOUREBANNEDCREEP() ":ft_irc 465 :You are banned from this server\r\n"
+#define ERR_YOUREBANNEDCREEP ":ft_irc 465 :You are banned from this server\r\n" // Static size: 35
 
-// 466 ERR_YOUWILLBEBANNED
-#define ERR_YOUWILLBEBANNED() ":ft_irc 466 :You will be banned\r\n"
+#define ERR_YOUWILLBEBANNED ":ft_irc 466 :You will be banned\r\n" // Static size: 29
 
-// 467 ERR_KEYSET "<channel> :Channel key already set"
-#define ERR_KEYSET(channel) ":ft_irc 467 " channel " :Channel key already set\r\n"
+#define ERR_KEYSET ":ft_irc 467 %s :Channel key already set\r\n" // Static size: 35
 
-// 471 ERR_CHANNELISFULL "<channel> :Cannot join channel (+l)"
-#define ERR_CHANNELISFULL(channel) ":ft_irc 471 " channel " :Cannot join channel (+l)\r\n"
+#define ERR_CHANNELISFULL ":ft_irc 471 %s :Cannot join channel (+l)\r\n" // Static size: 34
 
-// 472 ERR_UNKNOWNMODE "<char> :is unknown mode char to me for <channel>"
-#define ERR_UNKNOWNMODE(char, channel) ":ft_irc 472 " char " :is unknown mode char to me for " channel "\r\n"
+#define ERR_UNKNOWNMODE ":ft_irc 472 %s :is unknown mode char to me for %s\r\n" // Static size: 39
 
-// 473 ERR_INVITEONLYCHAN "<channel> :Cannot join channel (+i)"
-#define ERR_INVITEONLYCHAN(channel) ":ft_irc 473 " channel " :Cannot join channel (+i)\r\n"
+#define ERR_INVITEONLYCHAN ":ft_irc 473 %s :Cannot join channel (+i)\r\n" // Static size: 33
 
-// 474 ERR_BANNEDFROMCHAN "<channel> :Cannot join channel (+b)"
-#define ERR_BANNEDFROMCHAN(channel) ":ft_irc 474 " channel " :Cannot join channel (+b)\r\n"
+#define ERR_BANNEDFROMCHAN ":ft_irc 474 %s :Cannot join channel (+b)\r\n" // Static size: 34
 
-// 475 ERR_BADCHANNELKEY "<channel> :Cannot join channel (+k)"
-#define ERR_BADCHANNELKEY(channel) ":ft_irc 475 " channel " :Cannot join channel (+k)\r\n"
+#define ERR_BADCHANNELKEY ":ft_irc 475 %s :Cannot join channel (+k)\r\n" // Static size: 34
 
-// 476 ERR_BADCHANMASK "<channel> :Bad Channel Mask"
-#define ERR_BADCHANMASK(channel) ":ft_irc 476 " channel " :Bad Channel Mask\r\n"
+#define ERR_BADCHANMASK ":ft_irc 476 %s :Bad Channel Mask\r\n" // Static size: 31
 
-// 477 ERR_NOCHANMODES "<channel> :Channel doesn't support modes"
-#define ERR_NOCHANMODES(channel) ":ft_irc 477 " channel " :Channel doesn't support modes\r\n"
+#define ERR_NOCHANMODES ":ft_irc 477 %s :Channel doesn't support modes\r\n" // Static size: 36
 
-// 478 ERR_BANLISTFULL "<channel> <char> :Channel list is full"
-#define ERR_BANLISTFULL(channel, char) ":ft_irc 478 " channel " " char " :Channel list is full\r\n"
+#define ERR_BANLISTFULL ":ft_irc 478 %s %s :Channel list is full\r\n" // Static size: 35
 
-// 481 ERR_NOPRIVILEGES ":Permission Denied- You're not an IRC operator"
-#define ERR_NOPRIVILEGES() ":ft_irc 481 :Permission Denied- You're not an IRC operator\r\n"
+#define ERR_NOPRIVILEGES ":ft_irc 481 :Permission Denied- You're not an IRC operator\r\n" // Static size: 48
 
-// 482 ERR_CHANOPRIVSNEEDED "<channel> :You're not channel operator"
-#define ERR_CHANOPRIVSNEEDED(channel) ":ft_irc 482 " channel " :You're not channel operator\r\n"
+#define ERR_CHANOPRIVSNEEDED ":ft_irc 482 %s :You're not channel operator\r\n" // Static size: 35
 
-// 483 ERR_CANTKILLSERVER ":You can't kill a server!"
-#define ERR_CANTKILLSERVER() ":ft_irc 483 :You can't kill a server!\r\n"
+#define ERR_CANTKILLSERVER ":ft_irc 483 :You can't kill a server!\r\n" // Static size: 31
 
-// 484 ERR_RESTRICTED ":Your connection is restricted!"
-#define ERR_RESTRICTED() ":ft_irc 484 :Your connection is restricted!\r\n"
+#define ERR_RESTRICTED ":ft_irc 484 :Your connection is restricted!\r\n" // Static size: 34
 
-// 485 ERR_UNIQOPPRIVSNEEDED ":You're not the original channel operator"
-#define ERR_UNIQOPPRIVSNEEDED() ":ft_irc 485 :You're not the original channel operator\r\n"
+#define ERR_UNIQOPPRIVSNEEDED ":ft_irc 485 :You're not the original channel operator\r\n" // Static size: 43
 
-// 491 ERR_NOOPERHOST ":No O-lines for your host"
-#define ERR_NOOPERHOST() ":ft_irc 491 :No O-lines for your host\r\n"
+#define ERR_NOOPERHOST ":ft_irc 491 :No O-lines for your host\r\n" // Static size: 29
 
-// 501 ERR_UMODEUNKNOWNFLAG ":Unknown MODE flag"
-#define ERR_UMODEUNKNOWNFLAG() ":ft_irc 501 :Unknown MODE flag\r\n"
+#define ERR_UMODEUNKNOWNFLAG ":ft_irc 501 :Unknown MODE flag\r\n" // Static size: 29
 
-// 502 ERR_USERSDONTMATCH ":Cannot change mode for other users"
-#define ERR_USERSDONTMATCH() ":ft_irc 502 :Cannot change mode for other users\r\n"
-
+#define ERR_USERSDONTMATCH ":ft_irc 502 :Cannot change mode for other users\r\n" // Static size: 36
 
 #endif

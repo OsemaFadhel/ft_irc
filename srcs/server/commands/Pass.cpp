@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:16:23 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 12:18:46 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 19:11:20 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ void Server::Pass(std::string args, int clientSocket)
 				return;
 			}
 			else if (verifyPassword(args))
-			{
 				_clients.push_back(new Client(clientSocket));
-				//send(clientSocket, RPL_WELCOME("ofadhel", "ofadhel_", "irc"), 55 + 14, 0); //CHANGE after nick user
-			}
 			else
 				send(clientSocket, ERR_PASSWDMISMATCH(), 55, 0);
 		}
