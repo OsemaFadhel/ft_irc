@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 20:53:19 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/17 21:19:04 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ class Server
 
 
 		/*commands maybe create static class*/
-		void CapLs(int clientSocket);
-		void Pong(Client *client, int clientSocket, std::string &message);
+		void Cap(int clientSocket);
+		void Ping(Client *client, int clientSocket, std::string &message);
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
