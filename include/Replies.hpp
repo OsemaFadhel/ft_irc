@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 19:24:30 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 21:36:48 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,7 @@
 #include "Server.hpp"
 #include <cstdarg>
 
-std::string constructMessage(const std::string& format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	char buffer[512];  // Adjust size as necessary
-	vsnprintf(buffer, sizeof(buffer), format.c_str(), args);
-
-	va_end(args);
-	return std::string(buffer);
-}
+std::string constructMessage(const std::string& format, ...);
 
 // The server sends Replies 001 to 004 to a user upon successful registration.
 

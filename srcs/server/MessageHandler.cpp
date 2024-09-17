@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/31 15:49:39 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 21:42:56 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,6 @@ std::vector<std::string> Server::splitCommand(std::string &command)
 		vector.push_back(token);
 		command.erase(0, pos + delimiter.length());
 	}
-
-	for (size_t i = 0; i < vector.size(); i++)
-	{
-		std::cout << BLUE << "vector[" << i << "]: " << vector[i] << std::endl;
-	}
 	return vector;
 }
 
@@ -45,16 +40,6 @@ void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
 	(void)readSize;
 	(void)clientSocket;
 	std::cout << YELLOW << "[DEBUG] Command: " << buffer << std::endl;
-
-	/*
-	printf("char: %c \n", buffer[readSize - 1]);
-	printf("hex: %x \n", buffer[readSize - 1]);
-	printf("char: %c \n", buffer[readSize - 2]);
-	printf("hex: %x \n", buffer[readSize - 2]);
-	std::cout << std::endl; */
-
-	/*trimCommand(buffer);
-	std::cout << "buffer after trim: " << buffer << std::endl;*/
 
 	std::string cap = ":" + SERVERNAME + " CAP * LS \r\n";
 	std::string ping = "PONG " + SERVERNAME + "\r\n";
