@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/29 15:43:11 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 12:18:27 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,9 @@ class Server
 		/*commands maybe create static class*/
 		void CapLs(int clientSocket);
 		void Pong(Client *client, int clientSocket, std::string &message);
+		void Pass(std::string args, int clientSocket);
+		void Nick(std::string args, int clientSocket);
+		void User(std::string args, int clientSocket);
 
 };
 
