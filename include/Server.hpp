@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 12:18:27 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 20:53:19 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ class Server
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
-
+		void Nicotera(std::string cmd, std::string args, int clientSocket);
 };
 
 // Macros for ANSI escape codes
@@ -127,3 +127,11 @@ class Server
 #define BG_WHITE   "\033[47m"
 
 #endif
+
+/*
+Commands to update the forked repo with the other branches
+git fetch upstream
+git checkout <branch_to_update>
+git merge upstream/<branch_to_update>
+git push origin <branch_to_update>
+*/
