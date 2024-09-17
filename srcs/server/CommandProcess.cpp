@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 18:44:37 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 21:42:16 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ void Server::processCommand(std::string buffer, int clientSocket)
 
 	if (getClientIndex(clientSocket) == -1) //not registered (not in _clients, pass not inserted)
 	{
+		std::cout << YELLOW << "[DEBUG 1 Command: ]" << command << std::endl;
 		if (command != "PASS" && command != "CAP" && command != "PING")
-			return send(clientSocket, ERR_NOTREGISTERED(), 55, 0), void();
+			return send(clientSocket, ERR_NOTREGISTERED, 55, 0), void();
 		else if (command == "PASS")
 			Pass(args, clientSocket);
 		else if (command == "PING")
@@ -30,8 +31,10 @@ void Server::processCommand(std::string buffer, int clientSocket)
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
+		std::cout << YELLOW << "[DEBUG 2 Command: ]" << command << std::endl;
+
 		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS")
-			return send(clientSocket, ERR_NOTREGISTERED(), 55, 0), void();
+			return send(clientSocket, ERR_NOTREGISTERED, 55, 0), void();
 		else if (command == "NICK")
 			Nick(args, clientSocket);
 		else if (command == "USER")
@@ -45,6 +48,8 @@ void Server::processCommand(std::string buffer, int clientSocket)
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 1)
 	{
+		std::cout << YELLOW << "[DEBUG 3 Command: ]" << command << std::endl;
+
 		if (command == "Pass")
 			Pass(args, clientSocket);
 		else if (command == "NICK")

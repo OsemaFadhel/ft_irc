@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:19:05 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 19:17:25 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/17 21:35:11 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void Server::Nick(std::string args, int clientSocket)
 				{
 					if ((*itnick)->getNickname() == args)
 					{
-						send(clientSocket, ERR_NICKNAMEINUSE("nick"), 55 + args.size(), 0);
+						std::string message = constructMessage(ERR_NICKNAMEINUSE, (*it)->getNickname());
+						send(clientSocket, message.c_str(), 36 + (*it)->getNickname().size(), 0);
 						return;
 					}
 				}
@@ -50,7 +51,7 @@ void Server::User(std::string args, int clientSocket) //args = <username> <hostn
 {
 	if (args == "")
 	{
-		send(clientSocket, ERR_NEEDMOREPARAMS("USER"), 39, 0);
+		send(clientSocket, constructMessage(ERR_NEEDMOREPARAMS, "USER").c_str(), 39, 0);
 		return;
 	}
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
@@ -59,7 +60,7 @@ void Server::User(std::string args, int clientSocket) //args = <username> <hostn
 		{
 			if ((*it)->getIsRegistered() == 1)
 			{
-				send(clientSocket, ERR_ALREADYREGISTRED(), 55, 0);
+				send(clientSocket, ERR_ALREADYREGISTRED, 44, 0);
 				return;
 			}
 
