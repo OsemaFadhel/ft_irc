@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:41:15 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 21:46:26 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 14:43:29 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,4 @@ void Server::Cap(int clientSocket)
 		std::string response = ":" + SERVERNAME + " CAP * LS \r\n"; //if not logged in
 		send(clientSocket, response.c_str(), response.length(), 0);
 	}
-	std::cout << YELLOW << "[DEBUG] CAP command" << std::endl;
 }

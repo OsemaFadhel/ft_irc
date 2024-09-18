@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 19:31:40 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 19:18:05 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ void Server::checkClientActivity(fd_set& readfds)
 			char buffer[1024];
 			int readSize = 0;
 			std::string command;
-			//int carriageReturn = 0;
-			//append buffer to socket struct buffer, till it finds \r\n. if not goes to other client then comes back and continues to append. once found, process command
+
 			while (1) //think i can remove this loop
 			{
 				std::memset(buffer, 0, sizeof(buffer)); // Clear the buffer
@@ -45,16 +44,9 @@ void Server::checkClientActivity(fd_set& readfds)
 					break;
 				}
 
-				//buffer[readSize] = '\0'; // Null-terminate the received data
-
-				// Append the received data to the command string
-				//std::cout << "readSize: " << readSize << std::endl;
 				this->_newfds[i].buffer.append(buffer);
-				//std::cout << "buffer FD " << clientSocket << ": " << this->_newfds[i].buffer << std::endl;
 				if (findCarriageReturn(buffer, readSize) != 0) // Check if carriage return is found
 				{
-					//carriageReturn = findCarriageReturn(buffer, readSize); //pos of \r\n
-					//command = this->_newfds[i].buffer.substr(0, carriageReturn);
 					handleMessage(this->_newfds[i].buffer, this->_newfds[i].buffer.length(), clientSocket); // Handle the message
 					this->_newfds[i].buffer.erase(); // Clear the buffer
 					break; // Exit the loop once the full command is received
@@ -72,11 +64,6 @@ void Server::checkClientActivity(fd_set& readfds)
 				}
 				break;
 			}
-
-			//to change, maybe not needed check above: if (findCarriageReturn(buffer, readSize) != 0) // Check if carriage return is found
-			/*if (!command.empty()) //here starts the handler of the client message. other functions to create
-				handleMessage(command, command.length(), clientSocket); // Handle the message
-			command.clear();*/
 		}
 	}
 }
