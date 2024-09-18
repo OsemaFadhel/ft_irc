@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 18:43:11 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 19:02:48 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 #include "Replies.hpp"
 #include <arpa/inet.h>
 
-# define SERVERNAME std::string("ircserv")
+# define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")
 # define DATE std::string("2024/08/01")
 
@@ -62,7 +62,7 @@ class Server
 		std::vector < Channel* > _channels;
 		std::vector < socketdata > _newfds;
 		std::string hashPassword(const std::string& password) const;
-		struct sockaddr_in6 _serverAddr;
+		struct sockaddr_in _serverAddr;
 
 		//std::map < std::string, *Cmd > Commands; //to fix
 	public:

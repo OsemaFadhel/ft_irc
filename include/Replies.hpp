@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 21:36:48 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 19:05:43 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ std::string constructMessage(const std::string& format, ...);
 
 // The server sends Replies 001 to 004 to a user upon successful registration.
 
-#define RPL_WELCOME ":ft_irc 001 %s :Welcome to the Internet Relay Network %s!%s@%s\r\n" //size of string = 66
+#define RPL_WELCOME ":ft_irc 001 %s :Welcome to %s Network, %s\r\n" //size of string = 44
 
-#define RPL_YOURHOST ":ft_irc 002 %s :Your host is " SERVERNAME ", running version " VERSION "\r\n" // Static size: 48 + length of SERVERNAME + length of VERSION
+#define RPL_YOURHOST ":ft_irc 002 %s :Your host is %s, running version %s\r\n" // Static size: 54
 
-#define RPL_CREATED ":ft_irc 003 %s :This server was created %s\r\n" // Static size: 39
+#define RPL_CREATED ":ft_irc 003 %s :This server was created %s\r\n" // Static size: 45
 
-#define RPL_MYINFO ":ft_irc 004 %s " SERVERNAME " " VERSION " %s %s\r\n" // Static size: 40 + length of SERVERNAME + length of VERSION
+#define RPL_MYINFO ":ft_irc 004 %s %s %s %s %s\r\n" // Static size: 29
 
 //ERROR REPLIES
 
@@ -66,11 +66,11 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_FILEERROR ":ft_irc 424 :File error doing %s on %s\r\n" // Static size: 35
 
-#define ERR_NONICKNAMEGIVEN ":ft_irc 431 :No nickname given\r\n" // Static size: 28
+#define ERR_NONICKNAMEGIVEN ":ft_irc 431 :No nickname given\r\n" // Static size: 33
 
-#define ERR_ERRONEUSNICKNAME ":ft_irc 432 %s :Erroneous nickname\r\n" // Static size: 31
+#define ERR_ERRONEUSNICKNAME ":ft_irc 432 %s :Erroneous nickname\r\n" // Static size: 37
 
-#define ERR_NICKNAMEINUSE ":ft_irc 433 %s :Nickname is already in use\r\n" // Static size: 36
+#define ERR_NICKNAMEINUSE ":ft_irc 433 %s :Nickname is already in use\r\n" // Static size: 45
 
 #define ERR_NICKCOLLISION ":ft_irc 436 %s :Nickname collision KILL from %s@%s\r\n" // Static size: 45
 
@@ -88,15 +88,15 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_USERSDISABLED ":ft_irc 446 :USERS has been disabled\r\n" // Static size: 29
 
-#define ERR_NOTREGISTERED ":ft_irc 451 :You have not registered\r\n" // Static size: 30
+#define ERR_NOTREGISTERED ":ft_irc 451 :You have not registered\r\n" // Static size: 39
 
-#define ERR_NEEDMOREPARAMS ":ft_irc 461 %s :Not enough parameters\r\n" // Static size: 33
+#define ERR_NEEDMOREPARAMS ":ft_irc 461 %s :Not enough parameters\r\n" // Static size: 41
 
-#define ERR_ALREADYREGISTRED ":ft_irc 462 :Unauthorized command (already registered)\r\n" // Static size: 44
+#define ERR_ALREADYREGISTRED ":ft_irc 462 :Unauthorized command (already registered)\r\n" // Static size: 57
 
-#define ERR_NOPERMFORHOST ":ft_irc 463 :Your host isn't among the privileged\r\n" // Static size: 43
+#define ERR_NOPERMFORHOST ":ft_irc 463 :Your host isn't among the privileged\r\n" // Static size: 53
 
-#define ERR_PASSWDMISMATCH ":ft_irc 464 :Password incorrect\r\n" // Static size: 31
+#define ERR_PASSWDMISMATCH ":ft_irc 464 :Password incorrect\r\n" // Static size: 34
 
 #define ERR_YOUREBANNEDCREEP ":ft_irc 465 :You are banned from this server\r\n" // Static size: 35
 
@@ -104,9 +104,9 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_KEYSET ":ft_irc 467 %s :Channel key already set\r\n" // Static size: 35
 
-#define ERR_CHANNELISFULL ":ft_irc 471 %s :Cannot join channel (+l)\r\n" // Static size: 34
+#define ERR_CHANNELISFULL ":ft_irc 471 %s :Cannot join channel (+l)\r\n" // Static size: 44
 
-#define ERR_UNKNOWNMODE ":ft_irc 472 %s :is unknown mode char to me for %s\r\n" // Static size: 39
+#define ERR_UNKNOWNMODE ":ft_irc 472 %s :is unknown mode char to me for %s\r\n" // Static size: 53
 
 #define ERR_INVITEONLYCHAN ":ft_irc 473 %s :Cannot join channel (+i)\r\n" // Static size: 33
 

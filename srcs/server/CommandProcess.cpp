@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 21:42:16 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:15:46 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 void Server::processCommand(std::string buffer, int clientSocket)
 {
 	std::string command = buffer.substr(0, buffer.find(" "));
-	std::string args = buffer.substr(buffer.find(" ") + 1);
+	std::string args = buffer.length() > command.length() ? buffer.substr(command.length() + 1) : "";
+	args.erase(0, args.find_first_not_of(" \t"));
+
+	std::cout << YELLOW << "[DEBUG Command:] " << command << RESET << std::endl;
+	std::cout << YELLOW << "[DEBUG Args:] " << args << RESET << std::endl;
 
 	if (getClientIndex(clientSocket) == -1) //not registered (not in _clients, pass not inserted)
 	{
-		std::cout << YELLOW << "[DEBUG 1 Command: ]" << command << std::endl;
 		if (command != "PASS" && command != "CAP" && command != "PING")
-			return send(clientSocket, ERR_NOTREGISTERED, 55, 0), void();
+			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
 		else if (command == "PASS")
 			Pass(args, clientSocket);
 		else if (command == "PING")
@@ -31,10 +34,8 @@ void Server::processCommand(std::string buffer, int clientSocket)
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
-		std::cout << YELLOW << "[DEBUG 2 Command: ]" << command << std::endl;
-
 		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS")
-			return send(clientSocket, ERR_NOTREGISTERED, 55, 0), void();
+			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
 		else if (command == "NICK")
 			Nick(args, clientSocket);
 		else if (command == "USER")
@@ -48,8 +49,6 @@ void Server::processCommand(std::string buffer, int clientSocket)
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 1)
 	{
-		std::cout << YELLOW << "[DEBUG 3 Command: ]" << command << std::endl;
-
 		if (command == "Pass")
 			Pass(args, clientSocket);
 		else if (command == "NICK")

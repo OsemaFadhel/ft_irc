@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/24 21:51:44 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 19:15:32 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,7 @@ std::string Server::hashPassword(const std::string& password) const
 
 /* RUN ****************************************************************** */
 
-//ORDER OF WHAT IT SHOULD HAPPEN IN THE RUN FUNCTION
-	/*tcp_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-
+/*RDER OF WHAT IT SHOULD HAPPEN IN THE RUN FUNCTION
 	DESCRIPTION
 	This is an implementation of the TCP protocol defined in RFC 793,
 	RFC 1122 and RFC 2001 with the NewReno and SACK extensions.
@@ -113,7 +111,7 @@ void Server::createSocket()
 	// AF_INET6: It specifies the IPv6 protocol family.
 	// SOCK_STREAM: It defines that the TCP type socket.
 
-	_serverSocket = socket(AF_INET6, SOCK_STREAM, 0); //tcp socket v6
+	_serverSocket = socket(AF_INET, SOCK_STREAM, 0); //tcp socket v6
 	if (_serverSocket == -1)
 		throw std::runtime_error("Failed to create the socket");
 
@@ -124,15 +122,10 @@ void Server::createSocket()
 		throw std::runtime_error("Failed to set socket options");
 
 
-	//We then define the server address using the following set of statements
-	/*sockaddr_in: It is the data type that is used to store the address of the socket. SEE SERVER.HPP
-	htons(): This function is used to convert the unsigned int from machine byte order to network byte order.
-	INADDR_ANY: It is used when we don’t want to bind our socket to any particular IP and instead make it listen to all the available IPs.*/
-
 	std::memset(&_serverAddr, 0, sizeof(_serverAddr));
-	_serverAddr.sin6_family = AF_INET6;
-	_serverAddr.sin6_addr = in6addr_any;
-	_serverAddr.sin6_port = htons(_port);
+	_serverAddr.sin_family = AF_INET;
+	_serverAddr.sin_addr.s_addr = INADDR_ANY;
+	_serverAddr.sin_port = htons(_port);
 
 	//fcntl(_serverSocket, F_SETFL, O_NONBLOCK); //non blocking
 

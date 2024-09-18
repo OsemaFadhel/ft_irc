@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 21:42:56 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:15:19 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,6 @@ void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
 {
 	(void)readSize;
 	(void)clientSocket;
-	std::cout << YELLOW << "[DEBUG] Command: " << buffer << std::endl;
-
-	std::string cap = ":" + SERVERNAME + " CAP * LS \r\n";
-	std::string ping = "PONG " + SERVERNAME + "\r\n";
-	send(clientSocket, cap.c_str(), cap.length(), 0);
-	send(clientSocket, ping.c_str(), ping.length(), 0);
 
 	std::vector<std::string> vector = splitCommand(buffer);
 

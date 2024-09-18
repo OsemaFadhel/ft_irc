@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/22 12:44:57 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 18:10:24 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ std::string Client::getUsername() const
 	return _username;
 }
 
+std::string Client::getRealName() const
+{
+	return _realname;
+}
+
 std::string Client::getBuffer() const
 {
 	return _buffer;
@@ -54,6 +59,11 @@ void Client::setNickname(const std::string& nickname)
 void Client::setUsername(const std::string& username)
 {
 	_username = username;
+}
+
+void Client::setRealName(const std::string& realname)
+{
+	_realname = realname;
 }
 
 void Client::setBuffer(const std::string& buffer)

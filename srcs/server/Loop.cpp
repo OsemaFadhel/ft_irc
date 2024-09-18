@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 20:12:54 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 19:16:34 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 	while (1)
 	{
 		setMaxfds(maxfds, readfds);
-
-		//The select() call is used to monitor multiple file descriptors,
-		//waiting until one or more of the file descriptors become "ready" for some class of I/O operation.
+		
 		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
 		if (selectfd == -1)
@@ -57,15 +55,8 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 			std::cout << "Timeout expired before any file descriptors became ready" << std::endl;
 		else
 		{
-			// Check if the fd with event is the server fd
-			// Check if there is activity on the server socket (new connection)
-			//The FD_ISSET() macro is used to check if a file descriptor is part of the set of file descriptors passed to the select() call.
-			//The accept() call is used to accept the connection request that is recieved on the socket the application was listening to.
-
 			if (FD_ISSET(_serverSocket, &readfds) && acceptClient(&selectfd) == 1)
 				continue;
-
-			// Check activity on client sockets
 
 			checkClientActivity(readfds);
 		}

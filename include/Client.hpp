@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/15 18:27:46 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:10:06 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class Client
 		std::string _buffer;
 		std::string _nickname;
 		std::string _username;
+		std::string _realname;
 		int _isRegistered; // 0 if not registered (only pass inserted), 1 if registered (nick and user inserted)
 		//for all other commands, check if registered.
 		//std::string _password;
@@ -38,12 +39,14 @@ class Client
 		int getFd() const;
 		std::string getNickname() const;
 		std::string getUsername() const;
+		std::string getRealName() const;
 		std::string getBuffer() const;
 		int getIsRegistered() const;
 		//std::string getPassword() const;
 
 		void setNickname(const std::string& nickname);
 		void setUsername(const std::string& username);
+		void setRealName(const std::string& realname);
 		void setBuffer(const std::string& buffer);
 		void setIsRegistered(int isRegistered);
 		void clearBuffer();
