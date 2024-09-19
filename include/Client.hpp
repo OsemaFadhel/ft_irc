@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 18:10:06 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/18 22:01:15 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
+
+# define CHAR_FOR_CHANNEL_FIRST_LETTER "&#+!"
+# define BAD_CHAR_FOR_CHANNEL " ,:"
+
 
 #include "iostream"
 #include "Server.hpp"

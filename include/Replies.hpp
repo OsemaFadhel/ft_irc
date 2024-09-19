@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 19:05:43 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/19 15:04:01 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_BADCHANNELKEY ":ft_irc 475 %s :Cannot join channel (+k)\r\n" // Static size: 34
 
-#define ERR_BADCHANMASK ":ft_irc 476 %s :Bad Channel Mask\r\n" // Static size: 31
+#define ERR_BADCHANMASK ":ft_irc 476 %s :Bad Channel Mask\r\n" // Static size: 43
 
 #define ERR_NOCHANMODES ":ft_irc 477 %s :Channel doesn't support modes\r\n" // Static size: 36
 
@@ -137,3 +137,7 @@ std::string constructMessage(const std::string& format, ...);
 #define ERR_USERSDONTMATCH ":ft_irc 502 :Cannot change mode for other users\r\n" // Static size: 36
 
 #endif
+
+
+//for more information look at the rfc to know more about the arguments
+//it needs to be used in the constructMessage function

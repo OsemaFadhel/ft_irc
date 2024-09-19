@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/17 23:15:16 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/19 23:14:59 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Channel
 		//*my idea is to put, the user and if it is an operator
 		std::vector< std::pair< Client, int> >	_usrData;
 		// std::map < std::string, Client* , std::string > _clients; //thinking name, client, operator or not
+		//topic, mode, password, limit are only setted by the operator so they will be intialized to empty
 		std::string								_name;
 		std::string								_topic;
 		std::string								_mode;
@@ -36,7 +37,7 @@ class Channel
 		//the constructor should have the vector in it too
 		//because a channel is created every time a user choose to create it
 		//by consequence the constructor sets the int value to 1(it means is an operator)
-		Channel(std::vector< std::pair< Client, int> > _usrData, std::string _name);
+		Channel(Client firstClient, std::string _name);
 		~Channel();
 		//copy constructor
 		Channel(const Channel& obj);
