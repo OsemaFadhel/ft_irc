@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 19:15:32 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/19 15:05:09 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,3 @@ void Server::run()
 	startLoop(readfds, maxfds);
 	//killServer();  //kill server close all sockets and free memory
 }
-
-
-

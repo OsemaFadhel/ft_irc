@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 19:02:48 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/19 15:09:04 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ class Server
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
+		void Quit(std::string args, int clientSocket);
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 19:16:34 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/19 15:10:30 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 	while (1)
 	{
 		setMaxfds(maxfds, readfds);
-		
+
 		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
 		if (selectfd == -1)
@@ -63,21 +63,3 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 	}
 }
 
-
-void Server::clientDisconnect(int clientSocket, size_t &i)
-{
-	_newfds.erase(_newfds.begin() + i);
-	Client *client = getClient(clientSocket);
-	if (client)
-	{
-		std::cout << RED << "[DEBUG] Client disconnected. Nickname: " << client->getNickname() << std::endl;
-		// Remove the client from all channels
-		/*for (size_t i = 0; i < _channels.size(); ++i)
-			_channels[i]->removeClient(client);*/
-		// Remove the client from the clients vector
-		if (getClientIndex(clientSocket) != -1)
-			_clients.erase(_clients.begin() + getClientIndex(clientSocket));
-	}
-	close(clientSocket);
-	--i; // Adjust index after removal
-}
