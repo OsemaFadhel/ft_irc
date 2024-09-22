@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/19 23:14:59 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:09:59 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,13 @@ class Channel
 {
 	private:
 		//*my idea is to put, the user and if it is an operator
-		std::vector< std::pair< Client, int> >	_usrData;
-		// std::map < std::string, Client* , std::string > _clients; //thinking name, client, operator or not
+		std::vector< std::pair< Client, int> >	_usrData; //the user and if it is an operator
 		//topic, mode, password, limit are only setted by the operator so they will be intialized to empty
-		std::string								_name;
-		std::string								_topic;
-		std::string								_mode;
-		std::string								_password;
-		int										_limit;
+		std::string								_name; //setted when the join command is called
+		std::string								_topic; //setted by the operator
+		std::string								_mode; //setted by the operator
+		std::string								_password; //setted by the operator
+		int										_limit; //setted by the operator
 	public:
 		//the constructor should have the vector in it too
 		//because a channel is created every time a user choose to create it
@@ -42,18 +41,20 @@ class Channel
 		//copy constructor
 		Channel(const Channel& obj);
 		//copy constructor operator
-		Client&	operator=(const Client& obj);
+		Channel&									operator=(const Channel& obj);
 		//getters and setters
-		std::string	getName() const;
-		std::string	getTopic() const;
-		std::string	getMode() const;
-		std::string	getPassword() const;
-		int			getLimit() const;
-		void		setName(const std::string& name);
-		void		setTopic(const std::string& topic);
-		void		setMode(const std::string& mode);
-		void		setPassword(const std::string& password);
-		void		setLimit(int limit);
+		std::string								getName() const;
+		std::string								getTopic() const;
+		std::string								getMode() const;
+		std::string								getPassword() const;
+		int										getLimit() const;
+		std::vector< std::pair< Client, int> >	getUsrData() const;
+		void									setName(const std::string& name);
+		void									setTopic(const std::string& topic);
+		void									setMode(const std::string& mode);
+		void									setPassword(const std::string& password);
+		void									setLimit(int limit);
+		void									setUsrData(std::vector< std::pair< Client, int> > usrData);
 
 		/*something like this. each client has a channel
 		so from the client class, we can call the channel class
@@ -71,7 +72,8 @@ class Channel
 		 o: Give/take channel operator privilege
 		 l: Set/remove the user limit to channel
 		*/
-
+		//optional functions for outputs
+		void		printClients();
 };
 
 #endif

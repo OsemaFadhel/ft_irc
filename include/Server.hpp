@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 19:49:55 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/22 14:19:23 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 #include "Channel.hpp"
 #include "Replies.hpp"
 #include <arpa/inet.h>
+#include <utility>
 
 # define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")

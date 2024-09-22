@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 22:01:15 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:02:16 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@
 #include "Server.hpp"
 #include "Channel.hpp"
 
-class Channel;
 
 class Client
 {
 	private:
-		int _fd;
+		int			_fd;
 		std::string _buffer;
 		std::string _nickname;
 		std::string _username;
@@ -36,7 +35,6 @@ class Client
 		//std::string _password;
 		//std::string hashPassword(const std::string& password) const;
 		//std::string _role; dont know if we need this here or in channel
-		std::vector < Channel* > _channels; //lo dovrebbe gestire il server
 	public:
 		Client(int fd);
 		~Client();
@@ -59,5 +57,6 @@ class Client
 		//void setPassword(const std::string& password);
 		//bool verifyPassword(const std::string& password) const;
 };
+		std::ostream&	operator<<(std::ostream& os, const Client& client);
 
 #endif
