@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 12:19:50 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:31:01 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 
 	if (getClientIndex(clientSocket) == -1) //not registered (not in _clients, pass not inserted)
 	{
-		if (command != "PASS" && command != "CAP" && command != "PING")
+		if (command != "PASS" && command != "CAP" && command != "PING" && command != "QUIT")
 			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
 		else if (command == "PASS")
 			Pass(args, clientSocket);
@@ -31,10 +31,12 @@ void Server::processCommand(std::string buffer, int clientSocket)
 			Ping(getClient(clientSocket), clientSocket, args);
 		else if (command == "CAP")
 			Cap(clientSocket);
+		else if (command == "QUIT")
+			Quit(args, clientSocket);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
-		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS")
+		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS" && command != "QUIT")
 			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
 		else if (command == "NICK")
 			Nick(args, clientSocket);
@@ -46,6 +48,8 @@ void Server::processCommand(std::string buffer, int clientSocket)
 			Ping(getClient(clientSocket), clientSocket, args);
 		else if (command == "CAP")
 			Cap(clientSocket);
+		else if (command == "QUIT")
+			Quit(args, clientSocket);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 1)
 	{
@@ -59,6 +63,8 @@ void Server::processCommand(std::string buffer, int clientSocket)
 			Ping(getClient(clientSocket), clientSocket, args);
 		else if (command == "CAP")
 			Cap(clientSocket);
+		else if (command == "QUIT")
+			Quit(args, clientSocket);
 		else if (command == "JOIN")
 			Join(args, clientSocket);
 			//Join function (Client, Name) here is the next step

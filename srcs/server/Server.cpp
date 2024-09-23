@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 19:15:32 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/23 12:29:54 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ Client* Server::getClient(int clientSocket)
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		if (_clients[i]->getFd() == clientSocket)
-			return _clients[i];
+		if (_clients[i].getFd() == clientSocket)
+			return &_clients[i];
 	}
 	return NULL;
 }
@@ -50,7 +50,7 @@ int Server::getClientIndex(int clientSocket)
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		if (_clients[i]->getFd() == clientSocket)
+		if (_clients[i].getFd() == clientSocket)
 			return i;
 	}
 	return -1;
@@ -154,6 +154,3 @@ void Server::run()
 	startLoop(readfds, maxfds);
 	//killServer();  //kill server close all sockets and free memory
 }
-
-
-

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 13:52:39 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:25:59 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ class Server
 		int _port;
 		int _serverSocket; //tcp
 		std::string _password;
-		std::vector < Client* > _clients;
-		std::vector < Channel > _channels;
+		std::vector < Client > _clients;
+		std::vector < Channel* > _channels;
 		std::vector < socketdata > _newfds;
 		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
@@ -96,6 +96,7 @@ class Server
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
+		void Quit(std::string args, int clientSocket);
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);

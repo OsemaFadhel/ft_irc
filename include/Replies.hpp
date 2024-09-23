@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/19 15:04:01 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:26:45 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_NOTONCHANNEL ":ft_irc 442 %s :You're not on that channel\r\n" // Static size: 33
 
-#define ERR_USERONCHANNEL ":ft_irc 443 %s %s :is already on channel\r\n" // Static size: 33
+#define ERR_USERONCHANNEL ":ft_irc 443 %s %s :is already on channel\r\n" // Static size: 43
 
 #define ERR_NOLOGIN ":ft_irc 444 %s :User not logged in\r\n" // Static size: 28
 
@@ -112,7 +112,7 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_BANNEDFROMCHAN ":ft_irc 474 %s :Cannot join channel (+b)\r\n" // Static size: 34
 
-#define ERR_BADCHANNELKEY ":ft_irc 475 %s :Cannot join channel (+k)\r\n" // Static size: 34
+#define ERR_BADCHANNELKEY ":ft_irc 475 %s :Cannot join channel (+k)\r\n" // Static size: 43
 
 #define ERR_BADCHANMASK ":ft_irc 476 %s :Bad Channel Mask\r\n" // Static size: 43
 
