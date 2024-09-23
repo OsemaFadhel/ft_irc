@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/19 15:09:04 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/23 12:27:49 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class Server
 		int _port;
 		int _serverSocket; //tcp
 		std::string _password;
-		std::vector < Client* > _clients;
+		std::vector < Client > _clients;
 		std::vector < Channel* > _channels;
 		std::vector < socketdata > _newfds;
 		std::string hashPassword(const std::string& password) const;
