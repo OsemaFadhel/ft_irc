@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/22 17:06:09 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:02:56 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void	Channel::setUsrData(std::vector< std::pair< Client, int> > usrData)
 
 
 /* to implement:
-		void		join
+		void		join should i save the channel that are passed? how though
 		void		kick(Client* client); // kick client
 		void		invite(Client* client); // invite client
 		void		topic(Client* client, const std::string& topic); // change or view topic

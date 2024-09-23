@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/22 15:09:59 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:56:42 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,12 @@ class Channel
 		std::string								_password; //setted by the operator
 		int										_limit; //setted by the operator
 	public:
-		//the constructor should have the vector in it too
-		//because a channel is created every time a user choose to create it
-		//by consequence the constructor sets the int value to 1(it means is an operator)
 		Channel(Client firstClient, std::string _name);
 		~Channel();
 		//copy constructor
 		Channel(const Channel& obj);
 		//copy constructor operator
-		Channel&									operator=(const Channel& obj);
+		Channel&								operator=(const Channel& obj);
 		//getters and setters
 		std::string								getName() const;
 		std::string								getTopic() const;
