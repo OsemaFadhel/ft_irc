@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 16:31:01 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/23 20:32:23 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
 		else if (command == "JOIN")
-			Join(args, clientSocket);
+			Join(args, clientSocket, _channels);
 			//Join function (Client, Name) here is the next step
 	}
 }

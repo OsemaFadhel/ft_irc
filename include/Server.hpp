@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 16:25:59 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/23 20:12:09 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ class Server
 		int _serverSocket; //tcp
 		std::string _password;
 		std::vector < Client > _clients;
-		std::vector < Channel* > _channels;
+		//how to server that is the main object iteracts with the channels?
+		std::vector < Channel > _channels;
 		std::vector < socketdata > _newfds;
 		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
@@ -108,7 +109,7 @@ class Server
 				JOIN <channel>,....  <key>,....
 				between channel and key there is a space that's how we can differentiate them
 		*/
-		void Join(std::string args, int	clientSocket);
+		void Join(std::string args, int	clientSocket, std::vector < Channel > _channels);
 };
 
 // Macros for ANSI escape codes
