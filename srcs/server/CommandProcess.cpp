@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 19:49:14 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/22 19:00:12 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,6 @@ void Server::processCommand(std::string buffer, int clientSocket)
 			Ping(getClient(clientSocket), clientSocket, args);
 		else if (command == "CAP")
 			Cap(clientSocket);
-		//Nicotera(cmd, args, clientSocket);
+		//Join function (Client, Name) here is the next step
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 15:15:19 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/22 18:59:04 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,15 @@ std::vector<std::string> Server::splitCommand(std::string &command)
 	std::string delimiter = "\r\n";
 	size_t pos = 0;
 	std::string token;
-
+	//why the commands are messed up???? let's discover why in the future
 	while ((pos = command.find(delimiter)) != std::string::npos)
 	{
 		token = command.substr(0, pos);
 		vector.push_back(token);
 		command.erase(0, pos + delimiter.length());
 	}
+	for (int i = 0; i < (int)vector.size(); i++)
+		std::cout<<"read values in splitcmd "<<vector[i]<<std::endl;
 	return vector;
 }
 

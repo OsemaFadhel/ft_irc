@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/22 15:26:48 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/22 17:06:09 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,14 +133,55 @@ void	Channel::printClients()
 	}
 }
 
+
+void	Channel::setName(const std::string& name)
+{
+	_name = name;
+}
+
+void	Channel::setTopic(const std::string& topic)
+{
+	_topic = topic;
+}
+
+void	Channel::setMode(const std::string& mode)
+{
+	_mode = mode;
+}
+
+void	Channel::setPassword(const std::string& password)
+{
+	_password = password;
+}
+
+void	Channel::setLimit(int limit)
+{
+	_limit = limit;
+}
+
+void	Channel::setUsrData(std::vector< std::pair< Client, int> > usrData)
+{
+	_usrData = usrData;
+}
+
+
+
 /* to implement:
-		void		setName(const std::string& name);
-		void		setTopic(const std::string& topic);
-		void		setMode(const std::string& mode);
-		void		setPassword(const std::string& password);
-		void		setLimit(int limit);
+		void		join
 		void		kick(Client* client); // kick client
 		void		invite(Client* client); // invite client
 		void		topic(Client* client, const std::string& topic); // change or view topic
 		void		mode(Client* client, const std::string& mode); // change mode
+		mode:
+		 i: Set/remove Invite-only channel
+		 m: Set/remove moderated channel
+		 n: Set/remove channel name changes
+		 p: Set/remove private channel
+		 s: Secret channel
+		 t: Set/remove topic set by channel operator only
+		 k <key>: Set/remove the channel key (password)
+		 l <limit>: Set the user limit to channel
+
+		PRIVMSG
+
 */

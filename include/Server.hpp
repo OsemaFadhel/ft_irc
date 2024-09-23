@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/22 14:19:23 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/22 18:13:30 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ class Server
 		int _serverSocket; //tcp
 		std::string _password;
 		std::vector < Client* > _clients;
-		std::vector < Channel* > _channels;
+		std::vector < Channel > _channels;
 		std::vector < socketdata > _newfds;
 		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
@@ -99,6 +99,15 @@ class Server
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
+
+		/*Join command by lnicoter*/
+		/* Join behaviour
+			Syntax:
+				JOIN <channel>,....
+				JOIN <channel>,....  <key>,....
+				between channel and key there is a space that's how we can differentiate them
+		*/
+		void Join(std::string args, int clientSocket);
 };
 
 // Macros for ANSI escape codes
