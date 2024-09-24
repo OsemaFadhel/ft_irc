@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:08:31 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/19 15:23:39 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/09/24 14:18:32 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,11 @@ void Server::Quit(std::string args, int clientSocket)
 			break;
 		}
 	}
-	Client *client = getClient(clientSocket);
-	if (client)
-	{
-		//std::string message = constructMessage(RPL_QUIT, client->getNickname().c_str(), args.c_str());
-		//send(clientSocket, message.c_str(), message.size(), 0);
-		//broadcast(clientSocket, message);
-		_clients.erase(_clients.begin() + getClientIndex(clientSocket));
-	}
+	Client client = getClient(clientSocket);
+	//std::string message = constructMessage(RPL_QUIT, client->getNickname().c_str(), args.c_str());
+	//send(clientSocket, message.c_str(), message.size(), 0);
+	//broadcast(clientSocket, message);
+	_clients.erase(_clients.begin() + getClientIndex(clientSocket));
+
 	close(clientSocket);
 }

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 20:32:23 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:16:48 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
 	}
-	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
+	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket).getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
 		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS" && command != "QUIT")
 			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
@@ -51,7 +51,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
 	}
-	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 1)
+	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket).getIsRegistered() == 1)
 	{
 		if (command == "Pass")
 			Pass(args, clientSocket);

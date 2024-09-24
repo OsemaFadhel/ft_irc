@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 22:05:47 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:21:32 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ int Server::getPort() const
 	return _port;
 }
 
-Client* Server::getClient(int clientSocket)
+Client Server::getClient(int clientSocket)
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
 		if (_clients[i].getFd() == clientSocket)
-			return &_clients[i];
+			return _clients[i];
 	}
-	return NULL;
+	return 0;
 }
 
 int Server::getClientIndex(int clientSocket)

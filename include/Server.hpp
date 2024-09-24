@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 20:12:09 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/24 12:27:10 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ class Server
 		int getPort() const;
 		void setPassword(const std::string& password);
 		bool verifyPassword(const std::string& password) const;
-		Client* getClient(int clientSocket);
+		Client getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
 
 		void run();
@@ -96,7 +96,7 @@ class Server
 
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
-		void Ping(Client *client, int clientSocket, std::string &message);
+		void Ping(Client client, int clientSocket, std::string &message);
 		void Quit(std::string args, int clientSocket);
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
@@ -109,7 +109,8 @@ class Server
 				JOIN <channel>,....  <key>,....
 				between channel and key there is a space that's how we can differentiate them
 		*/
-		void Join(std::string args, int	clientSocket, std::vector < Channel > _channels);
+		void	Join(std::string args, int	clientSocket, std::vector < Channel > _channels);
+		void	channelParser(std::string &args);
 };
 
 // Macros for ANSI escape codes

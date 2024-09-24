@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/09/23 22:09:06 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:21:19 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,19 @@ the channel
 At the end i just made some checks to understand how many client the server socket could handle
 it seems it depends only from the protocol that's it
 
-- tomorrow we will start to do the join better though more focused on that
+- tomorrow we will start to do the join better though, i will be more focused on that
+- In the rfc the amount of channels and keys you can ienter is not defined
+- But you can insert keys only if you have one channel and you can't put more keys
+- than the number of channels you put
 */
+#include "../../../include/Server.hpp"
+
+// void	channelParser(std::string &args)
+
 void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > _channels)
 {
-
-	(void)clientSocket;
-	(void)args;
-	(void)_channels;
-
+	Client	clientToInsert = getClient(clientSocket);
+	(void) args;
+	(void) clientToInsert;
+	(void) _channels;
 }
