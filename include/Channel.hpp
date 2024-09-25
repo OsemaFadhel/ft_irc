@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/25 14:43:06 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:25:56 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ class Channel
 		*/
 		//optional functions for outputs
 		void		printClients();
+		int			isInChannel(Client client);
 };
 
 #endif

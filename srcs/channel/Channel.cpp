@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 12:02:56 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:51:17 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,15 @@ void	Channel::setUsrData(std::vector< std::pair< Client, int> > usrData)
 	_usrData = usrData;
 }
 
-
+int			Channel::isInChannel(Client client)
+{
+	for (size_t i = 0; i < _usrData.size(); i++)
+	{
+		if (_usrData[i].first.getNickname() == client.getNickname())
+			return 1;
+	}
+	return 0;
+}
 
 /* to implement:
 		void		join should i save the channel that are passed? how though
