@@ -6,11 +6,21 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/24 14:16:48 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/25 11:49:27 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
+
+/*
+It seems that the process part is not going as expected
+i tried doing some tests and the processing of the command
+is pretty anomalous
+for example:
+	- I try to identify myself and it doesn't work and sometimes it does
+	- The join command is never called and i don't know why
+*/
+
 
 void Server::processCommand(std::string buffer, int clientSocket)
 {
@@ -23,7 +33,8 @@ void Server::processCommand(std::string buffer, int clientSocket)
 
 	if (getClientIndex(clientSocket) == -1) //not registered (not in _clients, pass not inserted)
 	{
-		if (command != "PASS" && command != "CAP" && command != "PING" && command != "QUIT")
+		if (command != "PASS" && command != "CAP" && command != "PING" && command != "QUIT"
+			&& command != "JOIN")
 			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
 		else if (command == "PASS")
 			Pass(args, clientSocket);
@@ -33,10 +44,13 @@ void Server::processCommand(std::string buffer, int clientSocket)
 			Cap(clientSocket);
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
+		else if (command == "JOIN")
+			Join(args, clientSocket, _channels);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket).getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
-		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS" && command != "QUIT")
+		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS"
+			&& command != "QUIT" && command != "JOIN")
 			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
 		else if (command == "NICK")
 			Nick(args, clientSocket);
@@ -50,10 +64,12 @@ void Server::processCommand(std::string buffer, int clientSocket)
 			Cap(clientSocket);
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
+		else if (command == "JOIN")
+			Join(args, clientSocket, _channels);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket).getIsRegistered() == 1)
 	{
-		if (command == "Pass")
+		if (command == "PASS")
 			Pass(args, clientSocket);
 		else if (command == "NICK")
 			Nick(args, clientSocket);
@@ -67,6 +83,5 @@ void Server::processCommand(std::string buffer, int clientSocket)
 			Quit(args, clientSocket);
 		else if (command == "JOIN")
 			Join(args, clientSocket, _channels);
-			//Join function (Client, Name) here is the next step
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/24 12:27:10 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/24 17:20:42 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ class Server
 				between channel and key there is a space that's how we can differentiate them
 		*/
 		void	Join(std::string args, int	clientSocket, std::vector < Channel > _channels);
-		void	channelParser(std::string &args);
+		std::vector< std::string >	channelParser(std::string args);
 };
 
 // Macros for ANSI escape codes

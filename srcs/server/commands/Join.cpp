@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/09/24 14:21:19 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/25 12:52:32 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,41 @@ it seems it depends only from the protocol that's it
 */
 #include "../../../include/Server.hpp"
 
-// void	channelParser(std::string &args)
+std::vector<std::string>	Server::channelParser(std::string args)
+{
+	//substr e find per spostare il puntatore alla prima virgola
+	std::vector < std::string > numOfChannels;
+	// for (size_t i = 0; i != std::string::npos; i = args.find(","))
+	size_t	i = 0;
+	//loop for channels
+	while (i != std::string::npos)
+	{
+		size_t pos = args.find_first_of(" ,", i);
+		if (pos != std::string::npos)
+		{
+			std::string temp = args.substr(i);
+			// numOfChannels.push_back(args.substr(i));
+			std::cout << "temp: " << temp << std::endl;
+			numOfChannels.push_back(temp);
+			i = pos + 1;
+		}
+		else
+		{
+			std::string temp = args.substr(i, pos - i);
+			// numOfChannels.push_back(args.substr(i, pos - i));
+			std::cout << "temp: " << temp << std::endl;
+			numOfChannels.push_back(temp);
+			break;
+		}
+	}
+	return (numOfChannels);
+}
 
 void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > _channels)
 {
 	Client	clientToInsert = getClient(clientSocket);
-	(void) args;
-	(void) clientToInsert;
-	(void) _channels;
+	std::vector < std::string > numOfChannels;
+
+	numOfChannels = channelParser(args);
+	(void)_channels;
 }
