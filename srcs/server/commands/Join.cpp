@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/09/25 12:52:32 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:00:30 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		size_t pos = args.find_first_of(" ,", i);
 		if (pos != std::string::npos)
 		{
-			std::string temp = args.substr(i);
+			std::string temp = args.substr(i, pos - i);
 			// numOfChannels.push_back(args.substr(i));
 			std::cout << "temp: " << temp << std::endl;
+
 			numOfChannels.push_back(temp);
 			i = pos + 1;
 		}
@@ -61,6 +62,8 @@ std::vector<std::string>	Server::channelParser(std::string args)
 			break;
 		}
 	}
+	for (size_t i = 0; i < numOfChannels.size(); i++)
+		std::cout << "numOfChannels: " << numOfChannels[i] << std::endl;
 	return (numOfChannels);
 }
 
