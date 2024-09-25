@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/09/25 13:00:30 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/25 14:59:31 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,19 @@ it seems it depends only from the protocol that's it
 std::vector<std::string>	Server::channelParser(std::string args)
 {
 	//substr e find per spostare il puntatore alla prima virgola
+
 	std::vector < std::string > numOfChannels;
-	// for (size_t i = 0; i != std::string::npos; i = args.find(","))
+	std::string onlyChannels = args.substr(0, args.find_first_of(" "));
+	// std::vector < std::string > keys;
 	size_t	i = 0;
 	//loop for channels
 	while (i != std::string::npos)
 	{
-		size_t pos = args.find_first_of(" ,", i);
+		size_t pos = onlyChannels.find_first_of(",", i);
 		if (pos != std::string::npos)
 		{
-			std::string temp = args.substr(i, pos - i);
-			// numOfChannels.push_back(args.substr(i));
+			std::string temp = onlyChannels.substr(i, pos - i);
+			// numOfChannels.push_back(onlyChannels.substr(i));
 			std::cout << "temp: " << temp << std::endl;
 
 			numOfChannels.push_back(temp);
@@ -55,23 +57,76 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		}
 		else
 		{
-			std::string temp = args.substr(i, pos - i);
-			// numOfChannels.push_back(args.substr(i, pos - i));
+			std::string temp = onlyChannels.substr(i, pos - i);
+			// numOfChannels.push_back(onlyChannels.substr(i, pos - i));
 			std::cout << "temp: " << temp << std::endl;
 			numOfChannels.push_back(temp);
 			break;
 		}
 	}
+
+	//loop for keys
+	// while (i != std::string::npos)
+	// {
+	// 	size_t pos = args.find_first_of(",", i);
+	// 	if (pos != std::string::npos)
+	// 	{
+	// 		// std::string temp = args.substr(i, pos - i);
+	// 		numOfChannels.push_back(args.substr(i));
+	// 		// std::cout << "temp: " << temp << std::endl;
+
+	// 		// keys.push_back(temp);
+	// 		i = pos + 1;
+	// 	}
+	// 	else
+	// 	{
+	// 		// std::string temp = args.substr(i, pos - i);
+	// 		numOfChannels.push_back(args.substr(i, pos - i));
+	// 		// std::cout << "temp: " << temp << std::endl;
+	// 		// keys.push_back(temp);
+	// 		break;
+	// 	}
+	// }
+	//new problem i return only one vector
 	for (size_t i = 0; i < numOfChannels.size(); i++)
 		std::cout << "numOfChannels: " << numOfChannels[i] << std::endl;
 	return (numOfChannels);
+}
+
+
+std::vector< std::string >	Server::keyParser(std::string args)
+{
+	std::vector < std::string > keys;
+	size_t	i = 0;
+	//loop for keys
+	while (i != std::string::npos)
+	{
+		size_t pos = args.find_first_of(",", i);
+		if (pos != std::string::npos)
+		{
+			std::string temp = args.substr(i, pos - i);
+			keys.push_back(temp);
+			i = pos + 1;
+		}
+		else
+		{
+			std::string temp = args.substr(i, pos - i);
+			keys.push_back(temp);
+			break;
+		}
+	}
+	for (size_t i = 0; i < keys.size(); i++)
+		std::cout << "keys: " << keys[i] << std::endl;
+	return (keys);
 }
 
 void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > _channels)
 {
 	Client	clientToInsert = getClient(clientSocket);
 	std::vector < std::string > numOfChannels;
+	std::vector < std::string > keys;
 
 	numOfChannels = channelParser(args);
+	keys = keyParser(args);
 	(void)_channels;
 }
