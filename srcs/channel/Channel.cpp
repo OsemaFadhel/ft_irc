@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/26 15:52:38 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:41:29 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 Missing checks:
 	checks are correct the function in the join file must be
 	changed
+It seems the channel is not inserted correctly but i'm building it and i'm
+sure of it so i should isolate and check better
 */
 Channel::Channel(Client firstClient, std::string _name)
 {
@@ -61,11 +63,11 @@ Channel::Channel(Client firstClient, std::string _name)
 		std::string errMess = constructMessage(ERR_BADCHANMASK, _name);
 		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 	}
-	_name = _name;
+	//porco due prossima volta usa this oppure metti un altro nome per la variabile passata
+	this->_name = _name;
 	_topic = "";
 	_mode = "";
 	_password = "";
-	std::cout<<"channel name "<<_name<<std::endl;
 }
 
 

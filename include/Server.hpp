@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/25 16:59:15 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:24:34 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,9 @@ class Server
 		std::vector< std::string >			channelParser(std::string args);
 		std::vector< std::string >			keyParser(std::string args);
 		void	checkChannelExist(std::vector< std::string > numberOfChannels, std::vector < Channel > _channels, Client clientToInsert);
+		//checking functions of server by lnicoter
+		void	valuesCheck(Client clientToInsert);
+
 };
 
 // Macros for ANSI escape codes
