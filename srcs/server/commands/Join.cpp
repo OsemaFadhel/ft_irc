@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/09/25 19:54:56 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:51:24 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,14 +99,19 @@ std::vector< std::string >	Server::keyParser(std::string args)
 //if the channel exist because if it doesn't exist i must create it and put it
 //in the _channels vector
 //if the channel exists i must check if the client is already in the channel
-//
+//the check is made but it seems to not work
 
-void	checkChannelExist(std::vector< std::string > numberOfChannels, std::vector < Channel > _channels, Client clientToInsert)
+
+void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, std::vector < Channel > _channels, Client clientToInsert)
 {
 	for (size_t i = 0; i < numberOfChannels.size(); i++)
 	{
 		if (_channels.size() == 0)
+		{
+			std::cout<<"Channel name: "<<numberOfChannels[i]<<std::endl;
 			_channels.push_back(Channel(clientToInsert, numberOfChannels[i]));
+			std::cout<<GREEN<<"Channel successfully created"<<RESET<<std::endl;
+		}
 		else
 		{
 			for (size_t j = 0; j < _channels.size(); j++)
@@ -121,12 +126,26 @@ void	checkChannelExist(std::vector< std::string > numberOfChannels, std::vector 
 					}
 					else
 					{
-
+						//!we are missing the checks for the keys like if the channel exists and stuff
+						_channels[j].addClient(clientToInsert);
+						std::cout<<GREEN<<"Client successfully added to the channel"<<RESET<<std::endl;
 					}
-
+				}
+				else
+				{
+					//it goes in an infinite lelseoop
+					_channels.push_back(Channel(clientToInsert, numberOfChannels[i]));
+					//the break is not the solution
+					break;
 				}
 			}
 		}
+	}
+	//no channels? something is wrong here
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		std::cout<<"Channel name: "<<_channels[i].getName()<<std::endl;
+		_channels[i].printClients();
 	}
 }
 
@@ -134,12 +153,12 @@ void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > _ch
 {
 	Client	clientToInsert = getClient(clientSocket);
 	std::vector < std::string > numOfChannels;
-	std::vector < std::string > keys;
+	// std::vector < std::string > keys;
 
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
-	keys = keyParser(args);
+	// keys = keyParser(args);
 
-
+	checkChannelExist(numOfChannels, _channels, clientToInsert);
 	(void)_channels;
 }

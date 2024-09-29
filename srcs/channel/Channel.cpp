@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/25 19:51:17 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:52:38 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 //   Command: JOIN
 //    Parameters: ( <channel> *( "," <channel> ) [ <key> *( "," <key> ) ] )
 //                / "0"
+
+/*
+Missing checks:
+	checks are correct the function in the join file must be
+	changed
+*/
 Channel::Channel(Client firstClient, std::string _name)
 {
 	//check name
@@ -23,6 +29,7 @@ Channel::Channel(Client firstClient, std::string _name)
 	//that do not appear here
 	std::string	charCheck = CHAR_FOR_CHANNEL_FIRST_LETTER;
 	std::string	badCharCheck = BAD_CHAR_FOR_CHANNEL;
+	int			syntaxFlag = 0;
 	//setting the first user as an operator
 	if (_usrData.size() == 0)
 		_usrData.push_back(std::make_pair(firstClient, 1));
@@ -35,17 +42,20 @@ Channel::Channel(Client firstClient, std::string _name)
 		for (size_t i = 0; i < charCheck.size(); i++)
 		{
 			if (_name[0] == charCheck[i])
-				break ;
+				syntaxFlag = 1;
 		}
-		std::string errMess = constructMessage(ERR_BADCHANMASK, _name);
-		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
+		if (syntaxFlag == 0)
+		{
+			std::string errMess = constructMessage(ERR_BADCHANMASK, _name);
+			send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
+		}
 	}
 	else
 	{
 		std::string errMess = constructMessage(ERR_NEEDMOREPARAMS, "JOIN");
 		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 	}
-	if (_name.find(badCharCheck[0], 0) || _name.find(badCharCheck[1], 0) || _name.find(badCharCheck[2], 0))
+	if (_name.find_first_of(badCharCheck) != std::string::npos)
 	{
 		//check for the name of the channel
 		std::string errMess = constructMessage(ERR_BADCHANMASK, _name);
@@ -55,6 +65,7 @@ Channel::Channel(Client firstClient, std::string _name)
 	_topic = "";
 	_mode = "";
 	_password = "";
+	std::cout<<"channel name "<<_name<<std::endl;
 }
 
 
@@ -174,6 +185,11 @@ int			Channel::isInChannel(Client client)
 	return 0;
 }
 
+
+void	Channel::addClient(Client client)
+{
+	_usrData.push_back(std::make_pair(client, 0));
+}
 /* to implement:
 		void		join should i save the channel that are passed? how though
 		void		kick(Client* client); // kick client
