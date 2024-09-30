@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/30 14:02:29 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 17:33:54 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
 		else if (command == "JOIN")
-			Join(args, clientSocket, _channels);
+			Join(args, clientSocket);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
@@ -65,7 +65,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
 		else if (command == "JOIN")
-			Join(args, clientSocket, _channels);
+			Join(args, clientSocket);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 1)
 	{
@@ -82,6 +82,6 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "QUIT")
 			Quit(args, clientSocket);
 		else if (command == "JOIN")
-			Join(args, clientSocket, _channels);
+			Join(args, clientSocket);
 	}
 }
