@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/24 14:18:20 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:42:40 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ void Server::checkClientActivity(fd_set& readfds)
 void Server::clientDisconnect(int clientSocket, size_t &i)
 {
 	_newfds.erase(_newfds.begin() + i);
-	Client client = getClient(clientSocket);
+	Client *client = getClient(clientSocket);
 
-	std::cout << RED << "[DEBUG] Client disconnected. Nickname: " << client.getNickname() << std::endl;
+	std::cout << RED << "[DEBUG] Client disconnected. Nickname: " << client->getNickname() << std::endl;
 	// Remove the client from all channels
 	/*for (size_t i = 0; i < _channels.size(); ++i)
 		_channels[i]->removeClient(client);*/

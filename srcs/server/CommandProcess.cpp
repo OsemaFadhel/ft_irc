@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/25 11:49:27 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:02:29 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "JOIN")
 			Join(args, clientSocket, _channels);
 	}
-	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket).getIsRegistered() == 0) //registered (in _clients, pass inserted)
+	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
 		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS"
 			&& command != "QUIT" && command != "JOIN")
@@ -67,7 +67,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "JOIN")
 			Join(args, clientSocket, _channels);
 	}
-	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket).getIsRegistered() == 1)
+	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 1)
 	{
 		if (command == "PASS")
 			Pass(args, clientSocket);

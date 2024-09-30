@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/09/29 19:42:32 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:20:31 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ std::vector< std::string >	Server::keyParser(std::string args)
 }
 
 //Troubleshooting:
-//the real anomaly is with the channels that are not inserted correctly
-//if we fix that we can fix the rest
+//the real anomaly is with the channels that are not inserted correctly [SOLVED]
+//if we fix that we can fix the rest [SOLVED]
 
 
 void	Server::valuesCheck(Client clientToInsert)
@@ -152,9 +152,11 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, std:
 	// }
 }
 
+
+//i push and then experiment as Osema said
 void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > _channels)
 {
-	Client	clientToInsert = getClient(clientSocket);
+	Client	*clientToInsert = getClient(clientSocket);
 	std::vector < std::string > numOfChannels;
 	// std::vector < std::string > keys;
 

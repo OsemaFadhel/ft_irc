@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/29 19:24:34 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:44:24 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ class Server
 		int _port;
 		int _serverSocket; //tcp
 		std::string _password;
-		std::vector < Client > _clients;
+		std::vector < Client* > _clients;
 		//how to server that is the main object iteracts with the channels?
 		std::vector < Channel > _channels;
 		std::vector < socketdata > _newfds;
@@ -74,7 +74,7 @@ class Server
 		int getPort() const;
 		void setPassword(const std::string& password);
 		bool verifyPassword(const std::string& password) const;
-		Client getClient(int clientSocket);
+		Client *getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
 
 		void run();
@@ -96,7 +96,7 @@ class Server
 
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
-		void Ping(Client client, int clientSocket, std::string &message);
+		void Ping(Client* client, int clientSocket, std::string &message);
 		void Quit(std::string args, int clientSocket);
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
