@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+         #
+#    By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/29 16:43:20 by ofadhel           #+#    #+#              #
-#    Updated: 2024/08/03 18:10:39 by ofadhel          ###   ########.fr        #
+#    Updated: 2024/09/30 16:29:39 by lnicoter         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRCS = $(shell find srcs -name '*.cpp')
 
 OBJS = $(SRCS:.cpp=.o)
 
-FLAGS = -Wall -Wextra -Werror -std=c++98
+FLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
 CC = g++
 

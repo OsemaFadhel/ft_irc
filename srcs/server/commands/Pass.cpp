@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:16:23 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/30 14:01:03 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 16:25:56 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void Server::Pass(std::string args, int clientSocket)
 		if (args[0] == ':')
 			args.erase(0, 1);
 		if (verifyPassword(args))
-			_clients.push_back(&Client(clientSocket));
+			_clients.push_back(new Client(clientSocket));
 		else
 			send(clientSocket, ERR_PASSWDMISMATCH, 34, 0);
 	}

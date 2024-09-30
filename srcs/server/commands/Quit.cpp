@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:08:31 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/24 14:18:32 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:55:12 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Server::Quit(std::string args, int clientSocket)
 			break;
 		}
 	}
-	Client client = getClient(clientSocket);
+	// Client *client = getClient(clientSocket);
 	//std::string message = constructMessage(RPL_QUIT, client->getNickname().c_str(), args.c_str());
 	//send(clientSocket, message.c_str(), message.size(), 0);
 	//broadcast(clientSocket, message);

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:41:15 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/24 14:19:46 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 16:31:41 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void Server::Cap(int clientSocket)
 {
-	if (getClient(clientSocket).getIsRegistered() == 1) //if logged in
+	if (getClient(clientSocket) && getClient(clientSocket)->getIsRegistered() == 1) //if logged in
 	{
-		std::string response = ":" + SERVERNAME + " CAP " + getClient(clientSocket).getNickname() + " LS :\r\n";
+		std::string response = ":" + SERVERNAME + " CAP " + getClient(clientSocket)->getNickname() + " LS :\r\n";
 		send(clientSocket, response.c_str(), response.length(), 0);
 		return;
 	}
