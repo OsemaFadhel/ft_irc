@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/09/30 16:35:20 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/09/30 17:29:49 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	Server::valuesCheck(Client clientToInsert)
 }
 
 
-void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, std::vector < Channel > _channels, Client clientToInsert)
+void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, std::vector < Channel > &_channels, Client clientToInsert)
 {
 	for (size_t i = 0; i < numberOfChannels.size(); i++)
 	{
@@ -155,7 +155,7 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, std:
 
 
 //i push and then experiment as Osema said
-void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > _channels)
+void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > &_channels)
 {
 	Client	*clientToInsert = getClient(clientSocket);
 	std::vector < std::string > numOfChannels;
@@ -164,8 +164,13 @@ void	Server::Join(std::string args, int	clientSocket, std::vector< Channel > _ch
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
 	// keys = keyParser(args);
-
+	//the vector is empty
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		std::cout<<"let's go gambling"<<std::endl;
+		_channels[i].printClients();
+	}
 	checkChannelExist(numOfChannels, _channels, *clientToInsert);
-	valuesCheck(*clientToInsert);
+
 	std::cout<<"Does it come here?"<<std::endl;
 }
