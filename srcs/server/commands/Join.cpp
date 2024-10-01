@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/01 11:28:22 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:13:35 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ std::vector<std::string>	Server::channelParser(std::string args)
 			// numOfChannels.push_back(onlyChannels.substr(i, pos - i));
 			std::cout << "temp: " << temp << std::endl;
 			numOfChannels.push_back(temp);
-			break;
+			// break;
+			i = onlyChannels.find_first_of(",", i);
 		}
 	}
 	return (numOfChannels);
@@ -82,8 +83,10 @@ std::vector< std::string >	Server::keyParser(std::string args)
 
 void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert)
 {
+	std::cout<<"number of channels size: "<<numberOfChannels.size()<<std::endl;
 	for (size_t i = 0; i < numberOfChannels.size(); i++)
 	{
+		std::cout<<"!!!!!!!! times the loop is executed  !!!!!!!!! -> "<<i<<std::endl;
 		if (_channels.size() == 0)
 		{
 			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
@@ -91,12 +94,12 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 		}
 		else
 		{
-			for (size_t j = 1; j < _channels.size(); j++)
+			for (size_t j = 1; j < numberOfChannels.size(); j++)
 			{
-				if (_channels[j].getName() == numberOfChannels[i])
+				if (_channels[i].getName() == numberOfChannels[j])
 				{
 					//if for checking if the user is in the channel
-					if (_channels[j].isInChannel(clientToInsert))
+					if (_channels[i].isInChannel(clientToInsert))
 					{
 						std::string	errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname());
 						send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
