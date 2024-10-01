@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/30 17:33:10 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:12:53 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,13 @@ class Server
 				JOIN <channel>,....  <key>,....
 				between channel and key there is a space that's how we can differentiate them
 		*/
-		void	Join(std::string args, int	clientSocket);
+		void								Join(std::string args, int	clientSocket);
 		std::vector< std::string >			channelParser(std::string args);
 		std::vector< std::string >			keyParser(std::string args);
 		void	checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
 		//checking functions of server by lnicoter
 		void	valuesCheck(Client clientToInsert);
+		void	channelCheck();
 
 };
 
