@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/01 12:13:35 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/01 17:21:07 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,51 @@
 
 
 //substr e find per spostare il puntatore alla prima virgola
-
+//new error: 2 channels that are going to be inserted with
+//a space after the first , for example <channel1>, <channel2> the space messes up all the logic
 std::vector<std::string>	Server::channelParser(std::string args)
 {
 
 	std::vector < std::string > numOfChannels;
 	std::string onlyChannels = args.substr(0, args.find_first_of(" "));
 	// std::vector < std::string > keys;
+
 	size_t	i = 0;
 	//loop for channels
 	while (i != std::string::npos)
 	{
 		size_t pos = onlyChannels.find_first_of(",", i);
+		std::string temp;
 		if (pos != std::string::npos)
 		{
-			std::string temp = onlyChannels.substr(i, pos - i);
+			temp = onlyChannels.substr(i, pos - i);
 			// numOfChannels.push_back(onlyChannels.substr(i));
-			std::cout << "temp: " << temp << std::endl;
-
-			numOfChannels.push_back(temp);
+			std::cout << "temp1: " << temp << std::endl;
 			i = pos + 1;
 		}
 		else
 		{
-			std::string temp = onlyChannels.substr(i, pos - i);
+			temp = onlyChannels.substr(i);
 			// numOfChannels.push_back(onlyChannels.substr(i, pos - i));
-			std::cout << "temp: " << temp << std::endl;
-			numOfChannels.push_back(temp);
+			std::cout << "temp2: " << temp << std::endl;
 			// break;
-			i = onlyChannels.find_first_of(",", i);
+			i = std::string::npos;
+		}
+		temp.erase(0, temp.find_first_not_of(" "));
+		temp.erase(temp.find_last_not_of(" ") + 1);
+
+		// Controlla se la stringa è valida (non vuota e non contiene spazi)
+		if (!temp.empty() && temp.find(' ') == std::string::npos)
+		{
+			numOfChannels.push_back(temp);
+			std::cout << "Channel added: " << temp << std::endl;
+		}
+		else
+		{
+			std::cout << "Invalid channel ignored: " << temp << std::endl;
 		}
 	}
+	//why reach the end of this where a lot of channels are inserted
 	return (numOfChannels);
 }
 
@@ -86,7 +100,6 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 	std::cout<<"number of channels size: "<<numberOfChannels.size()<<std::endl;
 	for (size_t i = 0; i < numberOfChannels.size(); i++)
 	{
-		std::cout<<"!!!!!!!! times the loop is executed  !!!!!!!!! -> "<<i<<std::endl;
 		if (_channels.size() == 0)
 		{
 			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
