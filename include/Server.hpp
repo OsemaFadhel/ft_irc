@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/01 11:12:53 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/02 20:16:51 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ class Server
 		//checking functions of server by lnicoter
 		void	valuesCheck(Client clientToInsert);
 		void	channelCheck();
+		void	joinCreateChanMsg(Client clientToInsert, std::string channelName);
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/02 15:57:02 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/02 20:37:10 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,16 @@ std::vector< std::string >	Server::keyParser(std::string args)
 	return (keys);
 }
 
-
+//there's something else
+//channel created but the messages are not well translated
+void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
+{
+	std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
+	std::string serverMessage = ":" + clientToInsert.getNickname() + " JOIN :" + channelName + "\r\n";
+	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
+	std::string message = constructMessage(RPL_NAMREPLY, clientToInsert.getNickname(), channelName);
+	send(clientToInsert.getFd(), message.c_str(), message.size(), 0);
+}
 
 void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert)
 {
@@ -116,6 +125,8 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 		{
 			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
 			_channels.push_back(newChannel);
+			//i send the message to make the client create/join the channel
+			joinCreateChanMsg(clientToInsert, newChannel.getName());
 		}
 		else
 		{
@@ -134,12 +145,14 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 						//!we are missing the checks for the keys like if the channel exists and stuff
 						_channels[j].addClient(clientToInsert);
 						std::cout<<GREEN<<"Client successfully added to the channel"<<RESET<<std::endl;
+						// joinCreateChanMsg(clientToInsert, _channels[j].getName());
 					}
 				}
 				else
 				{
 					std::cout<<"adding channel last case of ifs"<<std::endl;
 					_channels.push_back(Channel(clientToInsert, numberOfChannels[i]));
+					joinCreateChanMsg(clientToInsert, _channels[(int)_channels.size()].getName());
 				}
 			}
 		}
@@ -165,6 +178,12 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 
 ! the modes defines if there's a password or not
 
+ Channels with '+' as prefix do not support channel modes.  This means
+   that all the modes are unset, with the exception of the 't' channel
+   flag which is set.
+A user who creates a channel with the character '!' as prefix is
+   identified as the "channel creator".  Upon creation of the channel,
+   this user is also given channel operator status.
 */
 
 void	Server::Join(std::string args, int	clientSocket)
@@ -175,7 +194,7 @@ void	Server::Join(std::string args, int	clientSocket)
 
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
-	keys = keyParser(args);
+	// keys = keyParser(args);
 	for (size_t k = 0; k < keys.size(); k++)
 		std::cout << "keys: " << keys[k] << std::endl;
 
