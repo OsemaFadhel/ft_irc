@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/02 20:16:51 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:55:15 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,10 @@ class Server
 		void	valuesCheck(Client clientToInsert);
 		void	channelCheck();
 		void	joinCreateChanMsg(Client clientToInsert, std::string channelName);
+		void	listOfUsersMsg(std::string channelName);
+
+		/*Privmsg command and functions by lnicoter*/
+		void	Privmsg(std::string args, int clientSocket);
 
 };
 
