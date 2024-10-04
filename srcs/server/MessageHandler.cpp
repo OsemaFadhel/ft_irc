@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/22 18:59:04 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:19:23 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void Server::trimCommand(std::string &command)
 	command.erase(0, command.find_first_not_of(" \n\r\t"));
 }
 
-std::vector<std::string> Server::splitCommand(std::string &command)
+std::vector<std::string> Server::splitCommand(std::string command)
 {
 	std::vector<std::string> vector;
 	std::string delimiter = "\r\n";
@@ -32,20 +32,22 @@ std::vector<std::string> Server::splitCommand(std::string &command)
 		vector.push_back(token);
 		command.erase(0, pos + delimiter.length());
 	}
-	for (int i = 0; i < (int)vector.size(); i++)
-		std::cout<<"read values in splitcmd "<<vector[i]<<std::endl;
+
 	return vector;
 }
 
-void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
+void Server::handleMessage(std::string buffer, int readSize, int clientSocket, size_t &i)
 {
 	(void)readSize;
 	(void)clientSocket;
 
+	std::cout << CYAN << "[DEBUG] Handling message: " << buffer << RESET << std::endl;
 	std::vector<std::string> vector = splitCommand(buffer);
+	this->_newfds[i].buffer.clear();
 
-	for (size_t i = 0; i < vector.size(); i++)
-		processCommand(vector[i], clientSocket);
+	std::cout << CYAN << "[DEBUG] Vector size: " << vector.size() << RESET << std::endl;
+	for (size_t j = 0; j < vector.size(); j++)
+		processCommand(vector[j], clientSocket, i);
 }
 
 int Server::findCarriageReturn(char* buffer, int readSize)

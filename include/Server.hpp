@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/03 14:55:15 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:08:02 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 #include "Channel.hpp"
 #include "Replies.hpp"
 #include <arpa/inet.h>
-#include <utility>
+#include <csignal>
 
 # define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")
@@ -66,7 +66,6 @@ class Server
 		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
 
-		//std::map < std::string, *Cmd > Commands; //to fix
 	public:
 		Server();
 		~Server();
@@ -76,6 +75,7 @@ class Server
 		bool verifyPassword(const std::string& password) const;
 		Client *getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
+		void removeClient(int clientSocket);
 
 		void run();
 		void createSocket();
@@ -85,19 +85,17 @@ class Server
 		void clientDisconnect(int clientSocket, size_t &i);
 		void checkClientActivity(fd_set& readfds);
 
-		void handleMessage(std::string buffer, int readSize, int clientSocket);
+		void handleMessage(std::string buffer, int readSize, int clientSocket, size_t &i);
 		void trimCommand(std::string &command);
-		std::vector<std::string> splitCommand(std::string &command);
+		std::vector<std::string> splitCommand(std::string command);
 		int findCarriageReturn(char* buffer, int readSize);
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
-		void processCommand(std::string buffer, int clientSocket);
-
-
+		void processCommand(std::string buffer, int clientSocket, size_t &i);
 
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
-		void Ping(Client* client, int clientSocket, std::string &message);
-		void Quit(std::string args, int clientSocket);
+		void Ping(Client *client, int clientSocket, std::string &message);
+		void Quit(std::string args, int clientSocket, size_t &i);
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);

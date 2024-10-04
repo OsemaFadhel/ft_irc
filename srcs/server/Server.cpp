@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/30 14:03:01 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:20:11 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,35 @@ std::string Server::hashPassword(const std::string& password) const
 	return oss.str();
 }
 
+void	Server::valuesCheck(Client clientToInsert)
+{
+	std::cout<<"Client nickname: "<<clientToInsert.getNickname()<<std::endl;
+	std::cout<<"Client fd: "<<clientToInsert.getFd()<<std::endl;
+}
+
+
+void	Server::channelCheck()
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		_channels[i].printClients();
+	}
+}
+
+// Method to remove and delete a client by socket
+void Server::removeClient(int clientSocket)
+{
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		if ((*it)->getFd() == clientSocket)
+		{
+			delete *it; // Free the dynamically allocated Client
+			_clients.erase(it); // Erase from the vector
+			break;
+		}
+	}
+}
+
 /* ************************************************************************** */
 
 
@@ -141,6 +170,12 @@ void Server::createSocket()
 
 	if (listen(_serverSocket, 50) == -1)
 		throw std::runtime_error("Failed to listen for connections");
+
+	// Add the server socket to the list of file descriptors to monitor
+
+	socketdata newfd;
+	newfd.id = _serverSocket;
+	_newfds.push_back(newfd);
 }
 
 void Server::run()

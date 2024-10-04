@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/22 15:02:16 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:07:05 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include "Server.hpp"
 #include "Channel.hpp"
 
+# define CHAR_FOR_CHANNEL_FIRST_LETTER "&#+!"
+# define BAD_CHAR_FOR_CHANNEL " ,:"
 
 class Client
 {
@@ -44,7 +46,6 @@ class Client
 		std::string getRealName() const;
 		std::string getBuffer() const;
 		int getIsRegistered() const;
-		//std::string getPassword() const;
 
 		void setNickname(const std::string& nickname);
 		void setUsername(const std::string& username);
@@ -54,9 +55,8 @@ class Client
 		void clearBuffer();
 
 		void appendBuffer(const char* buffer, int readsize);
-		//void setPassword(const std::string& password);
-		//bool verifyPassword(const std::string& password) const;
 };
-		std::ostream&	operator<<(std::ostream& os, const Client& client);
+
+	std::ostream&	operator<<(std::ostream& os, const Client& client);
 
 #endif
