@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:19:05 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 12:30:41 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/02 19:09:23 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ void Server::Nick(std::string args, int clientSocket)
 
 	Client *client = getClient(clientSocket);
 
-	for (std::vector<Client>::iterator itnick = _clients.begin(); itnick != _clients.end(); ++itnick) //check if the nickname is already in use
+	for (std::vector<Client * >::iterator itnick = _clients.begin(); itnick != _clients.end(); ++itnick) //check if the nickname is already in use
 	{
-		if ((itnick)->getNickname() == args)
+		if ((*itnick)->getNickname() == args)
 		{
 			std::string message = constructMessage(ERR_NICKNAMEINUSE, args);
 			send(clientSocket, message.c_str(), message.size(), 0);

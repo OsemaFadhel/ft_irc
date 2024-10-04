@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/19 15:03:51 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 11:21:00 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,5 +135,7 @@ std::string constructMessage(const std::string& format, ...);
 #define ERR_UMODEUNKNOWNFLAG ":ft_irc 501 :Unknown MODE flag\r\n" // Static size: 29
 
 #define ERR_USERSDONTMATCH ":ft_irc 502 :Cannot change mode for other users\r\n" // Static size: 36
+
+#define RPL_NAMREPLY ":ft_irc 353 %s = %s :%s\r\n" // Static size: 29
 
 #endif

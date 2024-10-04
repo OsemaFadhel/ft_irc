@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 12:27:49 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 11:54:28 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 #include "Channel.hpp"
 #include "Replies.hpp"
 #include <arpa/inet.h>
+#include <csignal>
 
 # define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")
@@ -58,13 +59,12 @@ class Server
 		int _port;
 		int _serverSocket; //tcp
 		std::string _password;
-		std::vector < Client > _clients;
-		std::vector < Channel* > _channels;
+		std::vector < Client* > _clients;
+		std::vector < Channel > _channels;
 		std::vector < socketdata > _newfds;
 		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
 
-		//std::map < std::string, *Cmd > Commands; //to fix
 	public:
 		Server();
 		~Server();
@@ -74,6 +74,7 @@ class Server
 		bool verifyPassword(const std::string& password) const;
 		Client* getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
+		void removeClient(int clientSocket);
 
 		void run();
 		void createSocket();
@@ -83,22 +84,40 @@ class Server
 		void clientDisconnect(int clientSocket, size_t &i);
 		void checkClientActivity(fd_set& readfds);
 
-		void handleMessage(std::string buffer, int readSize, int clientSocket);
+		void handleMessage(std::string buffer, int readSize, int clientSocket, size_t &i);
 		void trimCommand(std::string &command);
-		std::vector<std::string> splitCommand(std::string &command);
+		std::vector<std::string> splitCommand(std::string command);
 		int findCarriageReturn(char* buffer, int readSize);
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
-		void processCommand(std::string buffer, int clientSocket);
-
-
+		void processCommand(std::string buffer, int clientSocket, size_t &i);
 
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
-		void Quit(std::string args, int clientSocket);
+		void Quit(std::string args, int clientSocket, size_t &i);
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
+
+		/*Join command and functions by lnicoter*/
+		/* Join behaviour
+			Syntax:
+				JOIN <channel>,....
+				JOIN <channel>,....  <key>,....
+				between channel and key there is a space that's how we can differentiate them
+		*/
+		void								Join(std::string args, int	clientSocket);
+		std::vector< std::string >			channelParser(std::string args);
+		std::vector< std::string >			keyParser(std::string args);
+		void	checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
+		//checking functions of server by lnicoter
+		void	valuesCheck(Client clientToInsert);
+		void	channelCheck();
+		void	joinCreateChanMsg(Client clientToInsert, std::string channelName);
+		void	listOfUsersMsg(std::string channelName);
+
+		/*Privmsg command and functions by lnicoter*/
+		void	Privmsg(std::string args, int clientSocket);
 
 };
 

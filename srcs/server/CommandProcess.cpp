@@ -6,13 +6,13 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/19 15:15:15 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:28:40 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 
-void Server::processCommand(std::string buffer, int clientSocket)
+void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 {
 	std::string command = buffer.substr(0, buffer.find(" "));
 	std::string args = buffer.length() > command.length() ? buffer.substr(command.length() + 1) : "";
@@ -32,7 +32,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "CAP")
 			Cap(clientSocket);
 		else if (command == "QUIT")
-			Quit(args, clientSocket);
+			Quit(args, clientSocket, i);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
@@ -49,7 +49,7 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "CAP")
 			Cap(clientSocket);
 		else if (command == "QUIT")
-			Quit(args, clientSocket);
+			Quit(args, clientSocket, i);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 1)
 	{
@@ -64,7 +64,10 @@ void Server::processCommand(std::string buffer, int clientSocket)
 		else if (command == "CAP")
 			Cap(clientSocket);
 		else if (command == "QUIT")
-			Quit(args, clientSocket);
-		//Nicotera(cmd, args, clientSocket);
+			Quit(args, clientSocket, i);
+		else if (command == "JOIN")
+			Join(args, clientSocket);
+		else if (command == "PRIVMSG")
+			Privmsg(args, clientSocket);
 	}
 }

@@ -1,30 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Quit.cpp                                           :+:      :+:    :+:   */
+/*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/19 15:08:31 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:05:49 by ofadhel          ###   ########.fr       */
+/*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
+/*   Updated: 2024/10/04 11:20:18 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/Server.hpp"
 
-void Server::Quit(std::string args, int clientSocket, size_t &i)
+//next thing to do []
+void	Server::Privmsg(std::string args, int clientsocket)
 {
 	(void)args;
-
-	_newfds.erase(_newfds.begin() + i);
-
-	Client *client = getClient(clientSocket);
-	if (client)
-	{
-		std::cout << RED << "[DEBUG QUIT] Client disconnected. Nickname: " << client->getNickname() << RESET << std::endl;
-		removeClient(clientSocket);
-	}
-
-	close(clientSocket);
-	--i;
+	(void)clientsocket;
 }

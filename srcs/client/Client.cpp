@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 18:10:24 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/02 18:17:53 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,15 @@ void Client::appendBuffer(const char* buffer, int readsize)
 		return;
 	}
 	_buffer += buffer;
+}
+
+// i made this overload for the channel so i won' print all the data
+std::ostream&	operator<<(std::ostream& os, const Client& client)
+{
+	os << "Client fd: " << client.getFd() << std::endl;
+	os << "Nickname: " << client.getNickname() << std::endl;
+	os << "Username: " << client.getUsername() << std::endl;
+	os << "Realname: " << client.getRealName() << std::endl;
+
+	return os;
 }

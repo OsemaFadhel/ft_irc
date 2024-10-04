@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/23 12:29:54 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:17:50 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ Client* Server::getClient(int clientSocket)
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		if (_clients[i].getFd() == clientSocket)
-			return &_clients[i];
+		if (_clients[i]->getFd() == clientSocket)
+			return _clients[i];
 	}
 	return NULL;
 }
@@ -50,7 +50,7 @@ int Server::getClientIndex(int clientSocket)
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		if (_clients[i].getFd() == clientSocket)
+		if (_clients[i]->getFd() == clientSocket)
 			return i;
 	}
 	return -1;
@@ -79,6 +79,35 @@ std::string Server::hashPassword(const std::string& password) const
 	std::ostringstream oss;
 	oss << std::hex << hash;
 	return oss.str();
+}
+
+void	Server::valuesCheck(Client clientToInsert)
+{
+	std::cout<<"Client nickname: "<<clientToInsert.getNickname()<<std::endl;
+	std::cout<<"Client fd: "<<clientToInsert.getFd()<<std::endl;
+}
+
+
+void	Server::channelCheck()
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		_channels[i].printClients();
+	}
+}
+
+// Method to remove and delete a client by socket
+void Server::removeClient(int clientSocket)
+{
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		if ((*it)->getFd() == clientSocket)
+		{
+			delete *it; // Free the dynamically allocated Client
+			_clients.erase(it); // Erase from the vector
+			break;
+		}
+	}
 }
 
 /* ************************************************************************** */
@@ -141,6 +170,12 @@ void Server::createSocket()
 
 	if (listen(_serverSocket, 50) == -1)
 		throw std::runtime_error("Failed to listen for connections");
+
+	// Add the server socket to the list of file descriptors to monitor
+
+	socketdata newfd;
+	newfd.id = _serverSocket;
+	_newfds.push_back(newfd);
 }
 
 void Server::run()

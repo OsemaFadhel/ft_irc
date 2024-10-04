@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/09/18 15:15:19 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:29:43 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void Server::trimCommand(std::string &command)
 	command.erase(0, command.find_first_not_of(" \n\r\t"));
 }
 
-std::vector<std::string> Server::splitCommand(std::string &command)
+std::vector<std::string> Server::splitCommand(std::string command)
 {
 	std::vector<std::string> vector;
 	std::string delimiter = "\r\n";
@@ -32,18 +32,22 @@ std::vector<std::string> Server::splitCommand(std::string &command)
 		vector.push_back(token);
 		command.erase(0, pos + delimiter.length());
 	}
+
 	return vector;
 }
 
-void Server::handleMessage(std::string buffer, int readSize, int clientSocket)
+void Server::handleMessage(std::string buffer, int readSize, int clientSocket, size_t &i)
 {
 	(void)readSize;
 	(void)clientSocket;
 
+	std::cout << CYAN << "[DEBUG] Handling message: " << buffer << RESET << std::endl;
 	std::vector<std::string> vector = splitCommand(buffer);
+	this->_newfds[i].buffer.clear();
 
-	for (size_t i = 0; i < vector.size(); i++)
-		processCommand(vector[i], clientSocket);
+	std::cout << CYAN << "[DEBUG] Vector size: " << vector.size() << RESET << std::endl;
+	for (size_t j = 0; j < vector.size(); j++)
+		processCommand(vector[j], clientSocket, i);
 }
 
 int Server::findCarriageReturn(char* buffer, int readSize)
