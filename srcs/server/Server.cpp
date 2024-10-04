@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:17:50 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:56:17 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int Server::getClientIndex(int clientSocket)
 
 void Server::setPassword(const std::string& password)
 {
-	_password = hashPassword(password);
+	_password = password;
 }
 
 
@@ -66,19 +66,7 @@ void Server::setPassword(const std::string& password)
 
 bool Server::verifyPassword(const std::string& password) const
 {
-	return hashPassword(password) ==_password;
-}
-
-std::string Server::hashPassword(const std::string& password) const
-{
-	unsigned long hash = 5381;
-	for (size_t i = 0; i < password.size(); ++i) {
-		hash = ((hash << 5) + hash) + password[i]; // hash * 33 + c
-	}
-
-	std::ostringstream oss;
-	oss << std::hex << hash;
-	return oss.str();
+	return password ==_password;
 }
 
 void	Server::valuesCheck(Client clientToInsert)
@@ -187,5 +175,5 @@ void Server::run()
 
 	std::cout << BOLD << CYAN << "IRC SERVER UP! WAITING FOR CLIENTS" << RESET << std::endl;
 	startLoop(readfds, maxfds);
-	//killServer();  //kill server close all sockets and free memory
+	killServer();  //kill server close all sockets and free memory
 }

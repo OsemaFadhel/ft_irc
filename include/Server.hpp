@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 11:54:28 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:52:04 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ class Server
 		std::vector < Client* > _clients;
 		std::vector < Channel > _channels;
 		std::vector < socketdata > _newfds;
-		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
 
 	public:
@@ -75,6 +74,7 @@ class Server
 		Client* getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
 		void removeClient(int clientSocket);
+		void killServer();
 
 		void run();
 		void createSocket();

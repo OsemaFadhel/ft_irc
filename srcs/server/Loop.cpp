@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:02:04 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:59:39 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@
 	for incoming data or connection requests.
 */
 
-void signalHandler(int signum)
+bool killflag = false;
+
+void signalHandler(int signal)
 {
-	std::cout << "Interrupt signal (" << signum << ") received.\n";
-	//killServer();
+	std::cout << "Interrupt signal (" << signal << ") received.\n";
+	killflag = true;
 }
 
 void Server::setMaxfds(int &maxfds, fd_set &readfds)
@@ -55,14 +57,23 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 	timeout.tv_sec = 180; // 3 minutes
 	timeout.tv_usec = 0;
 
-	while (true) // Infinite loop but maybe add flag signal for exit
+	while (!killflag) // Infinite loop but maybe add flag signal for exit
 	{
 		setMaxfds(maxfds, readfds);
 
 		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, &timeout);
 
 		if (selectfd == -1)
-			throw std::runtime_error("Failed to select file descriptors");
+		{
+				if (errno == EINTR)
+			{
+				std::cerr << "Select interrupted by signal, retrying..." << std::endl;
+				continue;
+			}
+			else
+				throw std::runtime_error(std::string("Select error: ") + strerror(errno));
+
+		}
 		else if (selectfd == 0)
 		{
 			std::cout << "Timeout expired before any file descriptors became ready" << std::endl;
@@ -76,17 +87,31 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 			checkClientActivity(readfds);
 		}
 	}
-	//killServer();
 }
 
-/*
 void Server::killServer()
 {
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-	{
-		delete *it; // Free each dynamically allocated client
-	}
-	_clients.clear(); // Clear the vector
+	//close all sockets
+	close(_serverSocket);
+	for (size_t i = 0; i < _newfds.size(); ++i)
+		close(_newfds[i].id);
+
+	_newfds.clear();
+
+	//free memory
+
+	for (size_t i = 0; i < _clients.size(); ++i)
+		delete _clients[i];
+	_clients.clear();
+
+	//for (size_t i = 0; i < _channels.size(); ++i)
+	//	delete _channels[i];
+	//_channels.clear();
+
+
+
+	std::cout << GREEN << "Server closed" <<  RESET << std::endl;
+
 	exit(0);
 }
-*/
+
