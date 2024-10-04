@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/04 12:43:13 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:30:29 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,15 @@ int	isChannel(std::string channelName)
 
 void	Server::Privmsg(std::string args, int clientsocket)
 {
+	(void)clientsocket;
+	std::cout<<"PRIVMSG "<<args<<std::endl;
 	if (isChannel(args))
 	{
-
+		;
 	}
 	else
 	{
 		//private message
+		;
 	}
 }
