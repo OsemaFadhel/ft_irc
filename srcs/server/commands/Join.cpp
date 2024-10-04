@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/03 15:01:23 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/04 12:40:02 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,16 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		if (pos != std::string::npos)
 		{
 			temp = onlyChannels.substr(i, pos - i);
-			// numOfChannels.push_back(onlyChannels.substr(i));
 			std::cout << "temp1: " << temp << std::endl;
 			i = pos + 1;
 		}
 		else
 		{
 			temp = onlyChannels.substr(i);
-			// numOfChannels.push_back(onlyChannels.substr(i, pos - i));
 			std::cout << "temp2: " << temp << std::endl;
-			// break;
 			i = std::string::npos;
 		}
+		//trimming the string to remove the spaces and avoiding a sudden segfault
 		temp.erase(0, temp.find_first_not_of(" "));
 		temp.erase(temp.find_last_not_of(" ") + 1);
 
@@ -196,12 +194,6 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 
 ! the modes defines if there's a password or not
 
- Channels with '+' as prefix do not support channel modes.  This means
-   that all the modes are unset, with the exception of the 't' channel
-   flag which is set.
-A user who creates a channel with the character '!' as prefix is
-   identified as the "channel creator".  Upon creation of the channel,
-   this user is also given channel operator status.
 */
 
 void	Server::Join(std::string args, int	clientSocket)
@@ -212,11 +204,11 @@ void	Server::Join(std::string args, int	clientSocket)
 
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
+	//the check of the keys must be put in the checkChannelExist function
 	// keys = keyParser(args);
 	for (size_t k = 0; k < keys.size(); k++)
 		std::cout << "keys: " << keys[k] << std::endl;
 
 	checkChannelExist(numOfChannels, *clientToInsert);
-	// channelCheck();
 }
 
