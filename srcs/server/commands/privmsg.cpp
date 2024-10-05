@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/05 09:24:52 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/05 09:29:40 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,11 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 			// std::vector< std::pair< Client, int > >::iterator it;
 			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
 			{
-				std::cout<<"sending message to the others"<<std::endl;
-		 		send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
+				if (_channels[i].getUsrData()[j].first.getNickname().compare(sender->getNickname()))
+				{
+					std::cout<<"sending message to the others"<<std::endl;
+		 			send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
+				}
 			}
 			break;
 		}
