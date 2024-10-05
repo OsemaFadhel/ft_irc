@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/04 14:30:29 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/05 09:24:52 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,85 @@ int	isChannel(std::string channelName)
 
 	if ( prefixChecker.find_first_of(channelName[0]) != std::string::npos)
 		return (1);
+	std::cout<<"death 💀"<<std::endl;
 	return (0);
 }
 
-void	Server::Privmsg(std::string args, int clientsocket)
+std::string extractMessage(const std::string& input)
 {
-	(void)clientsocket;
-	std::cout<<"PRIVMSG "<<args<<std::endl;
-	if (isChannel(args))
+	size_t	i = input.find(':');
+	std::string	message = input.substr(i, input.size());
+	return message;
+}
+
+std::string extractChannelName(const std::string& input)
+{
+	// Trova la posizione del primo carattere ':'
+	size_t colonPos = input.find(':');
+
+	// Se non troviamo il carattere ':', restituiamo l'intera stringa
+	if (colonPos == std::string::npos)
 	{
-		;
+		return input; // Non c'è ':' quindi restituiamo l'intera stringa
+	}
+
+	// Restituiamo la sottostringa che va dall'inizio fino al carattere ':'
+	return input.substr(0, colonPos);
+}
+
+//better implementation
+	// Channel	*myChannel = getChannel(channelName);
+	// if (myChannel)
+	// {
+	// std::vector< std::pair< Client, int > >::iterator it;
+	// for (it = myChannel->getUsrData().begin(); it != myChannel->getUsrData().end(); it++)
+	// {
+		// if (it->first.getFd() != clientSocket)
+		// {
+		// 	std::cout<<"sending message to the others"<<std::endl;
+		// 	send(it->first.getFd(), message.c_str(), message.length(), 0);
+		// }
+	// }
+	// }
+// 	else
+// 		std::cout<<"Channel not found"<<std::endl;
+
+void	Server::privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage)
+{
+	std::cout<<"channelName "<<channelName<<std::endl;
+	Client	*sender = getClient(clientSocket);
+	std::string	message = ":"+sender->getNickname()+"!"+sender->getUsername()+"@host PRIVMSG "+channelName+" :"+usrMessage+"\r\n";
+
+
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		if (_channels[i].getName().compare(channelName.c_str()))
+		{
+			// std::vector< std::pair< Client, int > >::iterator it;
+			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+			{
+				std::cout<<"sending message to the others"<<std::endl;
+		 		send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
+			}
+			break;
+		}
+		else
+		{
+			std::cout<<"wrong one here we have "<<_channels[i].getName()<<std::endl;
+		}
+	}
+
+}
+
+void	Server::Privmsg(std::string args, int clientSocket)
+{
+	(void)clientSocket;
+	std::string	realChannel = extractChannelName(args);
+	std::string	message = extractMessage(args);
+	std::cout<<"PRIVMSG "<<realChannel<<std::endl;
+	if (isChannel(realChannel))
+	{
+		privmsgChannel(realChannel, clientSocket, message);
 	}
 	else
 	{

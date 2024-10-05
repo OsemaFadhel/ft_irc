@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 14:19:00 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:02:23 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 {
 	signal(SIGINT, signalHandler);
 
-	struct timeval timeout;
+	/* struct timeval timeout;
 	timeout.tv_sec = 180; // 3 minutes
-	timeout.tv_usec = 0;
+	timeout.tv_usec = 0;*/
 
 	while (true) // Infinite loop but maybe add flag signal for exit
 	{
 		setMaxfds(maxfds, readfds);
 
-		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, &timeout);
+		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
 		if (selectfd == -1)
 			throw std::runtime_error("Failed to select file descriptors");

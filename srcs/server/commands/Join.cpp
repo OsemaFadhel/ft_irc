@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/04 14:12:08 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/05 09:20:12 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,15 +114,20 @@ void	Server::listOfUsersMsg(std::string channelName)
 		{
 			std::string serverMessage = ":" + SERVERNAME + " 353 " + SERVERNAME + " = " + channelName + " :";
 			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
-			{
 				serverMessage += _channels[i].getUsrData()[j].first.getNickname() + " ";
-			}
 			serverMessage += "\r\n";
-			send(_channels[i].getUsrData()[0].first.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
+
+			//to make the new user know who's in the channel i need to send the message to the other users as well
+			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+				send(_channels[i].getUsrData()[j].first.getFd(), serverMessage.c_str(), serverMessage.length(), 0);
+
+			//i do the message to tell the client i've finished listing the users in the channel
+			std::string endOfListMessage = ":" + SERVERNAME + " 366 " + channelName + " :End of NAMES list\r\n";
+			send(_channels[0].getUsrData()[0].first.getFd(), endOfListMessage.c_str(), endOfListMessage.size(), 0);
 		}
 	}
-	std::string channelMessage = ":" + SERVERNAME + " 366 " + channelName + " :End of NAMES list\r\n";
-	send(_channels[0].getUsrData()[0].first.getFd(), channelMessage.c_str(), channelMessage.size(), 0);
+
+
 }
 
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
