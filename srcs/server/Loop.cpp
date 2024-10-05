@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:59:39 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 15:00:18 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,15 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 {
 	signal(SIGINT, signalHandler);
 
-	struct timeval timeout;
+	/*struct timeval timeout;
 	timeout.tv_sec = 180; // 3 minutes
-	timeout.tv_usec = 0;
+	timeout.tv_usec = 0;*/
 
 	while (!killflag) // Infinite loop but maybe add flag signal for exit
 	{
 		setMaxfds(maxfds, readfds);
 
-		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, &timeout);
+		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
 		if (selectfd == -1)
 		{

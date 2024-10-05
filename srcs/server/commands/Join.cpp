@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/04 11:18:48 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/05 11:38:42 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,16 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		if (pos != std::string::npos)
 		{
 			temp = onlyChannels.substr(i, pos - i);
-			// numOfChannels.push_back(onlyChannels.substr(i));
 			std::cout << "temp1: " << temp << std::endl;
 			i = pos + 1;
 		}
 		else
 		{
 			temp = onlyChannels.substr(i);
-			// numOfChannels.push_back(onlyChannels.substr(i, pos - i));
 			std::cout << "temp2: " << temp << std::endl;
-			// break;
 			i = std::string::npos;
 		}
+		//trimming the string to remove the spaces and avoiding a sudden segfault
 		temp.erase(0, temp.find_first_not_of(" "));
 		temp.erase(temp.find_last_not_of(" ") + 1);
 
@@ -116,15 +114,20 @@ void	Server::listOfUsersMsg(std::string channelName)
 		{
 			std::string serverMessage = ":" + SERVERNAME + " 353 " + SERVERNAME + " = " + channelName + " :";
 			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
-			{
 				serverMessage += _channels[i].getUsrData()[j].first.getNickname() + " ";
-			}
 			serverMessage += "\r\n";
-			send(_channels[i].getUsrData()[0].first.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
+
+			//to make the new user know who's in the channel i need to send the message to the other users as well
+			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+				send(_channels[i].getUsrData()[j].first.getFd(), serverMessage.c_str(), serverMessage.length(), 0);
+
+			//i do the message to tell the client i've finished listing the users in the channel
+			std::string endOfListMessage = ":" + SERVERNAME + " 366 " + channelName + " :End of NAMES list\r\n";
+			send(_channels[0].getUsrData()[0].first.getFd(), endOfListMessage.c_str(), endOfListMessage.size(), 0);
 		}
 	}
-	std::string channelMessage = ":" + SERVERNAME + " 366 " + channelName + " :End of NAMES list\r\n";
-	send(_channels[0].getUsrData()[0].first.getFd(), channelMessage.c_str(), channelMessage.size(), 0);
+
+
 }
 
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
@@ -196,12 +199,6 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 
 ! the modes defines if there's a password or not
 
- Channels with '+' as prefix do not support channel modes.  This means
-   that all the modes are unset, with the exception of the 't' channel
-   flag which is set.
-A user who creates a channel with the character '!' as prefix is
-   identified as the "channel creator".  Upon creation of the channel,
-   this user is also given channel operator status.
 */
 
 void	Server::Join(std::string args, int	clientSocket)
@@ -212,10 +209,10 @@ void	Server::Join(std::string args, int	clientSocket)
 
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
+	//the check of the keys must be put in the checkChannelExist function
 	// keys = keyParser(args);
 	for (size_t k = 0; k < keys.size(); k++)
 		std::cout << "keys: " << keys[k] << std::endl;
 
 	checkChannelExist(numOfChannels, *clientToInsert);
-	// channelCheck();
 }

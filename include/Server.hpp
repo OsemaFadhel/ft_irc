@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:52:04 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/05 11:41:00 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ class Server
 		int getClientIndex(int clientSocket);;
 		void removeClient(int clientSocket);
 		void killServer();
+		Channel	*getChannel(std::string channelName);
+
 
 		void run();
 		void createSocket();
@@ -118,7 +120,7 @@ class Server
 
 		/*Privmsg command and functions by lnicoter*/
 		void	Privmsg(std::string args, int clientSocket);
-
+		void	privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
 };
 
 // Macros for ANSI escape codes

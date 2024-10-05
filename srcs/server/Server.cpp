@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:56:17 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/05 11:39:32 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,4 +176,18 @@ void Server::run()
 	std::cout << BOLD << CYAN << "IRC SERVER UP! WAITING FOR CLIENTS" << RESET << std::endl;
 	startLoop(readfds, maxfds);
 	killServer();  //kill server close all sockets and free memory
+}
+
+//per dopo da sistemare le interazioni qua
+Channel*	Server::getChannel(std::string channelName)
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		std::cout<<"what channel do we have here "<<_channels[i].getName()<<std::endl;
+		std::cout<<"and what channel i've passed here? "<<channelName<<std::endl;
+		if (_channels[i].getName() == channelName)
+			return (&_channels[i]);
+	}
+	std::cout<<"death reached?"<<std::endl;
+	return 0;
 }
