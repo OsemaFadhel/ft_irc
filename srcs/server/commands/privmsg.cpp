@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/05 09:29:40 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:39:41 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@ int	isChannel(std::string channelName)
 	return (0);
 }
 
+//can't be used for a private msg
 std::string extractMessage(const std::string& input)
 {
 	size_t	i = input.find(':');
+	std::cout<<"eccoci "<<i<<std::endl;
 	std::string	message = input.substr(i, input.size());
 	return message;
 }
@@ -95,19 +97,30 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 
 }
 
-void	Server::Privmsg(std::string args, int clientSocket)
+
+
+void	Server::privmsgPrivateMsg(int clientSocket, std::string usrMessage)
 {
 	(void)clientSocket;
+	(void)usrMessage;
+
+}
+
+void	Server::Privmsg(std::string args, int clientSocket)
+{
 	std::string	realChannel = extractChannelName(args);
-	std::string	message = extractMessage(args);
-	std::cout<<"PRIVMSG "<<realChannel<<std::endl;
+
 	if (isChannel(realChannel))
 	{
+		std::string	message = extractMessage(args);
+		std::cout<<"PRIVMSG "<<realChannel<<std::endl;
 		privmsgChannel(realChannel, clientSocket, message);
 	}
 	else
 	{
 		//private message
-		;
+		//this in kvirc is not sent by the channel ui
+		//but is instead is sent manually from the basic ui
+			;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 14:10:50 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:42:38 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Missing checks:
 It seems the channel is not inserted correctly but i'm building it and i'm
 sure of it so i should isolate and check better
 */
-Channel::Channel(Client firstClient, std::string _name)
+Channel::Channel(Client firstClient, std::string channelName)
 {
 	//check name
 	//You should empty the data from the attributes
@@ -38,36 +38,41 @@ Channel::Channel(Client firstClient, std::string _name)
 	else
 		_usrData.push_back(std::make_pair(firstClient, 0));
 
-	if (_name.size() > 0)
+	if (channelName.size() > 0)
 	{
 
 		for (size_t i = 0; i < charCheck.size(); i++)
 		{
 			if (_name[0] == charCheck[i])
 				syntaxFlag = 1;
+			this->_name = channelName;
 		}
 		if (syntaxFlag == 0)
 		{
-			std::string errMess = constructMessage(ERR_BADCHANMASK, _name);
+			this->_name = "";
+			std::cout<<"what kind of name am i passing here??? "<<channelName<<std::endl;
+			std::string errMess = constructMessage(ERR_BADCHANMASK, channelName.c_str());
+			std::cout<<"the message is "<<errMess<<std::endl;
 			send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 		}
 	}
 	else
 	{
+		this->_name = "";
 		std::string errMess = constructMessage(ERR_NEEDMOREPARAMS, "JOIN");
 		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 	}
 	if (_name.find_first_of(badCharCheck) != std::string::npos)
 	{
 		//check for the name of the channel
-		std::string errMess = constructMessage(ERR_BADCHANMASK, _name);
+		this->_name = "";
+		std::string errMess = constructMessage(ERR_BADCHANMASK, channelName.c_str());
 		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 	}
 	//porco due prossima volta usa this oppure metti un altro nome per la variabile passata
-	this->_name = _name;
-	_topic = "";
-	_mode = "";
-	_password = "";
+	this->_topic = "";
+	this->_mode = "";
+	this->_password = "";
 }
 
 

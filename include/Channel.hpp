@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 14:06:10 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:35:43 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class Channel
 		std::string								_password; //setted by the operator
 		int										_limit; //setted by the operator
 	public:
-		Channel(Client firstClient, std::string _name);
+		Channel(Client firstClient, std::string channelName);
 		~Channel();
 		//copy constructor
 		Channel(const Channel& obj);
