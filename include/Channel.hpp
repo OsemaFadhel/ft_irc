@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/02 18:11:45 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/07 21:48:06 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class Channel
 		std::string								_password; //setted by the operator
 		int										_limit; //setted by the operator
 	public:
-		Channel(Client firstClient, std::string _name);
+		Channel(Client firstClient, std::string channelName);
 		~Channel();
 		//copy constructor
 		Channel(const Channel& obj);

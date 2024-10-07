@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/05 11:38:42 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/07 21:48:45 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,10 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
 			_channels.push_back(newChannel);
 			//i send the message to make the client create/join the channel
-			joinCreateChanMsg(clientToInsert, newChannel.getName());
+			if (!newChannel.getName().empty())
+				joinCreateChanMsg(clientToInsert, newChannel.getName());
+			else
+				std::cout<<RED<<"death"<<RESET<<std::endl;
 		}
 		else
 		{

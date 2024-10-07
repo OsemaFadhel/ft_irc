@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 15:00:18 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:12:25 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,6 @@ void Server::killServer()
 	//for (size_t i = 0; i < _channels.size(); ++i)
 	//	delete _channels[i];
 	//_channels.clear();
-
-
 
 	std::cout << GREEN << "Server closed" <<  RESET << std::endl;
 

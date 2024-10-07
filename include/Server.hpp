@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/05 11:41:00 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/07 21:47:44 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ class Server
 		/*Privmsg command and functions by lnicoter*/
 		void	Privmsg(std::string args, int clientSocket);
 		void	privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
+		void	privmsgPrivateMsg(int clientSocket, std::string usrMessage);
+
 };
 
 // Macros for ANSI escape codes
