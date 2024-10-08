@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/08 17:02:36 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/08 19:05:19 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ std::string extractMessage(const std::string& input)
 {
 	size_t	i = input.find(':');
 	std::cout<<"eccoci "<<i<<std::endl;
+	if (i == std::string::npos)
+		return "";
 	std::string	message = input.substr(i, input.size());
 	return message;
 }
@@ -110,7 +112,7 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 }
 
 
-
+//BAN checks are not requested by the subject
 void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg)
 {
 	Client	receivingUser(0);
@@ -122,6 +124,12 @@ void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg
 			receivingUser = *_clients[i];
 			break;
 		}
+	}
+	if (receivingUser.getFd() == 0)
+	{
+		std::string	errMessage = constructMessage(ERR_NOSUCHNICK, usrAndMsg[0]);
+		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+		return ;
 	}
 	std::string	message = ":"+getClient(clientSocket)->getNickname()+"!"+getClient(clientSocket)->getUsername()+"@host PRIVMSG "+receivingUser.getNickname()+" "+usrAndMsg[1]+"\r\n";
 	send(receivingUser.getFd(), message.c_str(), message.length(), 0);
@@ -135,6 +143,12 @@ void	Server::Privmsg(std::string args, int clientSocket)
 	if (isChannel(realChannel))
 	{
 		std::string	message = extractMessage(args);
+		if (message.empty())
+		{
+			std::string	errMessage = constructMessage(ERR_NORECIPIENT, "PRIVMSG");
+			send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+			return ;
+		}
 		std::cout<<"PRIVMSG "<<realChannel<<std::endl;
 		privmsgChannel(realChannel, clientSocket, message);
 	}
