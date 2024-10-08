@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/07 16:39:41 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:02:36 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ int	isChannel(std::string channelName)
 {
 	std::string prefixChecker = CHAR_FOR_CHANNEL_FIRST_LETTER;
 
-	if ( prefixChecker.find_first_of(channelName[0]) != std::string::npos)
+	if (prefixChecker.find_first_of(channelName[0]) != std::string::npos)
 		return (1);
-	std::cout<<"death 💀"<<std::endl;
 	return (0);
 }
 
@@ -35,6 +34,21 @@ std::string extractMessage(const std::string& input)
 	return message;
 }
 
+std::vector<std::string> extractUsrMsgToSend(const std::string& input)
+{
+	std::string	usr = input.substr(0, input.find_first_of(':') - 1);
+	std::string	message = input.substr(input.find_first_of(':'), input.size());
+	// usr.erase()
+	//chekc if message || usr are npos in case send an error to the client in question!!!
+	// std::cout<<"Input received sending to user case "<<input<<std::endl;
+	// std::cout<<"user that needs to receive the message"<<GREEN<<usr<<RESET<<"that's it"<<std::endl;
+	// std::cout<<"message in question"<<GREEN<<message<<RESET<<"that's it"<<std::endl;
+	std::vector<std::string>	usrAndMessage;
+	usrAndMessage.push_back(usr);
+	usrAndMessage.push_back(message);
+	return usrAndMessage;
+}
+
 std::string extractChannelName(const std::string& input)
 {
 	// Trova la posizione del primo carattere ':'
@@ -42,9 +56,7 @@ std::string extractChannelName(const std::string& input)
 
 	// Se non troviamo il carattere ':', restituiamo l'intera stringa
 	if (colonPos == std::string::npos)
-	{
 		return input; // Non c'è ':' quindi restituiamo l'intera stringa
-	}
 
 	// Restituiamo la sottostringa che va dall'inizio fino al carattere ':'
 	return input.substr(0, colonPos);
@@ -99,16 +111,26 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 
 
 
-void	Server::privmsgPrivateMsg(int clientSocket, std::string usrMessage)
+void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg)
 {
-	(void)clientSocket;
-	(void)usrMessage;
+	Client	receivingUser(0);
 
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (_clients[i]->getNickname().compare(usrAndMsg[0]))
+		{
+			receivingUser = *_clients[i];
+			break;
+		}
+	}
+	std::string	message = ":"+getClient(clientSocket)->getNickname()+"!"+getClient(clientSocket)->getUsername()+"@host PRIVMSG "+receivingUser.getNickname()+" "+usrAndMsg[1]+"\r\n";
+	send(receivingUser.getFd(), message.c_str(), message.length(), 0);
 }
 
 void	Server::Privmsg(std::string args, int clientSocket)
 {
 	std::string	realChannel = extractChannelName(args);
+	std::cout<<"args received "<<args<<std::endl;
 
 	if (isChannel(realChannel))
 	{
@@ -118,9 +140,10 @@ void	Server::Privmsg(std::string args, int clientSocket)
 	}
 	else
 	{
+		std::vector<std::string>	usrAndMsg = extractUsrMsgToSend(args);
 		//private message
 		//this in kvirc is not sent by the channel ui
 		//but is instead is sent manually from the basic ui
-			;
+		sendPrivateMsg(clientSocket, usrAndMsg);
 	}
 }

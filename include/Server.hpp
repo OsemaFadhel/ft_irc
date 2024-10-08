@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/07 15:45:47 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:04:08 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ class Server
 		/*Privmsg command and functions by lnicoter*/
 		void	Privmsg(std::string args, int clientSocket);
 		void	privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
-		void	privmsgPrivateMsg(int clientSocket, std::string usrMessage);
+		void	sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg);
 
 };
 
