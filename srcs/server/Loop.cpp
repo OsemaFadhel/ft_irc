@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/05 12:12:25 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/08 12:11:20 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,14 @@ void Server::killServer()
 		close(_newfds[i].id);
 
 	_newfds.clear();
+	std::vector<socketdata>().swap(_newfds);
 
 	//free memory
 
 	for (size_t i = 0; i < _clients.size(); ++i)
 		delete _clients[i];
 	_clients.clear();
+	std::vector<Client*>().swap(_clients);
 
 	//for (size_t i = 0; i < _channels.size(); ++i)
 	//	delete _channels[i];
