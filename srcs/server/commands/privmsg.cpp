@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/08 19:05:19 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/08 19:25:28 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,18 @@ std::string extractMessage(const std::string& input)
 
 std::vector<std::string> extractUsrMsgToSend(const std::string& input)
 {
-	std::string	usr = input.substr(0, input.find_first_of(':') - 1);
-	std::string	message = input.substr(input.find_first_of(':'), input.size());
+	std::string	usr = (input.find_first_of(':') == std::string::npos) ? "" : input.substr(0, input.find_first_of(':'));
+	std::string	message = (input.find_first_of(':') == std::string::npos) ? "" : input.substr(input.find_first_of(':'), input.size());
+
+	if (usr == "" || message == "")
+	{
+		//then you'll check if vector is empty later
+		std::vector<std::string>	usrAndMessage;
+		usrAndMessage.push_back(usr);
+		usrAndMessage.push_back(message);
+		std::cout<<"death"<<std::endl;
+		return usrAndMessage;
+	}
 	// usr.erase()
 	//chekc if message || usr are npos in case send an error to the client in question!!!
 	// std::cout<<"Input received sending to user case "<<input<<std::endl;
@@ -145,19 +155,27 @@ void	Server::Privmsg(std::string args, int clientSocket)
 		std::string	message = extractMessage(args);
 		if (message.empty())
 		{
-			std::string	errMessage = constructMessage(ERR_NORECIPIENT, "PRIVMSG");
+			std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "PRIVMSG");
 			send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 			return ;
 		}
-		std::cout<<"PRIVMSG "<<realChannel<<std::endl;
+		std::cout<<"PRIVMSG channel? "<<realChannel<<std::endl;
 		privmsgChannel(realChannel, clientSocket, message);
 	}
 	else
 	{
 		std::vector<std::string>	usrAndMsg = extractUsrMsgToSend(args);
+		if (usrAndMsg[0].empty() || usrAndMsg[1].empty())
+		{
+			std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "PRIVMSG");
+			send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+			return ;
+		}
 		//private message
 		//this in kvirc is not sent by the channel ui
-		//but is instead is sent manually from the basic ui
+		//but is instead is sent manually from the basic
+		std::cout<<"PRIVMSG users? "<<realChannel<<std::endl;
+
 		sendPrivateMsg(clientSocket, usrAndMsg);
 	}
 }
