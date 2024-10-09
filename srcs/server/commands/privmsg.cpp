@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/08 19:25:28 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:40:24 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ std::vector<std::string> extractUsrMsgToSend(const std::string& input)
 	// std::cout<<"Input received sending to user case "<<input<<std::endl;
 	// std::cout<<"user that needs to receive the message"<<GREEN<<usr<<RESET<<"that's it"<<std::endl;
 	// std::cout<<"message in question"<<GREEN<<message<<RESET<<"that's it"<<std::endl;
+	usr = usr.erase(usr.find_last_of(' '));
 	std::vector<std::string>	usrAndMessage;
 	usrAndMessage.push_back(usr);
 	usrAndMessage.push_back(message);
@@ -93,14 +94,14 @@ std::string extractChannelName(const std::string& input)
 
 void	Server::privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage)
 {
+	channelName = channelName.erase(channelName.find_first_of(' '));
 	std::cout<<"channelName "<<channelName<<std::endl;
 	Client	*sender = getClient(clientSocket);
 	std::string	message = ":"+sender->getNickname()+"!"+sender->getUsername()+"@host PRIVMSG "+channelName+" :"+usrMessage+"\r\n";
 
-
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
-		if (_channels[i].getName().compare(channelName.c_str()))
+		if (!_channels[i].getName().compare(channelName.c_str()))
 		{
 			// std::vector< std::pair< Client, int > >::iterator it;
 			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
@@ -115,11 +116,14 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 		}
 		else
 		{
-			std::cout<<"wrong one here we have "<<_channels[i].getName()<<std::endl;
+			std::cout<<"wrong one here we have "<<channelName<<std::endl;
+			break;
 		}
 	}
 
 }
+
+
 
 
 //BAN checks are not requested by the subject
@@ -127,9 +131,10 @@ void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg
 {
 	Client	receivingUser(0);
 
+	std::cout<<"usrAndMsg[0] "<<usrAndMsg[0]<<std::endl;
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		if (_clients[i]->getNickname().compare(usrAndMsg[0]))
+		if (_clients[i]->getNickname().compare(usrAndMsg[0]) == 0 && _clients[i]->getFd() != clientSocket)
 		{
 			receivingUser = *_clients[i];
 			break;
@@ -159,7 +164,6 @@ void	Server::Privmsg(std::string args, int clientSocket)
 			send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 			return ;
 		}
-		std::cout<<"PRIVMSG channel? "<<realChannel<<std::endl;
 		privmsgChannel(realChannel, clientSocket, message);
 	}
 	else
@@ -173,9 +177,7 @@ void	Server::Privmsg(std::string args, int clientSocket)
 		}
 		//private message
 		//this in kvirc is not sent by the channel ui
-		//but is instead is sent manually from the basic
-		std::cout<<"PRIVMSG users? "<<realChannel<<std::endl;
-
+		//but is instead is sent manually from the
 		sendPrivateMsg(clientSocket, usrAndMsg);
 	}
 }
