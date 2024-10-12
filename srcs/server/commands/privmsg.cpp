@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/12 16:43:43 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/12 17:22:31 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,6 @@ std::vector<std::string> extractUsrMsgToSend(const std::string& input)
 		std::cout<<"death"<<std::endl;
 		return usrAndMessage;
 	}
-	// usr.erase()
-	//chekc if message || usr are npos in case send an error to the client in question!!!
-	// std::cout<<"Input received sending to user case "<<input<<std::endl;
-	// std::cout<<"user that needs to receive the message"<<GREEN<<usr<<RESET<<"that's it"<<std::endl;
-	// std::cout<<"message in question"<<GREEN<<message<<RESET<<"that's it"<<std::endl;
 	usr = usr.erase(usr.find_last_of(' '));
 	std::vector<std::string>	usrAndMessage;
 	usrAndMessage.push_back(usr);
@@ -130,7 +125,7 @@ void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg
 {
 	Client	receivingUser(0);
 
-	std::cout<<"usrAndMsg[0] "<<usrAndMsg[0]<<std::endl;
+	// std::cout<<"usrAndMsg[0] "<<usrAndMsg[0]<<std::endl;
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
 		if (_clients[i]->getNickname().compare(usrAndMsg[0]) == 0 && _clients[i]->getFd() != clientSocket)

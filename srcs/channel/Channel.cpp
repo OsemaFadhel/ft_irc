@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/12 13:02:12 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/12 19:30:40 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@ Missing checks:
 It seems the channel is not inserted correctly but i'm building it and i'm
 sure of it so i should isolate and check better
 */
+
+Channel::Channel()
+{
+	_name = "";
+	_topic = "";
+	_mode = "";
+	_password = "";
+	_limit = 0;
+}
+
+
 Channel::Channel(Client firstClient, std::string channelName)
 {
 	//check name

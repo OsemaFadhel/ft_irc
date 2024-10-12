@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/08 17:04:08 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/12 19:38:19 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ class Server
 		Client *getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
 		void removeClient(int clientSocket);
-		Channel	*getChannel(std::string channelName);
+		Channel	getChannel(std::string& channelName);
 
 		void run();
 		void createSocket();
@@ -123,6 +123,8 @@ class Server
 		void	privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
 		void	sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg);
 
+		/*Part command and functions by lnicoter*/
+		void	Part(std::string args, int clientSocket);
 };
 
 // Macros for ANSI escape codes
