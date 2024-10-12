@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/12 14:03:22 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/12 16:43:43 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,21 +103,13 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 	{
 		if (!_channels[i].getName().compare(channelName.c_str()))
 		{
-			if (_channels[i].isInChannel(*sender))
+			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
 			{
-				for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+				if (_channels[i].getUsrData()[j].first.getNickname().compare(sender->getNickname()))
 				{
-					if (_channels[i].getUsrData()[j].first.getNickname().compare(sender->getNickname()))
-					{
-						std::cout<<"sending message to the others"<<std::endl;
-						send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
-					}
+					std::cout<<"sending message to the others"<<std::endl;
+					send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
 				}
-			}
-			else
-			{
-				std::string errMessage = constructMessage(ERR_NOTONCHANNEL, sender->getNickname().c_str(), channelName);
-				send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 			}
 			break;
 		}
@@ -199,6 +191,9 @@ void	Server::Privmsg(std::string args, int clientSocket)
 }
 
 /*
+
+
+
 	errors to handle
 
 	404    ERR_CANNOTSENDTOCHAN (this should be implemented after you have implemented the operators)
@@ -213,14 +208,6 @@ void	Server::Privmsg(std::string args, int clientSocket)
 		   not having
 		   permission to speak on the channel, or not being joined to a channel with the no external
 		   messages mode set.
-
-	 442    ERR_NOTONCHANNEL (very generic error i don't know how to implement it)
-	 		<client> <channel> :You're not on that channel"
-
-         - Returned by the server whenever a client tries to
-           perform a channel affecting command for which the
-           client isn't a member.
-
 
 
 */
