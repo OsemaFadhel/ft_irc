@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/09 16:40:24 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/12 14:03:22 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,21 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 	{
 		if (!_channels[i].getName().compare(channelName.c_str()))
 		{
-			// std::vector< std::pair< Client, int > >::iterator it;
-			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+			if (_channels[i].isInChannel(*sender))
 			{
-				if (_channels[i].getUsrData()[j].first.getNickname().compare(sender->getNickname()))
+				for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
 				{
-					std::cout<<"sending message to the others"<<std::endl;
-		 			send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
+					if (_channels[i].getUsrData()[j].first.getNickname().compare(sender->getNickname()))
+					{
+						std::cout<<"sending message to the others"<<std::endl;
+						send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
+					}
 				}
+			}
+			else
+			{
+				std::string errMessage = constructMessage(ERR_NOTONCHANNEL, sender->getNickname().c_str(), channelName);
+				send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 			}
 			break;
 		}
@@ -171,9 +178,18 @@ void	Server::Privmsg(std::string args, int clientSocket)
 		std::vector<std::string>	usrAndMsg = extractUsrMsgToSend(args);
 		if (usrAndMsg[0].empty() || usrAndMsg[1].empty())
 		{
-			std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "PRIVMSG");
-			send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
-			return ;
+			if (usrAndMsg[0].empty())
+			{
+				std::string	errMessage = constructMessage(ERR_NORECIPIENT, "PRIVMSG");
+				send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+				return ;
+			}
+			else
+			{
+				std::string	errMessage = constructMessage(ERR_NOTEXTTOSEND, "PRIVMSG");
+				send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+				return ;
+			}
 		}
 		//private message
 		//this in kvirc is not sent by the channel ui
@@ -181,3 +197,30 @@ void	Server::Privmsg(std::string args, int clientSocket)
 		sendPrivateMsg(clientSocket, usrAndMsg);
 	}
 }
+
+/*
+	errors to handle
+
+	404    ERR_CANNOTSENDTOCHAN (this should be implemented after you have implemented the operators)
+              "<channel name> :Cannot send to channel"
+
+         - Sent to a user who is either (a) not on a channel
+           which is mode +n or (b) not a chanop (or mode +v) on
+           a channel which has mode +m set or where the user is
+           banned and is trying to send a PRIVMSG message to
+           that channel.
+		   This is generally sent in response to channel modes, such as a channel being moderated and the client
+		   not having
+		   permission to speak on the channel, or not being joined to a channel with the no external
+		   messages mode set.
+
+	 442    ERR_NOTONCHANNEL (very generic error i don't know how to implement it)
+	 		<client> <channel> :You're not on that channel"
+
+         - Returned by the server whenever a client tries to
+           perform a channel affecting command for which the
+           client isn't a member.
+
+
+
+*/

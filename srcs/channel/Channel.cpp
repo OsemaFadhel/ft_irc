@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/09 17:10:52 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/12 13:02:12 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,9 +186,9 @@ int			Channel::isInChannel(Client client)
 {
 	for (size_t i = 0; i < _usrData.size(); i++)
 	{
-		std::cout<<"nickname "<<_usrData[i].first.getNickname()<<std::endl;
-		std::cout<<"i number "<<i<<std::endl;
-		std::cout<<"size??? "<<_usrData.size()<<std::endl;
+		// std::cout<<"nickname "<<_usrData[i].first.getNickname()<<std::endl;
+		// std::cout<<"i number "<<i<<std::endl;
+		// std::cout<<"size??? "<<_usrData.size()<<std::endl;
 		if (_usrData[i].first.getNickname() == client.getNickname())
 			return 1;
 	}
