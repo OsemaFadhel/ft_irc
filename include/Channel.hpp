@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/12 19:47:56 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/13 18:55:28 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class Channel
 		void									setPassword(const std::string& password);
 		void									setLimit(int limit);
 		void									setUsrData(std::vector< std::pair< Client, int> > usrData);
-		void									removeClient(Client& client);
+		void									removeClient(Client& client, std::string reason);
 		/*something like this. each client has a channel
 		so from the client class, we can call the channel class
 		since vector: *it.kick(client); somtehing like this
