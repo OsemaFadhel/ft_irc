@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 14:18:43 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/13 18:18:26 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,7 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 			Join(args, clientSocket);
 		else if (command == "PRIVMSG")
 			Privmsg(args, clientSocket);
+		else if (command == "PART")
+			Part(args, clientSocket);
 	}
 }
