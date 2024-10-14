@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/12 17:22:31 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:04:21 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	isChannel(std::string channelName)
 std::string extractMessage(const std::string& input)
 {
 	size_t	i = input.find(':');
-	std::cout<<"eccoci "<<i<<std::endl;
 	if (i == std::string::npos)
 		return "";
 	std::string	message = input.substr(i, input.size());

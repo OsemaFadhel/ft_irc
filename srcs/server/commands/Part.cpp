@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/14 15:00:09 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:06:49 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 			{
 				if (_channels[i].getUsrData()[j].first.getNickname() != usrName)
 				{
+					std::cout<<"Allerting others that someone is leaving the channel"<<std::endl;
+					std::cout<<"allerting "<<_channels[i].getUsrData()[j].first.getNickname()<<std::endl;
 					send(_channels[i].getUsrData()[j].first.getFd(), partMessage.c_str(), partMessage.length(), 0);
 				}
 			}
@@ -39,8 +41,8 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 
 void	Server::partLeavingMessage(Client	usr, std::string channelName)
 {
-	// std::string	partMessage = ":" + usr.getNickname() + " PART " + channelName + " " + usr.getNickname() + " is leaving the channel " + channelName + "\r\n";
-	// send(usr.getFd(), partMessage.c_str(), partMessage.length(), 0);
+	std::string	partMessage = ":" + usr.getNickname() + " PART " + channelName + " " + usr.getNickname() + " is leaving the channel " + channelName + "\r\n";
+	send(usr.getFd(), partMessage.c_str(), partMessage.length(), 0);
 	partLeavingMessageAll(channelName, usr.getNickname());
 }
 
@@ -64,11 +66,7 @@ void	Channel::removeClient(Client& client, std::string reason)
 			std::cout<<partMessage<<std::endl;
 			// send(client.getFd(), partMessage.c_str(), partMessage.length(), 0);
 			std::cout<<_usrData[i].first<<std::endl;
-			if (!partMessage.empty())
-			{
-				std::cout<<"who's getting this message damnnnnn "<<_usrData[i].first.getNickname()<<std::endl;
-				send(_usrData[i].first.getFd(), partMessage.c_str(), partMessage.length(), 0);
-			}
+
 		}
 	}
 }
@@ -100,6 +98,13 @@ void	Server::Part(std::string args, int clientSocket)
 			if (_channels[i].getName() == numOfChannels[j])
 			{
 				_channels[i].removeClient(*client, reason);
+				if (_channels[i].getUsrData().size() == 0)
+				{
+					_channels.erase(_channels.begin() + i);
+					partLeavingMessage(*client, _channels[i].getName());
+				}
+				else
+					partLeavingMessage(*client, _channels[i].getName());
 				break ;
 			}
 		}
