@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/14 14:55:10 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 20:26:15 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,26 +108,29 @@ class Server
 				JOIN <channel>,....  <key>,....
 				between channel and key there is a space that's how we can differentiate them
 		*/
-		void								Join(std::string args, int	clientSocket);
-		std::vector< std::string >			channelParser(std::string args);
-		std::vector< std::string >			keyParser(std::string args);
-		void	checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
+
+		//join command
+		void						Join(std::string args, int	clientSocket);
+		std::vector< std::string >	channelParser(std::string args);
+		std::vector< std::string >	keyParser(std::string args);
+		void						channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert);
+		void						checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
 		//checking functions of server by lnicoter
-		void	valuesCheck(Client clientToInsert);
-		void	channelCheck();
-		void	joinCreateChanMsg(Client clientToInsert, std::string channelName);
-		void	listOfUsersMsg(std::string channelName);
+		void						valuesCheck(Client clientToInsert);
+		void						channelCheck();
+		void						joinCreateChanMsg(Client clientToInsert, std::string channelName);
+		void						listOfUsersMsg(std::string channelName);
 
 		/*Privmsg command and functions by lnicoter*/
-		void	Privmsg(std::string args, int clientSocket);
-		void	privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
-		void	sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg);
+		void						Privmsg(std::string args, int clientSocket);
+		void						privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
+		void						sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg);
 
 		/*Part command and functions by lnicoter*/
-		void		Part(std::string args, int clientSocket);
-		std::string	takeReason(std::string args);
-		void		partLeavingMessage(Client	usr, std::string channelName);
-		void		partLeavingMessageAll(std::string channelName, std::string usrName);
+		void						Part(std::string args, int clientSocket);
+		std::string					takeReason(std::string args);
+		void						partLeavingMessage(Client	usr, std::string channelName);
+		void						partLeavingMessageAll(std::string channelName, std::string usrName);
 };
 
 // Macros for ANSI escape codes

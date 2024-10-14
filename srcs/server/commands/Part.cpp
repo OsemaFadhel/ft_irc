@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/14 16:06:49 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 17:32:53 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 
 void	Server::partLeavingMessage(Client	usr, std::string channelName)
 {
-	std::string	partMessage = ":" + usr.getNickname() + " PART " + channelName + " " + usr.getNickname() + " is leaving the channel " + channelName + "\r\n";
+	std::string	partMessage = ":" + usr.getNickname() + " PART :" + channelName + "\r\n";
 	send(usr.getFd(), partMessage.c_str(), partMessage.length(), 0);
 	partLeavingMessageAll(channelName, usr.getNickname());
 }
@@ -53,18 +53,11 @@ void	Channel::removeClient(Client& client, std::string reason)
 	std::string	partMessage = "";
 	for (size_t i = 0; i < _usrData.size(); i++)
 	{
-		if (_usrData[i].first.getNickname() == client.getNickname())
+		if (isInChannel(client))
 		{
 			std::cout<<"Usr to delete "<<_usrData[i].first.getNickname()<<std::endl;
-			// partMessage = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost "+ "PART " + this->getName() + " " + client.getNickname() + " is leaving the channel " + this->getName();
-			partMessage = ":" + client.getNickname() + " PART :" + this->_name + "\r\n";
-			// partMessage += "\r\n";
-			channelContentSize();
 			_usrData.erase(_usrData.begin() + i);
-			channelContentSize();
-			// std::cout<<"user found "<<_usrData.begin() + i<<std::endl;
 			std::cout<<partMessage<<std::endl;
-			// send(client.getFd(), partMessage.c_str(), partMessage.length(), 0);
 			std::cout<<_usrData[i].first<<std::endl;
 
 		}
@@ -86,9 +79,11 @@ std::string	Server::takeReason(std::string args)
 	return "";
 }
 
+
 void	Server::Part(std::string args, int clientSocket)
 {
 	std::vector<std::string>	numOfChannels = channelParser(args);
+	std::cout<<"numOfChannels "<<numOfChannels.size()<<std::endl;
 	Client		*client = getClient(clientSocket);
 	std::string	reason = takeReason(args);
 	for (size_t i = 0; i < _channels.size(); i++)
@@ -97,6 +92,7 @@ void	Server::Part(std::string args, int clientSocket)
 		{
 			if (_channels[i].getName() == numOfChannels[j])
 			{
+				std::cout<<YELLOW<<"leaving "<<_channels[i].getName()<<RESET<<std::endl;
 				_channels[i].removeClient(*client, reason);
 				if (_channels[i].getUsrData().size() == 0)
 				{
@@ -105,7 +101,7 @@ void	Server::Part(std::string args, int clientSocket)
 				}
 				else
 					partLeavingMessage(*client, _channels[i].getName());
-				break ;
+				// break ;
 			}
 		}
 	}

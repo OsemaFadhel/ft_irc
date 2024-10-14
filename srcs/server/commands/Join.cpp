@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/14 13:48:48 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 20:24:30 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,50 +140,68 @@ void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 	listOfUsersMsg(channelName);
 }
 
-void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert)
+//function for checkChannelList
+void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i)
 {
-	for (size_t i = 0; i < numberOfChannels.size(); i++)
+	for (size_t j = 0; j < _channels.size(); j++)
 	{
-		if (_channels.size() == 0)
+		if (_channels[j].getName() == numberOfChannels[i])
 		{
-			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
-			_channels.push_back(newChannel);
-			//i send the message to make the client create/join the channel
-			if (!newChannel.getName().empty())
-				joinCreateChanMsg(clientToInsert, newChannel.getName());
-			else
-				std::cout<<RED<<"death"<<RESET<<std::endl;
-		}
-		else
-		{
-			for (size_t j = 0; j < _channels.size(); j++)
-			{
-				if (_channels[j].getName() == numberOfChannels[i])
-				{
-					std::cout<<"check of channel name passed ✅"<<std::endl;
-					//if for checking if the user is in the channel
-					if (_channels[j].isInChannel(clientToInsert))
-					{
-						std::string	errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname());
-						send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
-					}
-					else
-					{
-						//!we are missing the checks for the keys like if the channel exists and stuff
-						_channels[j].addClient(clientToInsert);
-						std::cout<<GREEN<<"Client successfully added to the channel"<<RESET<<std::endl;
-						joinCreateChanMsg(clientToInsert, _channels[j].getName());
-					}
-				}
-				else
-				{
-					_channels.push_back(Channel(clientToInsert, numberOfChannels[i]));
-					joinCreateChanMsg(clientToInsert, _channels[_channels.size() - 1].getName());
-				}
-			}
+			channelExists = true;
+			channelIndex = j;
+			break; // Esci dal ciclo, abbiamo trovato il canale
 		}
 	}
 }
+
+void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert)
+{
+	if (_channels[channelIndex].isInChannel(clientToInsert))
+			{
+				std::cout << RED << "Questo client è già nel canale, Client: "
+							<< clientToInsert.getNickname()
+							<< " Chan: " << _channels[channelIndex].getName()
+							<< RESET << std::endl;
+				std::string errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname().c_str());
+				send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+			}
+			else
+			{
+				// Aggiungi il client al canale esistente
+				_channels[channelIndex].addClient(clientToInsert);
+				std::cout << GREEN << "Client aggiunto correttamente al canale"
+							<< RESET << std::endl;
+				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+			}
+}
+
+void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client clientToInsert)
+{
+	for (size_t i = 0; i < numberOfChannels.size(); i++)
+	{
+		bool channelExists = false;
+		size_t channelIndex = 0;
+
+		// Controlla se il canale esiste già
+		checkExistence(channelExists, channelIndex, _channels, numberOfChannels, i);
+
+		if (channelExists)
+		{
+			channelHandling(_channels, channelIndex, clientToInsert);
+		}
+		else
+		{
+			// Se il canale non esiste, creane uno nuovo
+			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
+			_channels.push_back(newChannel);
+			std::cout << GREEN << "Nuovo canale creato e client aggiunto: "
+						<< newChannel.getName()
+						<< RESET << std::endl;
+			joinCreateChanMsg(clientToInsert, newChannel.getName());
+		}
+	}
+}
+
 
 
 /*
@@ -218,7 +236,7 @@ void	Server::Join(std::string args, int	clientSocket)
 	// keys = keyParser(args);
 	for (size_t k = 0; k < keys.size(); k++)
 		std::cout << "keys: " << keys[k] << std::endl;
-
+	std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;
 	checkChannelExist(numOfChannels, *clientToInsert);
 }
 
