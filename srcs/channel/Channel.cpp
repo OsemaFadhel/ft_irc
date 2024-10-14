@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/12 19:30:40 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:46:25 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ Channel::Channel(Client firstClient, std::string channelName)
 	{
 		for (size_t i = 0; i < charCheck.size(); i++)
 		{
-			std::cout<<"testing channel name checks!!!! "<<static_cast<int>(channelName[0])<<std::endl;
+			// std::cout<<"testing channel name checks!!!! "<<static_cast<int>(channelName[0])<<std::endl;
 			if (channelName[0] == charCheck[i])
 				syntaxFlag = 1;
 			this->_name = channelName;
@@ -209,8 +209,25 @@ int			Channel::isInChannel(Client client)
 
 void	Channel::addClient(Client client)
 {
+	std::cout<<"qui non entra????"<<std::endl;
 	_usrData.push_back(std::make_pair(client, 0));
+	channelContentSize();
 }
+
+
+
+void	Channel::channelContentSize()
+{
+	std::vector<std::pair <Client, int> >::iterator	it;
+
+	for (it = this->_usrData.begin(); it != this->_usrData.end(); it++)
+	{
+		std::cout<<"Client nickname -> "<<it->first.getNickname()<<std::endl;
+	}
+	std::cout<<"channel size btw "<<this->_usrData.size()<<std::endl;
+}
+
+
 /* to implement:
 		void		join should i save the channel that are passed? how though
 		void		kick(Client* client); // kick client

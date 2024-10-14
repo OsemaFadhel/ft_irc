@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/13 18:55:12 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:55:10 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ class Server
 		/*Part command and functions by lnicoter*/
 		void		Part(std::string args, int clientSocket);
 		std::string	takeReason(std::string args);
+		void		partLeavingMessage(Client	usr, std::string channelName);
+		void		partLeavingMessageAll(std::string channelName, std::string usrName);
 };
 
 // Macros for ANSI escape codes

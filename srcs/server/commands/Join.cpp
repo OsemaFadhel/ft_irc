@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/13 19:09:48 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:48:48 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void	Server::listOfUsersMsg(std::string channelName)
 
 }
 
+//the user is not joining the channel
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 {
 	std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
@@ -159,6 +160,7 @@ void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Clie
 			{
 				if (_channels[j].getName() == numberOfChannels[i])
 				{
+					std::cout<<"check of channel name passed ✅"<<std::endl;
 					//if for checking if the user is in the channel
 					if (_channels[j].isInChannel(clientToInsert))
 					{
