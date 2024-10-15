@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/14 17:32:53 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:06:35 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,12 @@
 /*
 		void		partLeavingMessage(Client	usr, std::string channelName);
 		void		partLeavingMessageAll(std::string channelName);
+
 */
+
+
+
+
 
 void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 {
@@ -51,15 +56,20 @@ void	Channel::removeClient(Client& client, std::string reason)
 {
 	(void)reason;
 	std::string	partMessage = "";
+
 	for (size_t i = 0; i < _usrData.size(); i++)
 	{
 		if (isInChannel(client))
 		{
 			std::cout<<"Usr to delete "<<_usrData[i].first.getNickname()<<std::endl;
 			_usrData.erase(_usrData.begin() + i);
-			std::cout<<partMessage<<std::endl;
-			std::cout<<_usrData[i].first<<std::endl;
-
+			i--;
+		}
+		else
+		{
+			//<channel> :You're not on that channel
+			std::string notOnChannel = constructMessage(ERR_NOTONCHANNEL, this->getName().c_str());
+			send(client.getFd(), notOnChannel.c_str(), notOnChannel.size(), 0);
 		}
 	}
 }
@@ -80,29 +90,30 @@ std::string	Server::takeReason(std::string args)
 }
 
 
+
+
 void	Server::Part(std::string args, int clientSocket)
 {
 	std::vector<std::string>	numOfChannels = channelParser(args);
+	size_t						channelIndex;
+	bool						channelExist = false;
+	Client						*client = getClient(clientSocket);
+	std::string					reason = takeReason(args);
+
 	std::cout<<"numOfChannels "<<numOfChannels.size()<<std::endl;
-	Client		*client = getClient(clientSocket);
-	std::string	reason = takeReason(args);
+	//main for
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
-		for (size_t j = 0; j < numOfChannels.size(); j++)
+		//loop for the check of the same channel
+		checkExistence(channelExist, channelIndex, _channels, numOfChannels, i);
+
+		if (channelExist)
 		{
-			if (_channels[i].getName() == numOfChannels[j])
-			{
-				std::cout<<YELLOW<<"leaving "<<_channels[i].getName()<<RESET<<std::endl;
-				_channels[i].removeClient(*client, reason);
-				if (_channels[i].getUsrData().size() == 0)
-				{
-					_channels.erase(_channels.begin() + i);
-					partLeavingMessage(*client, _channels[i].getName());
-				}
-				else
-					partLeavingMessage(*client, _channels[i].getName());
-				// break ;
-			}
+			_channels[channelIndex].removeClient(*client, reason);
+			partLeavingMessage(*client, _channels[channelIndex].getName());
 		}
 	}
+
+	//checking how many channels still have usrs
+	deleteEmptyChannels();
 }

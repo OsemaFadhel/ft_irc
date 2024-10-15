@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/14 20:26:15 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/15 15:43:53 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,10 @@ class Server
 		std::string					takeReason(std::string args);
 		void						partLeavingMessage(Client	usr, std::string channelName);
 		void						partLeavingMessageAll(std::string channelName, std::string usrName);
+		void						deleteEmptyChannels();
 };
+
+void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
 
 // Macros for ANSI escape codes
 #define RESET      "\033[0m"   // Reset all attributes

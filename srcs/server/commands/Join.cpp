@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/14 20:24:30 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/15 15:09:45 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,22 +157,22 @@ void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Chann
 void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert)
 {
 	if (_channels[channelIndex].isInChannel(clientToInsert))
-			{
-				std::cout << RED << "Questo client è già nel canale, Client: "
-							<< clientToInsert.getNickname()
-							<< " Chan: " << _channels[channelIndex].getName()
-							<< RESET << std::endl;
-				std::string errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname().c_str());
-				send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
-			}
-			else
-			{
-				// Aggiungi il client al canale esistente
-				_channels[channelIndex].addClient(clientToInsert);
-				std::cout << GREEN << "Client aggiunto correttamente al canale"
-							<< RESET << std::endl;
-				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
-			}
+	{
+		std::cout << RED << "Questo client è già nel canale, Client: "
+					<< clientToInsert.getNickname()
+					<< " Chan: " << _channels[channelIndex].getName()
+					<< RESET << std::endl;
+		std::string errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname().c_str());
+		send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+	}
+	else
+	{
+		// Aggiungi il client al canale esistente
+		_channels[channelIndex].addClient(clientToInsert);
+		std::cout << GREEN << "Client aggiunto correttamente al canale"
+					<< RESET << std::endl;
+		joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+	}
 }
 
 void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client clientToInsert)
