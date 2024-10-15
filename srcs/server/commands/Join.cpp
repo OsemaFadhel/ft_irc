@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/15 15:09:45 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/15 20:27:46 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 
 //substr e find per spostare il puntatore alla prima virgola
 //new error: 2 channels that are going to be inserted with
-//a space after the first , for example <channel1>, <channel2> the space messes up all the logic [SOLVED]
+//a space after the first , for example <channel1>, <channel2> the space messes up all the logic
+//unfortunately is not possible to resolve it properly for now
+//there's something that I'm missing... but i tried anything to make it work
+//with a lot of casistics but with the keys is Impossible to handle it well without making problems
+//on the handling of the vector of channels
 std::vector<std::string>	Server::channelParser(std::string args)
 {
 
@@ -32,13 +36,13 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		if (pos != std::string::npos)
 		{
 			temp = onlyChannels.substr(i, pos - i);
-			std::cout << "temp1: " << temp << std::endl;
+			// std::cout << "temp1: " << temp << std::endl;
 			i = pos + 1;
 		}
 		else
 		{
 			temp = onlyChannels.substr(i);
-			std::cout << "temp2: " << temp << std::endl;
+			// std::cout << "temp2: " << temp << std::endl;
 			i = std::string::npos;
 		}
 		//trimming the string to remove the spaces and avoiding a sudden segfault
@@ -49,7 +53,7 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		if (!temp.empty() && temp.find(' ') == std::string::npos)
 		{
 			numOfChannels.push_back(temp);
-			std::cout << "Channel added: " << temp << std::endl;
+			// std::cout << "Channel added: " << temp << std::endl;
 		}
 		else
 		{
@@ -131,11 +135,13 @@ void	Server::listOfUsersMsg(std::string channelName)
 }
 
 //the user is not joining the channel
+//allora ho capito il messaggio ha questo tipo di formattazione
+//:ft_irc <usr> :
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 {
 	std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
 	std::cout<<"channel to create/join: "<<channelName<<std::endl;
-	std::string serverMessage = ":" + clientToInsert.getNickname() + " JOIN :" + channelName + "\r\n";
+	std::string serverMessage = ":ft_irc " + clientToInsert.getNickname() + " JOIN :" + channelName + "\r\n";
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
 	listOfUsersMsg(channelName);
 }
@@ -193,11 +199,14 @@ void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client
 		{
 			// Se il canale non esiste, creane uno nuovo
 			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
-			_channels.push_back(newChannel);
-			std::cout << GREEN << "Nuovo canale creato e client aggiunto: "
-						<< newChannel.getName()
-						<< RESET << std::endl;
-			joinCreateChanMsg(clientToInsert, newChannel.getName());
+			if (!newChannel.getName().empty())
+			{
+				_channels.push_back(newChannel);
+				std::cout << GREEN << "Nuovo canale creato e client aggiunto: "
+							<< newChannel.getName()
+							<< RESET << std::endl;
+				joinCreateChanMsg(clientToInsert, newChannel.getName());
+			}
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/12 15:21:39 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/15 20:25:36 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 std::string constructMessage(const std::string& format, ...);
 
 // The server sends Replies 001 to 004 to a user upon successful registration.
-
+// ":ft_irc :Welcome to the Internet Relay Network <nick>!<user>@<host>"
 #define RPL_WELCOME ":ft_irc 001 %s :Welcome to %s Network, %s\r\n" //size of string = 44
 
 #define RPL_YOURHOST ":ft_irc 002 %s :Your host is %s, running version %s\r\n" // Static size: 54

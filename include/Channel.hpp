@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/14 13:36:03 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:07:51 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ class Channel
 		void									setLimit(int limit);
 		void									setUsrData(std::vector< std::pair< Client, int> > usrData);
 		void									removeClient(Client& client, std::string reason);
-		/*something like this. each client has a channel
-		so from the client class, we can call the channel class
-		since vector: *it.kick(client); somtehing like this
-		*/
+
 		//channel commands for channel operators
 		void		kick(Client* client); // kick client
 		void		invite(Client* client); // invite client
@@ -78,3 +75,26 @@ class Channel
 };
 
 #endif
+
+/*
+!missing checks:
+	PART command with a well done <reason> breaks 💀
+
+
+
+
+
+I think that for now i don't need to do
+
+
+*Channel operators behaviour development logic 🧠:
+	a channel operator borns when is the first one to enter
+	a channel with the JOIN command.
+	this is the simplest case where you can define a chanop
+	!the chanop is identified by @ prefix next to it's nickname
+*dridolfo tips 🗣️
+	you should have a SERVEROperator too oh shit with a pass and a username
+	the operators aren't only created when you create a channel for the first time
+
+
+*/

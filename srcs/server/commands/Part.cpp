@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/15 16:06:35 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:43:33 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,13 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 	}
 }
 
-void	Server::partLeavingMessage(Client	usr, std::string channelName)
+void	Server::partLeavingMessage(Client usr, std::string channelName, std::string reason)
 {
-	std::string	partMessage = ":" + usr.getNickname() + " PART :" + channelName + "\r\n";
+	std::string	partMessage = ":" + usr.getNickname() + " PART :" + channelName;
+	if (!reason.empty())
+		partMessage += reason;
+	partMessage += "\r\n";
+	std::cout<<"message I'm going to send "<<partMessage<<std::endl;
 	send(usr.getFd(), partMessage.c_str(), partMessage.length(), 0);
 	partLeavingMessageAll(channelName, usr.getNickname());
 }
@@ -75,23 +79,26 @@ void	Channel::removeClient(Client& client, std::string reason)
 }
 
 //PART #channel, cmldffk :reason
+//the substring 
 std::string	Server::takeReason(std::string args)
 {
-	size_t i = args.find_first_of(':', 0);
-	std::string	reason;
-
-	if (i != std::string::npos)
+	// size_t i = args.find_first_of(':', 0);
+	try
 	{
-		reason = args.substr(i, args.size());
-		std::cout<<"reason "<< reason <<std::endl;
+		std::string	reason = args.substr(args.find_first_of(' '), args.find_last_not_of(' '));
 		return reason;
+	}
+	catch(std::out_of_range &e)
+	{
+		std::cout<<e.what()<<std::endl;
 	}
 	return "";
 }
 
 
 
-
+//args = #channel1,&channel2,&channel3(find_firs_of)     (last_not_of ' ') <reason>
+//pos
 void	Server::Part(std::string args, int clientSocket)
 {
 	std::vector<std::string>	numOfChannels = channelParser(args);
@@ -110,7 +117,7 @@ void	Server::Part(std::string args, int clientSocket)
 		if (channelExist)
 		{
 			_channels[channelIndex].removeClient(*client, reason);
-			partLeavingMessage(*client, _channels[channelIndex].getName());
+			partLeavingMessage(*client, _channels[channelIndex].getName(), reason);
 		}
 	}
 
