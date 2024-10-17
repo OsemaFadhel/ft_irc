@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/15 20:27:46 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:25:56 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,11 +137,13 @@ void	Server::listOfUsersMsg(std::string channelName)
 //the user is not joining the channel
 //allora ho capito il messaggio ha questo tipo di formattazione
 //:ft_irc <usr> :
+//però... ft_irc sbaglia perché sarebbe una cosa globale e pare che
+//facendo :ft_irc <usr> per il join non funzioni correttamente
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 {
 	std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
 	std::cout<<"channel to create/join: "<<channelName<<std::endl;
-	std::string serverMessage = ":ft_irc " + clientToInsert.getNickname() + " JOIN :" + channelName + "\r\n";
+	std::string serverMessage = ":" + clientToInsert.getNickname() + " JOIN " + channelName + "\r\n";
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
 	listOfUsersMsg(channelName);
 }
