@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/18 17:53:14 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:34:49 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,16 +155,6 @@ la situazione è la seguente:
 // }
 
 
-void	Server::partAll(Client usr)
-{
-	(void)usr;
-	// std::vector<Channel>::iterator	it;
-
-	// for (it = _channels.begin(); it != _channels.end(); )
-	// {
-	// 	it->
-	// }
-}
 
 
 

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/18 15:18:48 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:35:23 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,11 +186,6 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 
 void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client clientToInsert)
 {
-	if (numberOfChannels.size() == 1 && numberOfChannels[0] == "0")
-	{
-		partAll(clientToInsert);
-		return ;
-	}
 	for (size_t i = 0; i < numberOfChannels.size(); i++)
 	{
 		bool channelExists = false;
