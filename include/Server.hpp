@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/18 18:34:59 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 19:26:03 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,9 @@ class Server
 		void						partLeavingMessage(Client	usr, std::string channelName, std::string reason);
 		void						partLeavingMessageAll(std::string channelName, std::string usrName);
 		void						deleteEmptyChannels();
+
+		//super user commands:
+		void	Kick(std::string args, int clientSocket);
 };
 
 void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);

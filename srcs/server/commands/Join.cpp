@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/18 18:35:23 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 19:34:13 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ void	Server::Join(std::string args, int	clientSocket)
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
 	//the check of the keys must be put in the checkChannelExist function
-	// keys = keyParser(args);
+	keys = keyParser(args);
 	for (size_t k = 0; k < keys.size(); k++)
 		std::cout << "keys: " << keys[k] << std::endl;
 	std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;

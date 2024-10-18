@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/13 18:18:26 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 19:07:15 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 			Cap(clientSocket);
 		else if (command == "QUIT")
 			Quit(args, clientSocket, i);
+		else if (command == "KICK")
+			Kick(args, clientSocket);
 	}
 	else if (getClientIndex(clientSocket) != -1 && getClient(clientSocket)->getIsRegistered() == 0) //registered (in _clients, pass inserted)
 	{
