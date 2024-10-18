@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/09 14:45:55 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:57:20 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void Server::checkClientActivity(fd_set& readfds)
 				break; // Handle buffer overflow scenario
 			}
 			// Check if the command length exceeds 512
-			if (this->_newfds[i].buffer.size() >= 512) {
+			if (this->_newfds[i].buffer.size() >= 512)
+			{
 				std::cout << RED << "[DEBUG LOOP] Buffer overflow. FD = " << clientSocket << std::endl;
 				break; // Handle buffer overflow scenario
 			}

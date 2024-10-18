@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/15 19:43:33 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 17:53:14 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 {
-	std::string	partMessage = ":" + usrName + " PART :" + channelName + "\r\n";
+	std::string	partMessage = ":" + usrName + " PART " + channelName + "\r\n";
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
 		if (_channels[i].getName() == channelName)
@@ -46,7 +46,7 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 
 void	Server::partLeavingMessage(Client usr, std::string channelName, std::string reason)
 {
-	std::string	partMessage = ":" + usr.getNickname() + " PART :" + channelName;
+	std::string	partMessage = ":" + usr.getNickname() + " PART " + channelName + " ";
 	if (!reason.empty())
 		partMessage += reason;
 	partMessage += "\r\n";
@@ -55,7 +55,7 @@ void	Server::partLeavingMessage(Client usr, std::string channelName, std::string
 	partLeavingMessageAll(channelName, usr.getNickname());
 }
 
-
+//_usrs.erase(std::remove(_usrs.begin(), _usrs.end(), usr), _usrs.end());
 void	Channel::removeClient(Client& client, std::string reason)
 {
 	(void)reason;
@@ -79,14 +79,22 @@ void	Channel::removeClient(Client& client, std::string reason)
 }
 
 //PART #channel, cmldffk :reason
-//the substring 
+//the substring
 std::string	Server::takeReason(std::string args)
 {
 	// size_t i = args.find_first_of(':', 0);
 	try
 	{
-		std::string	reason = args.substr(args.find_first_of(' '), args.find_last_not_of(' '));
-		return reason;
+		std::cout<<"stringa ottenuta "<<args<<std::endl;
+		size_t i = (args.find_last_of(':'));
+		std::cout<<"i is going wild?? "<<i<<std::endl;
+		if (i != std::string::npos)
+		{
+			std::string	reason = args.substr(i, args.size());
+			std::cout<<"reason gained is wrong for sure "<<reason<<std::endl;
+			//il parsing di reason è sbagliato
+			return reason;
+		}
 	}
 	catch(std::out_of_range &e)
 	{
@@ -102,10 +110,10 @@ std::string	Server::takeReason(std::string args)
 void	Server::Part(std::string args, int clientSocket)
 {
 	std::vector<std::string>	numOfChannels = channelParser(args);
-	size_t						channelIndex;
 	bool						channelExist = false;
 	Client						*client = getClient(clientSocket);
 	std::string					reason = takeReason(args);
+	size_t						channelIndex;
 
 	std::cout<<"numOfChannels "<<numOfChannels.size()<<std::endl;
 	//main for
@@ -124,3 +132,39 @@ void	Server::Part(std::string args, int clientSocket)
 	//checking how many channels still have usrs
 	deleteEmptyChannels();
 }
+
+/*
+la situazione è la seguente:
+	essendo che con partAll devo eliminare più volte lo stesso utente
+	questo significa
+*/
+
+// void	turnOutFirst(std::vector<std::pair <Client, int> > )
+// {
+
+// }
+
+// void	Channel::removeUsrEasierBeta(const Client& usr)
+// {
+// 	_usrData.erase(std::remove_if(_usrData.begin(), _usrData.end(),
+// 	[&usr](const std::pair<Client, int>& p)
+// 	{
+// 		return p.first;
+// 	}),
+// 	_usrData.end());
+// }
+
+
+void	Server::partAll(Client usr)
+{
+	(void)usr;
+	// std::vector<Channel>::iterator	it;
+
+	// for (it = _channels.begin(); it != _channels.end(); )
+	// {
+	// 	it->
+	// }
+}
+
+
+

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/15 19:07:51 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 17:10:45 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ class Channel
 		int			isInChannel(Client client);
 		void		addClient(Client client);
 		void		channelContentSize();
+		void		removeUsrEasierBeta(const Client& usr);
 };
 
 #endif

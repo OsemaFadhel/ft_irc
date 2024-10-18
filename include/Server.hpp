@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/15 19:37:59 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 17:19:34 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 #include "Replies.hpp"
 #include <arpa/inet.h>
 #include <csignal>
+#include <algorithm>
 
 # define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")
@@ -128,6 +129,7 @@ class Server
 
 		/*Part command and functions by lnicoter*/
 		void						Part(std::string args, int clientSocket);
+		void						partAll(Client usr);
 		std::string					takeReason(std::string args);
 		void						partLeavingMessage(Client	usr, std::string channelName, std::string reason);
 		void						partLeavingMessageAll(std::string channelName, std::string usrName);

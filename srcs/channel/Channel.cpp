@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/14 13:46:25 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:01:40 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,4 +246,12 @@ void	Channel::channelContentSize()
 
 		PRIVMSG
 
+*/
+
+
+
+/*
+messaggio esempio:
+
+:ciao come stai?\r\n
 */
