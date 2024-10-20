@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 11:21:00 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:19:55 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 std::string constructMessage(const std::string& format, ...);
 
 // The server sends Replies 001 to 004 to a user upon successful registration.
-
+// ":ft_irc :Welcome to the Internet Relay Network <nick>!<user>@<host>"
 #define RPL_WELCOME ":ft_irc 001 %s :Welcome to %s Network, %s\r\n" //size of string = 44
 
 #define RPL_YOURHOST ":ft_irc 002 %s :Your host is %s, running version %s\r\n" // Static size: 54
@@ -28,7 +28,10 @@ std::string constructMessage(const std::string& format, ...);
 
 #define RPL_MYINFO ":ft_irc 004 %s %s %s %s %s\r\n" // Static size: 29
 
+#define RPL_NAMREPLY ":ft_irc 353 %s = %s :%s\r\n" // Static size: 29
 //ERROR REPLIES
+
+#define ERR_INPUTTOOLONG ":ft_irc 401 %s :Input line too long\r\n" // Static size: 33
 
 #define ERR_NOSUCHNICK ":ft_irc 401 %s :No such nick/channel\r\n" // Static size: 31
 
@@ -114,7 +117,7 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_BADCHANNELKEY ":ft_irc 475 %s :Cannot join channel (+k)\r\n" // Static size: 43
 
-#define ERR_BADCHANMASK ":ft_irc 476 %s :Bad Channel Mask\r\n" // Static size: 31
+#define ERR_BADCHANMASK ":ft_irc 476 %s :Bad Channel Mask\r\n" // Static size: 43
 
 #define ERR_NOCHANMODES ":ft_irc 477 %s :Channel doesn't support modes\r\n" // Static size: 36
 
@@ -136,6 +139,7 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_USERSDONTMATCH ":ft_irc 502 :Cannot change mode for other users\r\n" // Static size: 36
 
-#define RPL_NAMREPLY ":ft_irc 353 %s = %s :%s\r\n" // Static size: 29
-
 #endif
+
+//for more information look at the rfc to know more about the arguments
+//it needs to be used in the constructMessage function

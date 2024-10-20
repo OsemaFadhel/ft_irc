@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/07 21:48:23 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:40:22 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ Channel::Channel(Client firstClient, std::string channelName)
 
 	if (channelName.size() > 0)
 	{
-
 		for (size_t i = 0; i < charCheck.size(); i++)
 		{
-			if (_name[0] == charCheck[i])
+			std::cout<<"testing channel name checks!!!! "<<static_cast<int>(channelName[0])<<std::endl;
+			if (channelName[0] == charCheck[i])
 				syntaxFlag = 1;
 			this->_name = channelName;
 		}
@@ -71,8 +71,11 @@ Channel::Channel(Client firstClient, std::string channelName)
 	}
 	//porco due prossima volta usa this oppure metti un altro nome per la variabile passata
 	this->_topic = "";
-	this->_mode = "";
 	this->_password = "";
+	this->_mode['i'] = false;
+	this->_mode['t'] = false;
+	this->_mode['k'] = false;
+	this->_mode['l'] = false;
 }
 
 
@@ -118,7 +121,7 @@ std::string	Channel::getTopic() const
 	return _topic;
 }
 
-std::string	Channel::getMode() const
+std::map<char, bool>	Channel::getMode() const
 {
 	return _mode;
 }
@@ -162,7 +165,7 @@ void	Channel::setTopic(const std::string& topic)
 	_topic = topic;
 }
 
-void	Channel::setMode(const std::string& mode)
+void	Channel::setMode(const std::map<char, bool> & mode)
 {
 	_mode = mode;
 }

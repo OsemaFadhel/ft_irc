@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:39:22 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:47:02 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 
 	// Get client details
 	int clientIndex = getClientIndex(clientSocket);
-	Client* client = getClient(clientSocket);
+	Client* client = getClient(clientSocket); //remove
 	bool isRegistered = client && client->getIsRegistered();
 
 	if (clientIndex == -1) //not registered (not in _clients, pass not inserted)
@@ -76,5 +76,7 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 			Join(args, clientSocket);
 		else if (command == "PRIVMSG")
 			Privmsg(args, clientSocket);
+		else if (command == "TOPIC")
+			Topic(args, client);
 	}
 }

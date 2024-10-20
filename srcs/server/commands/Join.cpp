@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/07 21:48:45 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:28:34 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,13 @@
 
 //substr e find per spostare il puntatore alla prima virgola
 //new error: 2 channels that are going to be inserted with
-//a space after the first , for example <channel1>, <channel2> the space messes up all the logic [SOLVED]
+//a space after the first , for example <channel1>, <channel2> the space messes up all the logic
+//unfortunately is not possible to resolve it properly for now
+//there's something that I'm missing... but i tried anything to make it work
+//with a lot of casistics but with the keys is Impossible to handle it well without making problems
+//on the handling of the vector of channels
 std::vector<std::string>	Server::channelParser(std::string args)
 {
-
 	std::vector < std::string > numOfChannels;
 	std::string onlyChannels = args.substr(0, args.find_first_of(" "));
 	// std::vector < std::string > keys;
@@ -32,13 +35,13 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		if (pos != std::string::npos)
 		{
 			temp = onlyChannels.substr(i, pos - i);
-			std::cout << "temp1: " << temp << std::endl;
+			// std::cout << "temp1: " << temp << std::endl;
 			i = pos + 1;
 		}
 		else
 		{
 			temp = onlyChannels.substr(i);
-			std::cout << "temp2: " << temp << std::endl;
+			// std::cout << "temp2: " << temp << std::endl;
 			i = std::string::npos;
 		}
 		//trimming the string to remove the spaces and avoiding a sudden segfault
@@ -49,7 +52,7 @@ std::vector<std::string>	Server::channelParser(std::string args)
 		if (!temp.empty() && temp.find(' ') == std::string::npos)
 		{
 			numOfChannels.push_back(temp);
-			std::cout << "Channel added: " << temp << std::endl;
+			// std::cout << "Channel added: " << temp << std::endl;
 		}
 		else
 		{
@@ -130,61 +133,92 @@ void	Server::listOfUsersMsg(std::string channelName)
 
 }
 
+//the user is not joining the channel
+//allora ho capito il messaggio ha questo tipo di formattazione
+//:ft_irc <usr> :
+//però... ft_irc sbaglia perché sarebbe una cosa globale e pare che
+//facendo :ft_irc <usr> per il join non funzioni correttamente
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 {
 	std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
 	std::cout<<"channel to create/join: "<<channelName<<std::endl;
-	std::string serverMessage = ":" + clientToInsert.getNickname() + " JOIN :" + channelName + "\r\n";
+	std::string serverMessage = ":" + clientToInsert.getNickname() + " JOIN " + channelName + "\r\n";
+	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
+	serverMessage = ":" + SERVERNAME + " " + clientToInsert.getNickname() + " JOIN " + channelName + "\r\n";
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
 	listOfUsersMsg(channelName);
 }
 
-void	Server::checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert)
+//function for checkChannelList
+//to make it better i will do another function that stays in the server class
+//if i won't be lazy i will change the implementation
+void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i)
+{
+	for (size_t j = 0; j < _channels.size(); j++)
+	{
+		if (_channels[j].getName() == numberOfChannels[i])
+		{
+			channelExists = true;
+			channelIndex = j;
+			break; // Esci dal ciclo, abbiamo trovato il canale
+		}
+	}
+}
+
+void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert)
+{
+	if (_channels[channelIndex].isInChannel(clientToInsert))
+	{
+		std::cout << RED << "Questo client è già nel canale, Client: "
+					<< clientToInsert.getNickname()
+					<< " Chan: " << _channels[channelIndex].getName()
+					<< RESET << std::endl;
+		std::string errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname().c_str());
+		send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+	}
+	else
+	{
+		// Aggiungi il client al canale esistente
+		_channels[channelIndex].addClient(clientToInsert);
+		std::cout << GREEN << "Client aggiunto correttamente al canale"
+					<< RESET << std::endl;
+		joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+	}
+}
+
+void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client clientToInsert)
 {
 	for (size_t i = 0; i < numberOfChannels.size(); i++)
 	{
-		if (_channels.size() == 0)
-		{
-			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
-			_channels.push_back(newChannel);
-			//i send the message to make the client create/join the channel
-			if (!newChannel.getName().empty())
-				joinCreateChanMsg(clientToInsert, newChannel.getName());
-			else
-				std::cout<<RED<<"death"<<RESET<<std::endl;
-		}
+		bool channelExists = false;
+		size_t channelIndex = 0;
+
+		// Controlla se il canale esiste già
+		checkExistence(channelExists, channelIndex, _channels, numberOfChannels, i);
+
+		if (channelExists)
+			channelHandling(_channels, channelIndex, clientToInsert);
 		else
 		{
-			for (size_t j = 0; j < _channels.size(); j++)
+			// Se il canale non esiste, creane uno nuovo
+			Channel newChannel = Channel(clientToInsert, numberOfChannels[i]);
+			if (!newChannel.getName().empty())
 			{
-				if (_channels[j].getName() == numberOfChannels[i])
-				{
-					//if for checking if the user is in the channel
-					if (_channels[j].isInChannel(clientToInsert))
-					{
-						std::string	errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname());
-						send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
-					}
-					else
-					{
-						//!we are missing the checks for the keys like if the channel exists and stuff
-						_channels[j].addClient(clientToInsert);
-						std::cout<<GREEN<<"Client successfully added to the channel"<<RESET<<std::endl;
-						joinCreateChanMsg(clientToInsert, _channels[j].getName());
-					}
-				}
-				else
-				{
-					_channels.push_back(Channel(clientToInsert, numberOfChannels[i]));
-					joinCreateChanMsg(clientToInsert, _channels[_channels.size() - 1].getName());
-				}
+				_channels.push_back(newChannel);
+				std::cout << GREEN << "Nuovo canale creato e client aggiunto: "
+							<< newChannel.getName()
+							<< RESET << std::endl;
+				joinCreateChanMsg(clientToInsert, newChannel.getName());
 			}
 		}
 	}
 }
 
 
+
 /*
+
+
 ** Troubleshooting
 ** The parsing of the keys is on point and it works very well
 ** I should do the same checks for the keyparser
@@ -214,8 +248,8 @@ void	Server::Join(std::string args, int	clientSocket)
 	//the keys works only if the channel already exists
 	//the check of the keys must be put in the checkChannelExist function
 	// keys = keyParser(args);
-	for (size_t k = 0; k < keys.size(); k++)
-		std::cout << "keys: " << keys[k] << std::endl;
-
+	// for (size_t k = 0; k < keys.size(); k++)
+	// 	std::cout << "keys: " << keys[k] << std::endl;
+	std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;
 	checkChannelExist(numOfChannels, *clientToInsert);
 }

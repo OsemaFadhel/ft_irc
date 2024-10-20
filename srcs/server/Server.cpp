@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/08 12:10:27 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:26:00 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,26 +62,11 @@ void Server::setPassword(const std::string& password)
 }
 
 
-/* HASH PASSWORD************************************************************* */
+/* Check PASSWORD************************************************************* */
 
 bool Server::verifyPassword(const std::string& password) const
 {
 	return password ==_password;
-}
-
-void	Server::valuesCheck(Client clientToInsert)
-{
-	std::cout<<"Client nickname: "<<clientToInsert.getNickname()<<std::endl;
-	std::cout<<"Client fd: "<<clientToInsert.getFd()<<std::endl;
-}
-
-
-void	Server::channelCheck()
-{
-	for (size_t i = 0; i < _channels.size(); i++)
-	{
-		_channels[i].printClients();
-	}
 }
 
 // Method to remove and delete a client by socket

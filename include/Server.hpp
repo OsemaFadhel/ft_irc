@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/07 21:47:44 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:44:04 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ class Server
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
+		void Topic(std::string args, Client *client);
 
 		/*Join command and functions by lnicoter*/
 		/* Join behaviour
@@ -108,22 +109,34 @@ class Server
 				JOIN <channel>,....  <key>,....
 				between channel and key there is a space that's how we can differentiate them
 		*/
-		void								Join(std::string args, int	clientSocket);
-		std::vector< std::string >			channelParser(std::string args);
-		std::vector< std::string >			keyParser(std::string args);
-		void	checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
+		void						Join(std::string args, int	clientSocket);
+		std::vector< std::string >	channelParser(std::string args);
+		std::vector< std::string >	keyParser(std::string args);
+		void						channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert);
+		void						checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
 		//checking functions of server by lnicoter
-		void	valuesCheck(Client clientToInsert);
-		void	channelCheck();
-		void	joinCreateChanMsg(Client clientToInsert, std::string channelName);
-		void	listOfUsersMsg(std::string channelName);
+		void						valuesCheck(Client clientToInsert);
+		void						channelCheck();
+		void						joinCreateChanMsg(Client clientToInsert, std::string channelName);
+		void						listOfUsersMsg(std::string channelName);
 
 		/*Privmsg command and functions by lnicoter*/
-		void	Privmsg(std::string args, int clientSocket);
-		void	privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
-		void	privmsgPrivateMsg(int clientSocket, std::string usrMessage);
+		void						Privmsg(std::string args, int clientSocket);
+		void						privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
+		void						sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg);
+
+		void deleteEmptyChannels();
+
+
+		//check functions
+		//check if channel exists for now i'll do it with the strings vector
+		//seing that I'm working mostly with that when parsing channels
+		bool	checkIfChannelExists(std::string channelName);
 
 };
+
+void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+
 
 // Macros for ANSI escape codes
 #define RESET      "\033[0m"   // Reset all attributes
