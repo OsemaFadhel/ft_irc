@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/18 19:34:13 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/19 18:24:30 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 }
 
 //function for checkChannelList
+//to make it better i will do another function that stays in the server class
+//if i won't be lazy i will change the implementation
 void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i)
 {
 	for (size_t j = 0; j < _channels.size(); j++)
@@ -215,6 +217,8 @@ void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client
 
 
 /*
+
+
 ** Troubleshooting
 ** The parsing of the keys is on point and it works very well
 ** I should do the same checks for the keyparser
@@ -243,9 +247,9 @@ void	Server::Join(std::string args, int	clientSocket)
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
 	//the check of the keys must be put in the checkChannelExist function
-	keys = keyParser(args);
-	for (size_t k = 0; k < keys.size(); k++)
-		std::cout << "keys: " << keys[k] << std::endl;
+	// keys = keyParser(args);
+	// for (size_t k = 0; k < keys.size(); k++)
+	// 	std::cout << "keys: " << keys[k] << std::endl;
 	std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;
 	checkChannelExist(numOfChannels, *clientToInsert);
 }

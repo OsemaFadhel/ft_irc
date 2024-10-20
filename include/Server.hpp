@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/18 19:26:03 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/19 10:37:53 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ class Server
 		Client *getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
 		void removeClient(int clientSocket);
-		Channel	getChannel(std::string& channelName);
+		//is not being used because it would change a lot of stuff
+		Channel*	getChannel(std::string& channelName);
 
 		void run();
 		void createSocket();
@@ -136,6 +137,12 @@ class Server
 
 		//super user commands:
 		void	Kick(std::string args, int clientSocket);
+
+
+		//check functions
+		//check if channel exists for now i'll do it with the strings vector
+		//seing that I'm working mostly with that when parsing channels
+		bool	checkIfChannelExists(std::string channelName);
 };
 
 void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);

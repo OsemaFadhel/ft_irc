@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/12 19:38:04 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/19 10:29:20 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,15 +178,12 @@ void Server::run()
 }
 
 //per dopo da sistemare le interazioni qua
-Channel	Server::getChannel(std::string& channelName)
+Channel*	Server::getChannel(std::string& channelName)
 {
-	Channel failure;
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
-		std::cout<<"what channel do we have here "<<_channels[i].getName()<<std::endl;
-		std::cout<<"and what channel i've passed here? "<<channelName<<std::endl;
 		if (_channels[i].getName() == channelName)
-			return (_channels[i]);
+			return &_channels[i];
 	}
-	return failure;
+	return 0;
 }

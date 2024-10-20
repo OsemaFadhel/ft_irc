@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/18 13:01:40 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:26:14 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ Channel::Channel()
 {
 	_name = "";
 	_topic = "";
-	_mode = "";
 	_password = "";
 	_limit = 0;
 }
@@ -44,7 +43,9 @@ Channel::Channel(Client firstClient, std::string channelName)
 	std::string	badCharCheck = BAD_CHAR_FOR_CHANNEL;
 	int			syntaxFlag = 0;
 	//setting the first user as an operator
-	if (_usrData.size() == 0)
+	if (_usrData.size() == 0 && channelName[0] == '!')
+		_usrData.push_back(std::make_pair(firstClient, 0));
+	else if (_usrData.size() == 0)
 		_usrData.push_back(std::make_pair(firstClient, 1));
 	else
 		_usrData.push_back(std::make_pair(firstClient, 0));
@@ -82,8 +83,12 @@ Channel::Channel(Client firstClient, std::string channelName)
 	}
 	//porco due prossima volta usa this oppure metti un altro nome per la variabile passata
 	this->_topic = "";
-	this->_mode = "";
 	this->_password = "";
+	this->_mode['t'] = false;
+	this->_mode['i'] = false;
+	this->_mode['k'] = false;
+	this->_mode['o'] = false;
+	this->_mode['l'] = false;
 }
 
 
@@ -129,7 +134,7 @@ std::string	Channel::getTopic() const
 	return _topic;
 }
 
-std::string	Channel::getMode() const
+std::map<char, bool>	Channel::getMode() const
 {
 	return _mode;
 }
@@ -159,6 +164,7 @@ void	Channel::printClients()
 	for (begin = _usrData.begin(); begin != end; ++begin)
 	{
 		std::cout<<"Read value in the channel "<<_name<<" "<<begin->first<<std::endl;
+		std::cout<<"operators privileges "<<RED<<begin->second<<RESET<<std::endl;
 	}
 }
 
@@ -173,7 +179,7 @@ void	Channel::setTopic(const std::string& topic)
 	_topic = topic;
 }
 
-void	Channel::setMode(const std::string& mode)
+void	Channel::setMode(const std::map<char, bool> &mode)
 {
 	_mode = mode;
 }
@@ -209,7 +215,6 @@ int			Channel::isInChannel(Client client)
 
 void	Channel::addClient(Client client)
 {
-	std::cout<<"qui non entra????"<<std::endl;
 	_usrData.push_back(std::make_pair(client, 0));
 	channelContentSize();
 }
@@ -255,3 +260,15 @@ messaggio esempio:
 
 :ciao come stai?\r\n
 */
+
+Client	Channel::getClientByNickname(std::string nickname)
+{
+	std::vector<std::pair <Client, int> >::iterator	it;
+
+	for (it = _usrData.begin(); it != _usrData.end(); it++)
+	{
+		if (it->first.getNickname() == nickname)
+			return it->first;
+	}
+	return Client(0);
+}

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/15 15:55:59 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/19 15:23:11 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,27 @@ void	Server::deleteEmptyChannels()
 			i--;
 		}
 	}
+}
+
+bool	Server::checkIfChannelExists(std::string channelName)
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		if (_channels[i].getName() == channelName)
+			return true;
+	}
+	return false;
+}
+
+bool	Channel::isOperator(Client client)
+{
+	for (size_t i = 0; i < _usrData.size(); i++)
+	{
+		if (_usrData[i].first.getNickname() == client.getNickname())
+		{
+			if (_usrData[i].second == 1)
+				return true;
+		}
+	}
+	return false;
 }

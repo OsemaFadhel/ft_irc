@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/18 19:25:45 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:30:05 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Channel
 		//topic, mode, password, limit are only setted by the operator so they will be intialized to empty
 		std::string								_name; //setted when the join command is called
 		std::string								_topic; //setted by the operator
-		std::string								_mode; //setted by the operator
+		std::map< char, bool >					_mode; //setted by the operator
 		std::string								_password; //setted by the operator
 		int										_limit; //setted by the operator
 	public:
@@ -43,18 +43,21 @@ class Channel
 		//getters and setters
 		std::string								getName() const;
 		std::string								getTopic() const;
-		std::string								getMode() const;
+		std::map<char, bool>							getMode() const;
 		std::string								getPassword() const;
 		int										getLimit() const;
 		std::vector< std::pair< Client, int> >	getUsrData() const;
 		void									setName(const std::string& name);
 		void									setTopic(const std::string& topic);
-		void									setMode(const std::string& mode);
+		void									setMode(const std::map<char, bool> & mode);
 		void									setPassword(const std::string& password);
 		void									setLimit(int limit);
 		void									setUsrData(std::vector< std::pair< Client, int> > usrData);
 		void									removeClient(Client& client, std::string reason);
+		Client									getClientByNickname(std::string nickname);
 
+		//checks functions
+		bool									isOperator(Client client);
 		//channel commands for channel operators
 		// void		kick(Client* client); // kick client
 		// void		invite(Client* client); // invite client
@@ -72,6 +75,7 @@ class Channel
 		int			isInChannel(Client client);
 		void		addClient(Client client);
 		void		channelContentSize();
+		int			findUsr(std::string usrNickname);
 };
 
 #endif

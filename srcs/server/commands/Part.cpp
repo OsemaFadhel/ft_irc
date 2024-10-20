@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/18 18:34:49 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/19 22:13:03 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,29 @@ void	Server::partLeavingMessage(Client usr, std::string channelName, std::string
 	partLeavingMessageAll(channelName, usr.getNickname());
 }
 
+//this functions should return the index of the
+//k
+int	Channel::findUsr(std::string usrNickname)
+{
+}
+
 //_usrs.erase(std::remove(_usrs.begin(), _usrs.end(), usr), _usrs.end());
+//if there more clients it deletes more than one why thought
 void	Channel::removeClient(Client& client, std::string reason)
 {
 	(void)reason;
 	std::string	partMessage = "";
 
+	std::cout<<RED<<"Target Client nickname -> "<<client.getNickname()<<RESET<<std::endl;
 	for (size_t i = 0; i < _usrData.size(); i++)
 	{
-		if (isInChannel(client))
+		//i must change the condition
+		if (_usrData[i].first.getNickname())
 		{
 			std::cout<<"Usr to delete "<<_usrData[i].first.getNickname()<<std::endl;
 			_usrData.erase(_usrData.begin() + i);
 			i--;
+			//printing _usrData
 		}
 		else
 		{
@@ -85,9 +95,9 @@ std::string	Server::takeReason(std::string args)
 	// size_t i = args.find_first_of(':', 0);
 	try
 	{
-		std::cout<<"stringa ottenuta "<<args<<std::endl;
+		// std::cout<<"stringa ottenuta "<<args<<std::endl;
 		size_t i = (args.find_last_of(':'));
-		std::cout<<"i is going wild?? "<<i<<std::endl;
+		// std::cout<<"i is going wild?? "<<i<<std::endl;
 		if (i != std::string::npos)
 		{
 			std::string	reason = args.substr(i, args.size());
@@ -115,7 +125,7 @@ void	Server::Part(std::string args, int clientSocket)
 	std::string					reason = takeReason(args);
 	size_t						channelIndex;
 
-	std::cout<<"numOfChannels "<<numOfChannels.size()<<std::endl;
+	// std::cout<<"numOfChannels "<<numOfChannels.size()<<std::endl;
 	//main for
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
