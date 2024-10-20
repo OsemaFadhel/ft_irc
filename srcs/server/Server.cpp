@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 20:12:10 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:26:00 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,27 +58,29 @@ int Server::getClientIndex(int clientSocket)
 
 void Server::setPassword(const std::string& password)
 {
-	_password = hashPassword(password);
+	_password = password;
 }
 
 
-/* HASH PASSWORD************************************************************* */
+/* Check PASSWORD************************************************************* */
 
 bool Server::verifyPassword(const std::string& password) const
 {
-	return hashPassword(password) ==_password;
+	return password ==_password;
 }
 
-std::string Server::hashPassword(const std::string& password) const
+// Method to remove and delete a client by socket
+void Server::removeClient(int clientSocket)
 {
-	unsigned long hash = 5381;
-	for (size_t i = 0; i < password.size(); ++i) {
-		hash = ((hash << 5) + hash) + password[i]; // hash * 33 + c
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		if ((*it)->getFd() == clientSocket)
+		{
+			delete *it; // Free the dynamically allocated Client
+			_clients.erase(it); // Erase from the vector
+			break;
+		}
 	}
-
-	std::ostringstream oss;
-	oss << std::hex << hash;
-	return oss.str();
 }
 
 /* ************************************************************************** */
@@ -86,9 +88,7 @@ std::string Server::hashPassword(const std::string& password) const
 
 /* RUN ****************************************************************** */
 
-//ORDER OF WHAT IT SHOULD HAPPEN IN THE RUN FUNCTION
-	/*tcp_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-
+/*RDER OF WHAT IT SHOULD HAPPEN IN THE RUN FUNCTION
 	DESCRIPTION
 	This is an implementation of the TCP protocol defined in RFC 793,
 	RFC 1122 and RFC 2001 with the NewReno and SACK extensions.
@@ -113,7 +113,7 @@ void Server::createSocket()
 	// AF_INET6: It specifies the IPv6 protocol family.
 	// SOCK_STREAM: It defines that the TCP type socket.
 
-	_serverSocket = socket(AF_INET6, SOCK_STREAM, 0); //tcp socket v6
+	_serverSocket = socket(AF_INET, SOCK_STREAM, 0); //tcp socket v6
 	if (_serverSocket == -1)
 		throw std::runtime_error("Failed to create the socket");
 
@@ -124,15 +124,10 @@ void Server::createSocket()
 		throw std::runtime_error("Failed to set socket options");
 
 
-	//We then define the server address using the following set of statements
-	/*sockaddr_in: It is the data type that is used to store the address of the socket. SEE SERVER.HPP
-	htons(): This function is used to convert the unsigned int from machine byte order to network byte order.
-	INADDR_ANY: It is used when we don’t want to bind our socket to any particular IP and instead make it listen to all the available IPs.*/
-
 	std::memset(&_serverAddr, 0, sizeof(_serverAddr));
-	_serverAddr.sin6_family = AF_INET6;
-	_serverAddr.sin6_addr = in6addr_any;
-	_serverAddr.sin6_port = htons(_port);
+	_serverAddr.sin_family = AF_INET;
+	_serverAddr.sin_addr.s_addr = INADDR_ANY;
+	_serverAddr.sin_port = htons(_port);
 
 	//fcntl(_serverSocket, F_SETFL, O_NONBLOCK); //non blocking
 
@@ -148,6 +143,12 @@ void Server::createSocket()
 
 	if (listen(_serverSocket, 50) == -1)
 		throw std::runtime_error("Failed to listen for connections");
+
+	// Add the server socket to the list of file descriptors to monitor
+
+	socketdata newfd;
+	newfd.id = _serverSocket;
+	_newfds.push_back(newfd);
 }
 
 void Server::run()
@@ -159,8 +160,19 @@ void Server::run()
 
 	std::cout << BOLD << CYAN << "IRC SERVER UP! WAITING FOR CLIENTS" << RESET << std::endl;
 	startLoop(readfds, maxfds);
-	//killServer();  //kill server close all sockets and free memory
+	killServer();  //kill server close all sockets and free memory
 }
 
-
-
+//per dopo da sistemare le interazioni qua
+Channel*	Server::getChannel(std::string channelName)
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		std::cout<<"what channel do we have here "<<_channels[i].getName()<<std::endl;
+		std::cout<<"and what channel i've passed here? "<<channelName<<std::endl;
+		if (_channels[i].getName() == channelName)
+			return (&_channels[i]);
+	}
+	std::cout<<"death reached?"<<std::endl;
+	return 0;
+}

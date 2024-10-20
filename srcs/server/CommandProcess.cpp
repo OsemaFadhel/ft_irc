@@ -6,114 +6,77 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 15:17:49 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:47:02 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 
-void Server::processCommand(std::string buffer, int clientSocket)
+void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 {
-	std::string command(buffer); // Example command handling
-	std::string data; // Parse data from command as needed
+	std::cout << CYAN << "[DEBUG] Processing command: " << buffer << RESET << std::endl;
 
-	if (command.substr(0, 4) == "PASS")
+	std::string command = buffer.substr(0, buffer.find(" "));
+	std::string args = buffer.length() > command.length() ? buffer.substr(command.length() + 1) : "";
+	args.erase(0, args.find_first_not_of(" \t"));
+
+	// Get client details
+	int clientIndex = getClientIndex(clientSocket);
+	Client* client = getClient(clientSocket); //remove
+	bool isRegistered = client && client->getIsRegistered();
+
+	if (clientIndex == -1) //not registered (not in _clients, pass not inserted)
 	{
-		int logged = -1;
-		for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		{
-			if ((*it)->getFd() == clientSocket)
-			{
-				send(clientSocket, ERR_ALREADYREGISTRED(), 55, 0);
-				logged = 0;
-				break;
-			}
-		}
-		if (logged == -1)
-		{
-			data = command.substr(5);
-			if (data == "")
-			{
-				send(clientSocket, ERR_NEEDMOREPARAMS("PASS"), 39, 0);
-				return;
-			}
-			else if (verifyPassword(data))
-			{
-				_clients.push_back(new Client(clientSocket));
-				//send(clientSocket, RPL_WELCOME("ofadhel", "ofadhel_", "irc"), 55 + 14, 0); //CHANGE after nick user
-			}
-			else
-				send(clientSocket, ERR_PASSWDMISMATCH(), 55, 0);
-		}
+		if (command != "PASS" && command != "CAP" && command != "PING" && command != "QUIT")
+			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
+
+		if (command == "PASS")
+			Pass(args, clientSocket);
+		else if (command == "PING")
+			Ping(client, clientSocket, args);
+		else if (command == "CAP")
+			Cap(clientSocket);
+		else if (command == "QUIT")
+			Quit(args, clientSocket, i);
 	}
-	else if (command.substr(0, 4) == "NICK")
+	else if (!isRegistered)
 	{
-		for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		{
-			if ((*it)->getFd() == clientSocket)
-			{
-				if ((*it)->getIsRegistered() < 1)
-				{
-					data = command.substr(5);
-					if (data == "")
-					{
-						send(clientSocket, ERR_NONICKNAMEGIVEN, 55, 0);
-						return;
-					}
-					for (std::vector<Client*>::iterator itnick = _clients.begin(); itnick != _clients.end(); ++itnick)
-					{
-						if ((*itnick)->getNickname() == data)
-						{
-							send(clientSocket, ERR_NICKNAMEINUSE("nick"), 55 + data.size(), 0);
-							return;
-						}
-					}
-					(*it)->setNickname(data);\
-					if  ((*it)->getUsername() != "")
-					{
-						(*it)->setIsRegistered(1);
-						//send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
-					}
-					break;
-				}
-				else
-				{
-					send(clientSocket, ERR_ALREADYREGISTRED(), 55, 0);
-					return;
-				}
-			}
-		}
-		//else (no pass inserted)
+		if (command != "NICK" && command != "USER" && command != "PING" && command != "CAP" && command != "PASS" && command != "QUIT")
+			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
+
+		if (command == "NICK")
+			Nick(args, clientSocket);
+		else if (command == "USER")
+			User(args, clientSocket);
+		else if (command == "PASS")
+			Pass(args, clientSocket);
+		else if (command == "PING")
+			Ping(client, clientSocket, args);
+		else if (command == "CAP")
+			Cap(clientSocket);
+		else if (command == "QUIT")
+			Quit(args, clientSocket, i);
 	}
-	else if (command.substr(0, 4) == "USER")
-	{
-		data = command.substr(5);
-		if (data == "")
-		{
-			send(clientSocket, ERR_NEEDMOREPARAMS("USER"), 39, 0);
-			return;
-		}
-		for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		{
-			if ((*it)->getFd() == clientSocket)
-			{
-				if ((*it)->getIsRegistered() == 1)
-				{
-					send(clientSocket, ERR_ALREADYREGISTRED(), 55, 0);
-					return;
-				}
-				(*it)->setUsername(data);
-				//send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
-				break;
-			}
-			if  ((*it)->getNickname() != "")
-			{
-				(*it)->setIsRegistered(1);
-				//send(clientSocket, RPL_WELCOME((*it)->getNickname(), (*it)->getUsername(), "irc"), 55 + (*it)->getNickname().size() + (*it)->getUsername().size(), 0);
-			}
-		}
-	}
+	// Handle fully registered clients
 	else
 	{
+		if (command == "PASS")
+			Pass(args, clientSocket);
+		else if (command == "NICK")
+			Nick(args, clientSocket);
+		else if (command == "USER")
+			User(args, clientSocket);
+		else if (command == "PING")
+			Ping(client, clientSocket, args);
+		else if (command == "CAP")
+			Cap(clientSocket);
+		else if (command == "QUIT")
+			Quit(args, clientSocket, i);
+		else if (command == "JOIN")
+			Join(args, clientSocket);
+		else if (command == "PRIVMSG")
+			Privmsg(args, clientSocket);
+		else if (command == "TOPIC")
+			Topic(args, client);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 20:12:54 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/08 12:11:20 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,19 @@
 	for incoming data or connection requests.
 */
 
+bool killflag = false;
+
+void signalHandler(int signal)
+{
+	std::cout << "Interrupt signal (" << signal << ") received.\n";
+	killflag = true;
+}
+
 void Server::setMaxfds(int &maxfds, fd_set &readfds)
 {
 	FD_ZERO(&readfds);
 	FD_SET(_serverSocket, &readfds);
-	//maxfds = _serverSocket;
+	maxfds = _serverSocket;
 
 	for (size_t i = 0; i < _newfds.size(); ++i)
 	{
@@ -43,50 +51,67 @@ void Server::setMaxfds(int &maxfds, fd_set &readfds)
 
 void Server::startLoop(fd_set& readfds, int& maxfds)
 {
-	while (1)
+	signal(SIGINT, signalHandler);
+
+	/*struct timeval timeout;
+	timeout.tv_sec = 180; // 3 minutes
+	timeout.tv_usec = 0;*/
+
+	while (!killflag) // Infinite loop but maybe add flag signal for exit
 	{
 		setMaxfds(maxfds, readfds);
 
-		//The select() call is used to monitor multiple file descriptors,
-		//waiting until one or more of the file descriptors become "ready" for some class of I/O operation.
 		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
 		if (selectfd == -1)
-			throw std::runtime_error("Failed to select the socket");
+		{
+				if (errno == EINTR)
+			{
+				std::cerr << "Select interrupted by signal, retrying..." << std::endl;
+				continue;
+			}
+			else
+				throw std::runtime_error(std::string("Select error: ") + strerror(errno));
+
+		}
 		else if (selectfd == 0)
+		{
 			std::cout << "Timeout expired before any file descriptors became ready" << std::endl;
+			continue;
+		}
 		else
 		{
-			// Check if the fd with event is the server fd
-			// Check if there is activity on the server socket (new connection)
-			//The FD_ISSET() macro is used to check if a file descriptor is part of the set of file descriptors passed to the select() call.
-			//The accept() call is used to accept the connection request that is recieved on the socket the application was listening to.
-
 			if (FD_ISSET(_serverSocket, &readfds) && acceptClient(&selectfd) == 1)
 				continue;
-
-			// Check activity on client sockets
 
 			checkClientActivity(readfds);
 		}
 	}
 }
 
-
-void Server::clientDisconnect(int clientSocket, size_t &i)
+void Server::killServer()
 {
-	_newfds.erase(_newfds.begin() + i);
-	Client *client = getClient(clientSocket);
-	if (client)
-	{
-		std::cout << RED << "[DEBUG] Client disconnected. Nickname: " << client->getNickname() << std::endl;
-		// Remove the client from all channels
-		/*for (size_t i = 0; i < _channels.size(); ++i)
-			_channels[i]->removeClient(client);*/
-		// Remove the client from the clients vector
-		if (getClientIndex(clientSocket) != -1)
-			_clients.erase(_clients.begin() + getClientIndex(clientSocket));
-	}
-	close(clientSocket);
-	--i; // Adjust index after removal
+	//close all sockets
+	close(_serverSocket);
+	for (size_t i = 0; i < _newfds.size(); ++i)
+		close(_newfds[i].id);
+
+	_newfds.clear();
+	std::vector<socketdata>().swap(_newfds);
+
+	//free memory
+
+	for (size_t i = 0; i < _clients.size(); ++i)
+		delete _clients[i];
+	_clients.clear();
+	std::vector<Client*>().swap(_clients);
+
+	//for (size_t i = 0; i < _channels.size(); ++i)
+	//	delete _channels[i];
+	//_channels.clear();
+
+	std::cout << GREEN << "Server closed" <<  RESET << std::endl;
+
+	exit(0);
 }
+

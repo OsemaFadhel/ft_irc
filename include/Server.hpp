@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/08/23 20:12:47 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:44:04 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,12 @@
 #include "Channel.hpp"
 #include "Replies.hpp"
 #include <arpa/inet.h>
+#include <csignal>
 
-# define SERVERNAME std::string("ircserv")
+# define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")
+# define DATE std::string("2024/08/01")
+
 
 class Client;
 class Channel;
@@ -57,12 +60,10 @@ class Server
 		int _serverSocket; //tcp
 		std::string _password;
 		std::vector < Client* > _clients;
-		std::vector < Channel* > _channels;
+		std::vector < Channel > _channels;
 		std::vector < socketdata > _newfds;
-		std::string hashPassword(const std::string& password) const;
-		struct sockaddr_in6 _serverAddr;
+		struct sockaddr_in _serverAddr;
 
-		//std::map < std::string, *Cmd > Commands; //to fix
 	public:
 		Server();
 		~Server();
@@ -72,6 +73,10 @@ class Server
 		bool verifyPassword(const std::string& password) const;
 		Client* getClient(int clientSocket);
 		int getClientIndex(int clientSocket);;
+		void removeClient(int clientSocket);
+		void killServer();
+		Channel	*getChannel(std::string channelName);
+
 
 		void run();
 		void createSocket();
@@ -81,19 +86,57 @@ class Server
 		void clientDisconnect(int clientSocket, size_t &i);
 		void checkClientActivity(fd_set& readfds);
 
-		void handleMessage(std::string buffer, int readSize, int clientSocket);
+		void handleMessage(std::string buffer, int readSize, int clientSocket, size_t &i);
 		void trimCommand(std::string &command);
+		std::vector<std::string> splitCommand(std::string command);
 		int findCarriageReturn(char* buffer, int readSize);
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
-		void processCommand(std::string buffer, int clientSocket);
-
-
+		void processCommand(std::string buffer, int clientSocket, size_t &i);
 
 		/*commands maybe create static class*/
-		void CapLs(int clientSocket);
-		void Pong(Client *client, int clientSocket, std::string &message);
+		void Cap(int clientSocket);
+		void Ping(Client *client, int clientSocket, std::string &message);
+		void Quit(std::string args, int clientSocket, size_t &i);
+		void Pass(std::string args, int clientSocket);
+		void Nick(std::string args, int clientSocket);
+		void User(std::string args, int clientSocket);
+		void Topic(std::string args, Client *client);
+
+		/*Join command and functions by lnicoter*/
+		/* Join behaviour
+			Syntax:
+				JOIN <channel>,....
+				JOIN <channel>,....  <key>,....
+				between channel and key there is a space that's how we can differentiate them
+		*/
+		void						Join(std::string args, int	clientSocket);
+		std::vector< std::string >	channelParser(std::string args);
+		std::vector< std::string >	keyParser(std::string args);
+		void						channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert);
+		void						checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
+		//checking functions of server by lnicoter
+		void						valuesCheck(Client clientToInsert);
+		void						channelCheck();
+		void						joinCreateChanMsg(Client clientToInsert, std::string channelName);
+		void						listOfUsersMsg(std::string channelName);
+
+		/*Privmsg command and functions by lnicoter*/
+		void						Privmsg(std::string args, int clientSocket);
+		void						privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
+		void						sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg);
+
+		void deleteEmptyChannels();
+
+
+		//check functions
+		//check if channel exists for now i'll do it with the strings vector
+		//seing that I'm working mostly with that when parsing channels
+		bool	checkIfChannelExists(std::string channelName);
 
 };
+
+void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+
 
 // Macros for ANSI escape codes
 #define RESET      "\033[0m"   // Reset all attributes
