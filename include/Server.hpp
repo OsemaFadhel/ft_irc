@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/20 18:44:04 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/21 13:36:21 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ class Server
 		Channel	*getChannel(std::string channelName);
 
 
+
 		void run();
 		void createSocket();
 		void setMaxfds(int &maxfds, fd_set &readfds);
@@ -92,6 +93,8 @@ class Server
 		int findCarriageReturn(char* buffer, int readSize);
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
 		void processCommand(std::string buffer, int clientSocket, size_t &i);
+
+		void sendToChannel(Channel *channel, Client *sender, std::string chan, std::string message);
 
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
@@ -135,7 +138,10 @@ class Server
 
 };
 
-void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+void		checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+int			isChannel(std::string channelName);
+std::string extractMessage(const std::string& input);
+std::string extractChannelName(const std::string& input);
 
 
 // Macros for ANSI escape codes

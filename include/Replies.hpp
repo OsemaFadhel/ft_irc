@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/20 18:19:55 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/21 12:24:48 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ std::string constructMessage(const std::string& format, ...);
 #define RPL_MYINFO ":ft_irc 004 %s %s %s %s %s\r\n" // Static size: 29
 
 #define RPL_NAMREPLY ":ft_irc 353 %s = %s :%s\r\n" // Static size: 29
+
+#define RPL_NOTOPIC ":ft_irc 331 %s :No topic is set\r\n" // Static size: 34 channel
+
+#define RPL_TOPIC ":ft_irc 332 %s :%s\r\n" // Static size: 21 channel, topic
+
 //ERROR REPLIES
 
 #define ERR_INPUTTOOLONG ":ft_irc 401 %s :Input line too long\r\n" // Static size: 33

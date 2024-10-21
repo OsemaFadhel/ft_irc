@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/20 18:47:02 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/21 12:48:59 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 {
 	std::cout << CYAN << "[DEBUG] Processing command: " << buffer << RESET << std::endl;
+
+	if (buffer.empty())
+		return;
 
 	std::string command = buffer.substr(0, buffer.find(" "));
 	std::string args = buffer.length() > command.length() ? buffer.substr(command.length() + 1) : "";
