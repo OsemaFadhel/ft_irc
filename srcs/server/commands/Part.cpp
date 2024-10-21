@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/21 15:17:37 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:14:30 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,40 +129,25 @@ void	Server::Part(std::string args, int clientSocket)
 	//main for
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
-		//loop for the check of the same channel
 		checkExistence(channelExist, channelIndex, _channels, numOfChannels, i);
-
-		if (channelExist)
+		//non capisco come mai il messaggio viene mandato due volte causando l'errore guardo dopo
+		if (channelExist && _channels[channelIndex].isInChannel(*client))
 		{
-			_channels[channelIndex].removeClient(*client);
 			partLeavingMessage(*client, _channels[channelIndex].getName(), reason);
+			_channels[channelIndex].removeClient(*client);
 		}
 	}
-
 	//checking how many channels still have usrs
 	deleteEmptyChannels();
 }
 
 /*
-la situazione è la seguente:
-	essendo che con partAll devo eliminare più volte lo stesso utente
-	questo significa
+casi da gestire:
+	eliminando lo stesso utente su più canali
+	il messaggio di eliminazione viene inviato più volte ma sugli stessi canali
+	N volte quanto i canali che deve abbandonare
+
 */
-
-// void	turnOutFirst(std::vector<std::pair <Client, int> > )
-// {
-
-// }
-
-// void	Channel::removeUsrEasierBeta(const Client& usr)
-// {
-// 	_usrData.erase(std::remove_if(_usrData.begin(), _usrData.end(),
-// 	[&usr](const std::pair<Client, int>& p)
-// 	{
-// 		return p.first;
-// 	}),
-// 	_usrData.end());
-// }
 
 
 

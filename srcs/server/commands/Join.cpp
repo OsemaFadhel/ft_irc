@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/21 16:36:15 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/21 21:28:17 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ std::vector< std::string >	Server::keyParser(std::string args)
 //there's something else
 //channel created but the messages are not well translated
 
-void	Server::listOfUsersMsg(std::string channelName)
+void	Server::listOfUsersMsg(std::string channelName, Client &newUsr)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
@@ -122,20 +122,21 @@ void	Server::listOfUsersMsg(std::string channelName)
 		{
 			std::string serverMessage = ":" + SERVERNAME + " 353 " + SERVERNAME + " = " + channelName + " :";
 			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+			{
 				serverMessage += _channels[i].getUsrData()[j].first.getNickname() + " ";
+			}
 			serverMessage += "\r\n";
+			send(newUsr.getFd(), serverMessage.c_str(), serverMessage.length(), 0);
 
-			//to make the new user know who's in the channel i need to send the message to the other users as well
-			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
-				send(_channels[i].getUsrData()[j].first.getFd(), serverMessage.c_str(), serverMessage.length(), 0);
-
-			//i do the message to tell the client i've finished listing the users in the channel
 			std::string endOfListMessage = ":" + SERVERNAME + " 366 " + channelName + " :End of NAMES list\r\n";
-			send(_channels[0].getUsrData()[0].first.getFd(), endOfListMessage.c_str(), endOfListMessage.size(), 0);
+			send(newUsr.getFd(), endOfListMessage.c_str(), endOfListMessage.size(), 0);
+
+			std::string joinMessage = ":" + newUsr.getNickname() + "!127.0.0.1" + " JOIN :" + channelName + "\r\n";
+			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+				send(_channels[i].getUsrData()[j].first.getFd(), joinMessage.c_str(), joinMessage.size(), 0);
+
 		}
 	}
-
-
 }
 
 //the user is not joining the channel
@@ -151,7 +152,7 @@ void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
 	serverMessage = ":" + SERVERNAME + " " + clientToInsert.getNickname() + " JOIN " + channelName + "\r\n";
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
-	listOfUsersMsg(channelName);
+	listOfUsersMsg(channelName, clientToInsert);
 }
 
 //function for checkChannelList
@@ -258,4 +259,6 @@ void	Server::Join(std::string args, int	clientSocket)
 	std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;
 	checkChannelExist(numOfChannels, *clientToInsert);
 }
+
+
 
