@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/19 10:37:53 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:06:20 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ class Server
 		void						Part(std::string args, int clientSocket);
 		std::string					takeReason(std::string args);
 		void						partLeavingMessage(Client	usr, std::string channelName, std::string reason);
-		void						partLeavingMessageAll(std::string channelName, std::string usrName);
+		void						partLeavingMessageAll(std::string channelName, std::string usrName, std::string partMessage);
 		void						deleteEmptyChannels();
 
 		//super user commands:

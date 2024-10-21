@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/19 22:13:03 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:17:37 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,8 @@
 
 
 
-void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
+void	Server::partLeavingMessageAll(std::string channelName, std::string usrName, std::string partMessage)
 {
-	std::string	partMessage = ":" + usrName + " PART " + channelName + "\r\n";
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
 		if (_channels[i].getName() == channelName)
@@ -46,38 +45,42 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName)
 
 void	Server::partLeavingMessage(Client usr, std::string channelName, std::string reason)
 {
-	std::string	partMessage = ":" + usr.getNickname() + " PART " + channelName + " ";
+	std::string	partMessage = ":" + usr.getNickname() + " PART " + channelName;
 	if (!reason.empty())
-		partMessage += reason;
+		partMessage += " "+reason;
 	partMessage += "\r\n";
 	std::cout<<"message I'm going to send "<<partMessage<<std::endl;
 	send(usr.getFd(), partMessage.c_str(), partMessage.length(), 0);
-	partLeavingMessageAll(channelName, usr.getNickname());
+	partLeavingMessageAll(channelName, usr.getNickname(), partMessage);
 }
 
 //this functions should return the index of the
 //k
 int	Channel::findUsr(std::string usrNickname)
 {
+	for (size_t i = 0; i < _usrData.size(); i++)
+	{
+		if (_usrData[i].first.getNickname() == usrNickname)
+			return i;
+	}
+	return -1;
 }
 
 //_usrs.erase(std::remove(_usrs.begin(), _usrs.end(), usr), _usrs.end());
 //if there more clients it deletes more than one why thought
-void	Channel::removeClient(Client& client, std::string reason)
+void	Channel::removeClient(Client& client)
 {
-	(void)reason;
 	std::string	partMessage = "";
 
 	std::cout<<RED<<"Target Client nickname -> "<<client.getNickname()<<RESET<<std::endl;
 	for (size_t i = 0; i < _usrData.size(); i++)
 	{
 		//i must change the condition
-		if (_usrData[i].first.getNickname())
+		int	index = findUsr(client.getNickname());
+		if (index != -1)
 		{
-			std::cout<<"Usr to delete "<<_usrData[i].first.getNickname()<<std::endl;
-			_usrData.erase(_usrData.begin() + i);
-			i--;
-			//printing _usrData
+			_usrData.erase(_usrData.begin() + index);
+			break;
 		}
 		else
 		{
@@ -92,12 +95,9 @@ void	Channel::removeClient(Client& client, std::string reason)
 //the substring
 std::string	Server::takeReason(std::string args)
 {
-	// size_t i = args.find_first_of(':', 0);
 	try
 	{
-		// std::cout<<"stringa ottenuta "<<args<<std::endl;
 		size_t i = (args.find_last_of(':'));
-		// std::cout<<"i is going wild?? "<<i<<std::endl;
 		if (i != std::string::npos)
 		{
 			std::string	reason = args.substr(i, args.size());
@@ -134,7 +134,7 @@ void	Server::Part(std::string args, int clientSocket)
 
 		if (channelExist)
 		{
-			_channels[channelIndex].removeClient(*client, reason);
+			_channels[channelIndex].removeClient(*client);
 			partLeavingMessage(*client, _channels[channelIndex].getName(), reason);
 		}
 	}

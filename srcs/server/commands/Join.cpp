@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/19 18:24:30 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:36:15 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ std::vector<std::string>	Server::channelParser(std::string args)
 	return (numOfChannels);
 }
 
+//for now it seems that the keyparser saves one of the keys two times
+//before passing to the next one
 
 std::vector< std::string >	Server::keyParser(std::string args)
 {
@@ -76,14 +78,17 @@ std::vector< std::string >	Server::keyParser(std::string args)
 		if (pos != std::string::npos)
 		{
 			temp = args.substr(i, pos - i);
-			keys.push_back(temp);
+			std::cout << "temp1: " << temp << std::endl;
+			// keys.push_back(temp);
 			i = pos + 1;
 		}
 		else
 		{
-			temp = args.substr(i, pos - i);
-			keys.push_back(temp);
-			break;
+			temp = args.substr(i);
+			std::cout << "temp2: " << temp << std::endl;
+			i = std::string::npos;
+			// keys.push_back(temp);
+			// break;
 		}
 
 		temp.erase(0, temp.find_first_not_of(" "));

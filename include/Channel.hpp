@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/19 21:30:05 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:17:27 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class Channel
 		void									setPassword(const std::string& password);
 		void									setLimit(int limit);
 		void									setUsrData(std::vector< std::pair< Client, int> > usrData);
-		void									removeClient(Client& client, std::string reason);
+		void									removeClient(Client& client);
 		Client									getClientByNickname(std::string nickname);
 
 		//checks functions

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 19:14:00 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/19 18:16:15 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:00:08 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,16 @@ Parameters: <channel> *( "," <channel> ) <user> *( "," <user> )
 */
 
 
+//#channel user1,user2
+
 
 void Server::Kick(std::string args, int clientSocket)
 {
 	std::vector<std::string>	numOfChannels = channelParser(args);
 	//keyparser should parse the clients just fine
+	//is not parsing correctly it puts the first client two times in the vector
 	std::vector<std::string>	numOfClient = keyParser(args);
+
 	Client* superUser = getClient(clientSocket);
 
 	for (size_t i = 0; i < numOfChannels.size(); i++)
@@ -62,7 +66,6 @@ void Server::Kick(std::string args, int clientSocket)
 		{
 			//checking if the usr is an operator
 			Channel *channel = getChannel(numOfChannels[i]);
-			channel->printClients();
 			if (!channel->isOperator(*superUser))
 			{
 				std::string	errorMessage = constructMessage(ERR_CHANOPRIVSNEEDED, superUser->getNickname(), numOfChannels[i]);
@@ -71,21 +74,22 @@ void Server::Kick(std::string args, int clientSocket)
 			}
 			for (size_t j = 0; j < numOfClient.size(); j++)
 			{
+				std::cout<<RED<<"usr to kick "<<numOfClient[j]<<RESET<<std::endl;
+				int	usrIndex = channel->findUsr(numOfClient[j]);
 				Client clientToKick = channel->getClientByNickname(numOfClient[j]);
 				//checks if the client exists
 				if (clientToKick.getFd() == 0)
 				{
 					std::string	errorMessage = constructMessage(ERR_NOSUCHNICK, numOfClient[j]);
 					send(clientSocket, errorMessage.c_str(), errorMessage.size(), 0);
-					return ;
+					// return ;
 				}
 				//kick the user from the channel
-				if (channel->isInChannel(clientToKick))
+				if (usrIndex != -1)
 				{
-					Part(numOfChannels[i], clientToKick.getFd());
+					Part(channel->getName(), clientToKick.getFd());
 					std::string kickMessage = ":" + SERVERNAME + " KICK " + numOfChannels[i] + " " + clientToKick.getNickname() + " :Kicked by " + getClient(clientSocket)->getNickname() + "\r\n";
 					send(clientSocket, kickMessage.c_str(), kickMessage.size(), 0);
-					return ;
 				}
 				else
 				{
