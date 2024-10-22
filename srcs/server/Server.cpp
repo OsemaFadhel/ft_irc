@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:17:50 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:26:00 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,42 +58,15 @@ int Server::getClientIndex(int clientSocket)
 
 void Server::setPassword(const std::string& password)
 {
-	_password = hashPassword(password);
+	_password = password;
 }
 
 
-/* HASH PASSWORD************************************************************* */
+/* Check PASSWORD************************************************************* */
 
 bool Server::verifyPassword(const std::string& password) const
 {
-	return hashPassword(password) ==_password;
-}
-
-std::string Server::hashPassword(const std::string& password) const
-{
-	unsigned long hash = 5381;
-	for (size_t i = 0; i < password.size(); ++i) {
-		hash = ((hash << 5) + hash) + password[i]; // hash * 33 + c
-	}
-
-	std::ostringstream oss;
-	oss << std::hex << hash;
-	return oss.str();
-}
-
-void	Server::valuesCheck(Client clientToInsert)
-{
-	std::cout<<"Client nickname: "<<clientToInsert.getNickname()<<std::endl;
-	std::cout<<"Client fd: "<<clientToInsert.getFd()<<std::endl;
-}
-
-
-void	Server::channelCheck()
-{
-	for (size_t i = 0; i < _channels.size(); i++)
-	{
-		_channels[i].printClients();
-	}
+	return password ==_password;
 }
 
 // Method to remove and delete a client by socket
@@ -187,5 +160,19 @@ void Server::run()
 
 	std::cout << BOLD << CYAN << "IRC SERVER UP! WAITING FOR CLIENTS" << RESET << std::endl;
 	startLoop(readfds, maxfds);
-	//killServer();  //kill server close all sockets and free memory
+	killServer();  //kill server close all sockets and free memory
+}
+
+//per dopo da sistemare le interazioni qua
+Channel*	Server::getChannel(std::string channelName)
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		std::cout<<"what channel do we have here "<<_channels[i].getName()<<std::endl;
+		std::cout<<"and what channel i've passed here? "<<channelName<<std::endl;
+		if (_channels[i].getName() == channelName)
+			return (&_channels[i]);
+	}
+	std::cout<<"death reached?"<<std::endl;
+	return 0;
 }

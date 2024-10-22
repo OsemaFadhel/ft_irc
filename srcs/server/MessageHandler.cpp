@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:35:50 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 12:29:43 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:35:22 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,9 @@ void Server::handleMessage(std::string buffer, int readSize, int clientSocket, s
 	(void)readSize;
 	(void)clientSocket;
 
-	std::cout << CYAN << "[DEBUG] Handling message: " << buffer << RESET << std::endl;
 	std::vector<std::string> vector = splitCommand(buffer);
 	this->_newfds[i].buffer.clear();
 
-	std::cout << CYAN << "[DEBUG] Vector size: " << vector.size() << RESET << std::endl;
 	for (size_t j = 0; j < vector.size(); j++)
 		processCommand(vector[j], clientSocket, i);
 }
