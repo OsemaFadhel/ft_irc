@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 19:14:00 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/22 16:51:17 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:01:52 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,8 @@ void Server::Kick(std::string args, int clientSocket)
 	{
 		tmpArgs = tmpArgs.substr(i, tmpArgs.size());
 		args.erase(i, args.size());
-
 	}
 	std::vector<std::string>	numOfChannels = channelParser(args);
-	//keyparser should parse the clients just fine
-	//is not parsing correctly it puts the first client two times in the vector
 	std::vector<std::string>	numOfClient = keyParser(args);
 
 	Client* superUser = getClient(clientSocket);

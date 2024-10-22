@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:33:07 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/22 15:48:27 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:02:39 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,21 +93,8 @@ void	Channel::removeClient(Client& client)
 
 //PART #channel, cmldffk :reason
 //the substring
-std::string	Server::takeReason(std::string &args, int flag)
+std::string	Server::takeReason(std::string &args)
 {
-	(void)flag;
-	// if (flag == 1)
-	// {
-	// 	//here i save the reason and delete it from the args
-	// 	//this is just to fix the keyparser logic used in the KICK command
-	// 	size_t i = (args.find_last_of(':'));
-	// 	if (i != std::string::npos)
-	// 	{
-	// 		std::string	reason = args.substr(i, args.size());
-	// 		args.erase(i, args.size());
-	// 		return reason;
-	// 	}
-	// }
 	try
 	{
 		size_t i = (args.find_last_of(':'));
@@ -135,7 +122,7 @@ void	Server::Part(std::string args, int clientSocket)
 	std::vector<std::string>	numOfChannels = channelParser(args);
 	bool						channelExist = false;
 	Client						*client = getClient(clientSocket);
-	std::string					reason = takeReason(args, 0);
+	std::string					reason = takeReason(args);
 	size_t						channelIndex;
 
 	// std::cout<<"numOfChannels "<<numOfChannels.size()<<std::endl;
