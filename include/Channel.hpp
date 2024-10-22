@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/21 15:17:27 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:20:05 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,10 @@ class Channel
 
 
 I think that for now i don't need to do
+
+*Important feature:
+	should i free the vecotrs when the the connection is closed?
+
 
 
 *Channel operators behaviour development logic 🧠:

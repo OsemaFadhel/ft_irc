@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 19:14:00 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/21 17:00:08 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:51:17 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,14 @@ Parameters: <channel> *( "," <channel> ) <user> *( "," <user> )
 
 void Server::Kick(std::string args, int clientSocket)
 {
+	std::string	tmpArgs = args;
+	size_t i = (tmpArgs.find_last_of(':'));
+	if (i != std::string::npos)
+	{
+		tmpArgs = tmpArgs.substr(i, tmpArgs.size());
+		args.erase(i, args.size());
+
+	}
 	std::vector<std::string>	numOfChannels = channelParser(args);
 	//keyparser should parse the clients just fine
 	//is not parsing correctly it puts the first client two times in the vector
@@ -87,13 +95,13 @@ void Server::Kick(std::string args, int clientSocket)
 				//kick the user from the channel
 				if (usrIndex != -1)
 				{
-					Part(channel->getName(), clientToKick.getFd());
+					Part(channel->getName()+ " " + tmpArgs, clientToKick.getFd());
 					std::string kickMessage = ":" + SERVERNAME + " KICK " + numOfChannels[i] + " " + clientToKick.getNickname() + " :Kicked by " + getClient(clientSocket)->getNickname() + "\r\n";
 					send(clientSocket, kickMessage.c_str(), kickMessage.size(), 0);
 				}
 				else
 				{
-					std::string	errorMessage = constructMessage(ERR_USERNOTINCHANNEL, clientToKick.getNickname(), numOfChannels[i]);
+					std::string	errorMessage = constructMessage(ERR_USERNOTINCHANNEL, clientToKick.getNickname().c_str(), numOfChannels[i].c_str());
 					send(clientSocket, errorMessage.c_str(), errorMessage.size(), 0);
 				}
 			}
