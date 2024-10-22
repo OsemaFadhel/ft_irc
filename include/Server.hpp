@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 11:54:28 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/22 14:42:38 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,4 +146,10 @@ class Server
 #define BG_CYAN    "\033[46m"
 #define BG_WHITE   "\033[47m"
 
+
 #endif
+
+// git fetch upstream
+// git checkout <branch_to_update>
+// git merge upstream/<branch_to_update>
+// git push origin <branch_to_update>
