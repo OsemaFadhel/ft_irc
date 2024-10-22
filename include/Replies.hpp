@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/19 10:32:29 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 19:23:32 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ std::string constructMessage(const std::string& format, ...);
 #define RPL_MYINFO ":ft_irc 004 %s %s %s %s %s\r\n" // Static size: 29
 
 #define RPL_NAMREPLY ":ft_irc 353 %s = %s :%s\r\n" // Static size: 29
+
+#define RPL_INVITING ":ft_irc 341 %s %s %s\r\n" // Static size: 23
 //ERROR REPLIES
 
 #define ERR_INPUTTOOLONG ":ft_irc 401 %s :Input line too long\r\n" // Static size: 33

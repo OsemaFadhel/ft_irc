@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/19 15:23:11 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:41:58 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,14 @@ bool	Channel::isOperator(Client client)
 		}
 	}
 	return false;
+}
+
+Client*	Server::getClientByNickname(std::string nickname)
+{
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (_clients[i]->getNickname() == nickname)
+			return _clients[i];
+	}
+	return 0;
 }

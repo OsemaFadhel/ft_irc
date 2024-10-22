@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/19 18:03:18 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 19:14:02 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,7 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 			Part(args, clientSocket);
 		else if (command == "KICK")
 			Kick(args, clientSocket);
+		else if (command == "INVITE")
+			Invite(args, clientSocket);
 	}
 }

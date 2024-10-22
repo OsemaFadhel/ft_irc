@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/22 17:02:45 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:46:17 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,12 +137,16 @@ class Server
 
 		//super user commands:
 		void	Kick(std::string args, int clientSocket);
+		//this can be a super user command only if a mode is setted
+		void	Invite(std::string args, int clientSocket);
 
 
 		//check functions
 		//check if channel exists for now i'll do it with the strings vector
 		//seing that I'm working mostly with that when parsing channels
 		bool	checkIfChannelExists(std::string channelName);
+		
+		Client*	getClientByNickname(std::string nickname);
 };
 
 void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
