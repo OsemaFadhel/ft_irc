@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/21 13:36:21 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/23 16:09:24 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class Channel;
 typedef struct socketdata
 {
 	int id;
+	std::string ip;
 	std::string buffer;
 } socketdata;
 
@@ -100,7 +101,7 @@ class Server
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
 		void Quit(std::string args, int clientSocket, size_t &i);
-		void Pass(std::string args, int clientSocket);
+		void Pass(std::string args, int clientSocket, size_t &i);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
 		void Topic(std::string args, Client *client);

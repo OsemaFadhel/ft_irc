@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/02 18:17:53 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/23 16:12:46 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ void Client::setRealName(const std::string& realname)
 void Client::setBuffer(const std::string& buffer)
 {
 	_buffer = buffer;
+}
+
+void Client::setHostname(const std::string& hostname)
+{
+	_hostname = hostname;
 }
 
 void Client::setIsRegistered(int isRegistered)

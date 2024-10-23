@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/21 12:48:59 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/23 16:09:09 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 			return send(clientSocket, ERR_NOTREGISTERED, 39, 0), void();
 
 		if (command == "PASS")
-			Pass(args, clientSocket);
+			Pass(args, clientSocket, i);
 		else if (command == "PING")
 			Ping(client, clientSocket, args);
 		else if (command == "CAP")
@@ -52,7 +52,7 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 		else if (command == "USER")
 			User(args, clientSocket);
 		else if (command == "PASS")
-			Pass(args, clientSocket);
+			Pass(args, clientSocket, i);
 		else if (command == "PING")
 			Ping(client, clientSocket, args);
 		else if (command == "CAP")
@@ -64,7 +64,7 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 	else
 	{
 		if (command == "PASS")
-			Pass(args, clientSocket);
+			Pass(args, clientSocket, i);
 		else if (command == "NICK")
 			Nick(args, clientSocket);
 		else if (command == "USER")

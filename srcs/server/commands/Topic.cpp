@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:30:20 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/21 13:35:46 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/21 13:36:52 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int checkErrors2(std::string chan, int fd, Channel *channel, Client *client)
 	}
 
 	return 0;
-
 }
 
 void Server::sendToChannel(Channel *channel, Client *sender, std::string chan, std::string message)

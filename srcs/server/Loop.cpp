@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/08 12:11:20 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/23 14:31:08 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,17 @@ void Server::setMaxfds(int &maxfds, fd_set &readfds)
 	}
 }
 
+void handle_select_error(int result)
+{
+	if (result == -1) {
+		if (errno == EINTR) {
+			std::cerr << "Select interrupted by signal, retrying..." << std::endl;
+		} else {
+			throw std::runtime_error(std::string("Select error: ") + strerror(errno));
+		}
+	}
+}
+
 void Server::startLoop(fd_set& readfds, int& maxfds)
 {
 	signal(SIGINT, signalHandler);
@@ -63,18 +74,9 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 
 		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
-		if (selectfd == -1)
-		{
-				if (errno == EINTR)
-			{
-				std::cerr << "Select interrupted by signal, retrying..." << std::endl;
-				continue;
-			}
-			else
-				throw std::runtime_error(std::string("Select error: ") + strerror(errno));
+		handle_select_error(selectfd);
 
-		}
-		else if (selectfd == 0)
+		if (selectfd == 0)
 		{
 			std::cout << "Timeout expired before any file descriptors became ready" << std::endl;
 			continue;
