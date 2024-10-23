@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 19:29:34 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/23 20:03:50 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,10 @@ class Server
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
-		void Quit(Channel channelToSet, int clientSocket, size_t &i);
-		void Pass(Channel channelToSet, int clientSocket);
-		void Nick(Channel channelToSet, int clientSocket);
-		void User(Channel channelToSet, int clientSocket);
+		void Quit(std::string args, int clientSocket, size_t &i);
+		void Pass(std::string args, int clientSocket);
+		void Nick(std::string args, int clientSocket);
+		void User(std::string args, int clientSocket);
 
 		/*Join command and functions by lnicoter*/
 		/* Join behaviour
