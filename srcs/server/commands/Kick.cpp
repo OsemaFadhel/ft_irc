@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 19:14:00 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/22 17:01:52 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:10:05 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void Server::Kick(std::string args, int clientSocket)
 {
 	std::string	tmpArgs = args;
 	size_t i = (tmpArgs.find_last_of(':'));
+
 	if (i != std::string::npos)
 	{
 		tmpArgs = tmpArgs.substr(i, tmpArgs.size());

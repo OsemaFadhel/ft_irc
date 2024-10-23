@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/22 18:46:17 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:29:34 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 # define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")
 # define DATE std::string("2024/08/01")
+# define MODES std::string("itkol")
 
 
 class Client;
@@ -98,10 +99,10 @@ class Server
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
-		void Quit(std::string args, int clientSocket, size_t &i);
-		void Pass(std::string args, int clientSocket);
-		void Nick(std::string args, int clientSocket);
-		void User(std::string args, int clientSocket);
+		void Quit(Channel channelToSet, int clientSocket, size_t &i);
+		void Pass(Channel channelToSet, int clientSocket);
+		void Nick(Channel channelToSet, int clientSocket);
+		void User(Channel channelToSet, int clientSocket);
 
 		/*Join command and functions by lnicoter*/
 		/* Join behaviour
@@ -137,19 +138,21 @@ class Server
 
 		//super user commands:
 		void	Kick(std::string args, int clientSocket);
-		//this can be a super user command only if a mode is setted
 		void	Invite(std::string args, int clientSocket);
 
-
+		//mode section
+		void		Mode(std::string args, int clientSocket);
+		std::string	modeParser(std::string args);
+		void		setOrRemoveMode(std::string channelName, std::string mode, std::string hypotheticalArgs, int clientSocket);
 		//check functions
 		//check if channel exists for now i'll do it with the strings vector
 		//seing that I'm working mostly with that when parsing channels
-		bool	checkIfChannelExists(std::string channelName);
-		
-		Client*	getClientByNickname(std::string nickname);
+		bool		checkIfChannelExists(std::string channelName);
+		Client*		getClientByNickname(std::string nickname);
 };
 
 void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+int		isChannel(std::string channelName);
 
 // Macros for ANSI escape codes
 #define RESET      "\033[0m"   // Reset all attributes

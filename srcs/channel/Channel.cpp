@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/22 18:48:02 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:59:14 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ Channel::Channel(Client firstClient, std::string channelName)
 		std::string errMess = constructMessage(ERR_BADCHANMASK, channelName.c_str());
 		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 	}
-	//porco due prossima volta usa this oppure metti un altro nome per la variabile passata
 	this->_topic = "";
 	this->_password = "";
 	this->_mode['t'] = false;

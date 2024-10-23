@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/22 15:20:05 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:30:24 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,6 @@ class Channel
 
 		//checks functions
 		bool									isOperator(Client client);
-		//channel commands for channel operators
-		// void		kick(Client* client); // kick client
-		// void		invite(Client* client); // invite client
-		// void		topic(Client* client, const std::string& topic); // change or view topic
-		// void		mode(Client* client, const std::string& mode); // change mode
 		/*mode
 		 i: Set/remove Invite-only channel
 		 t: Set/remove the restrictions of the TOPIC command to channel operators
@@ -70,6 +65,13 @@ class Channel
 		 o: Give/take channel operator privilege
 		 l: Set/remove the user limit to channel
 		*/
+		void		iMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
+		void		tMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
+		void		kMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
+		void		oMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
+		void		lMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
+
+
 		//optional functions for outputs
 		void		printClients();
 		int			isInChannel(Client client);
