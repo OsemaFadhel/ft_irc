@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 19:30:24 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:28:34 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,11 @@ class Channel
 		//getters and setters
 		std::string								getName() const;
 		std::string								getTopic() const;
-		std::map<char, bool>							getMode() const;
+		std::map<char, bool>					getMode() const;
 		std::string								getPassword() const;
 		int										getLimit() const;
 		std::vector< std::pair< Client, int> >	getUsrData() const;
+		bool									getModeValue(char mode);
 		void									setName(const std::string& name);
 		void									setTopic(const std::string& topic);
 		void									setMode(const std::map<char, bool> & mode);
@@ -55,6 +56,7 @@ class Channel
 		void									setUsrData(std::vector< std::pair< Client, int> > usrData);
 		void									removeClient(Client& client);
 		Client									getClientByNickname(std::string nickname);
+		Client									*getClientByfd(int fd);
 
 		//checks functions
 		bool									isOperator(Client client);
@@ -68,9 +70,10 @@ class Channel
 		void		iMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
 		void		tMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
 		void		kMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
-		void		oMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
+		int			checkKey(std::string keyToChekck, Client clientToInsert);
+		void		oMode(std::string hypotheticalArgs, int clientSocket);
 		void		lMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
-
+		void		broadcastMessage(std::string message, int clientSocket);
 
 		//optional functions for outputs
 		void		printClients();

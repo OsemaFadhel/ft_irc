@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/22 19:23:32 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:25:38 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,11 @@ std::string constructMessage(const std::string& format, ...);
 #define RPL_NAMREPLY ":ft_irc 353 %s = %s :%s\r\n" // Static size: 29
 
 #define RPL_INVITING ":ft_irc 341 %s %s %s\r\n" // Static size: 23
+
+#define RPL_CHANNELMODEIS ":ft_irc 324 %s %s %s\r\n" // Static size: 23 sometimes it doesn't have arguments
+
 //ERROR REPLIES
+#define ERR_KEYSET ":ft_irc 467 %s :Channel key already set\r\n" // Static size: 35
 
 #define ERR_INPUTTOOLONG ":ft_irc 401 %s :Input line too long\r\n" // Static size: 33
 
@@ -141,6 +145,7 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_USERSDONTMATCH ":ft_irc 502 :Cannot change mode for other users\r\n" // Static size: 36
 
+#define ERR_INVALIDKEY ":ft_irc 525 %s :Invalid channel key\r\n" // Static size: 35
 
 #endif
 

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/22 18:41:58 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:30:44 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,3 +72,18 @@ Client*	Server::getClientByNickname(std::string nickname)
 	}
 	return 0;
 }
+
+Client	*Channel::getClientByfd(int fd)
+{
+	std::vector< std::pair < Client, int > >::iterator it;
+
+	for (it = _usrData.begin(); it != _usrData.end(); it++)
+	{
+		if (it->first.getFd() == fd)
+			return &it->first;
+	}
+	return (0);
+}
+
+
+

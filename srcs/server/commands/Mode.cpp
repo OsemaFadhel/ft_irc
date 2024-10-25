@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 12:15:48 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/23 20:04:58 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:08:56 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ int	checkMode(std::string mode)
 void	Server::setOrRemoveMode(std::string channelName, std::string mode, std::string hypotheticalArgs, int clientSocket)
 {
 	Channel	*channel = getChannel(channelName);
-	(void)hypotheticalArgs;
-	(void)channel;
+
 	if ((mode[0] != '+' || mode[0] != '-') && !checkMode(mode))
 	{
 		std::string	errMessage = constructMessage(ERR_UNKNOWNMODE, mode.c_str(), channelName.c_str());
@@ -83,10 +82,10 @@ void	Server::setOrRemoveMode(std::string channelName, std::string mode, std::str
 	switch (mode[1])
 	{
 		case 'i':
-			//invite only
+			channel->iMode(mode, hypotheticalArgs, clientSocket);
 			break;
 		case 't':
-			//topic
+			
 			break;
 		case 'k':
 			//key

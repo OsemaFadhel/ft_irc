@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 18:59:14 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:26:53 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ Channel::Channel(Client firstClient, std::string channelName)
 	this->_mode['t'] = false;
 	this->_mode['i'] = false;
 	this->_mode['k'] = false;
-	this->_mode['o'] = false;
+	// this->_mode['o'] = false;
 	this->_mode['l'] = false;
 }
 
@@ -229,6 +229,14 @@ void	Channel::channelContentSize()
 }
 
 
+bool	Channel::getModeValue(char mode)
+{
+	std::map<char, bool>::iterator	it = _mode.find(mode);
+	if (it == _mode.end())
+		return false;
+	return it->second;
+}
+
 /* to implement:
 		void		join should i save the channel that are passed? how though
 		void		kick(Client* client); // kick client
@@ -267,4 +275,24 @@ Client	Channel::getClientByNickname(std::string nickname)
 			return it->first;
 	}
 	return Client(0);
+}
+
+void	Channel::broadcastMessage(std::string message, int clientSocket)
+{
+	std::vector<std::pair <Client, int> >::iterator	it;
+
+	for (it = _usrData.begin(); it != _usrData.end(); it++)
+	{
+		if (it->first.getFd() != clientSocket)
+			send(it->first.getFd(), message.c_str(), message.size(), 0);
+	}
+}
+int	Channel::checkKey(std::string keyToCheck, Client clientToInsert)
+{
+	if (!keyToCheck.empty() && this->_password.compare(keyToCheck) == 0)
+		return 1;
+
+	std::string errMessage = constructMessage(ERR_BADCHANNELKEY, this->_name.c_str());
+	send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+	return 0;
 }

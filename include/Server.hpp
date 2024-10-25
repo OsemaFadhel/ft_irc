@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 20:03:50 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:38:34 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ class Server
 		void removeClient(int clientSocket);
 		//is not being used because it would change a lot of stuff
 		Channel*	getChannel(std::string& channelName);
-
 		void run();
 		void createSocket();
 		void setMaxfds(int &maxfds, fd_set &readfds);
@@ -116,8 +115,8 @@ class Server
 		void						Join(std::string args, int	clientSocket);
 		std::vector< std::string >	channelParser(std::string args);
 		std::vector< std::string >	keyParser(std::string args);
-		void						channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert);
-		void						checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
+		void						channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys);
+		void						checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert, std::vector< std::string > keys);
 		//checking functions of server by lnicoter
 		void						valuesCheck(Client clientToInsert);
 		void						channelCheck();
