@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:22:56 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/25 21:43:11 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:58:00 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,13 +155,13 @@ void	Channel::tMode(std::string mode, std::string hypotheticalArgs, int clientSo
 		return ;
 	}
 	//i need to tell the others that the channel is invite only
-	if (mode[0] == '+' && this->_mode['i'] != true)
+	if (mode[0] == '+' && this->_mode['t'] != true)
 	{
-		this->_mode['i'] = true;
+		this->_mode['t'] = true;
 	}
-	else if (mode[0] == '-' && this->_mode['i'] != false)
+	else if (mode[0] == '-' && this->_mode['r'] != false)
 	{
-		this->_mode['i'] = false;
+		this->_mode['t'] = false;
 	}
 	else
 	{
@@ -187,13 +187,16 @@ void	Channel::lMode(std::string mode, std::string hypotheticalArgs, int clientSo
 		return ;
 	}
 	//i need to tell the others that the channel is invite only
-	if (mode[0] == '+' && this->_mode['i'] != true)
+	if (mode[0] == '+' && this->_mode['l'] != true)
 	{
-		this->_mode['i'] = true;
+		std::stringstream ss(hypotheticalArgs);
+		ss >> this->_limit;
+		this->_mode['l'] = true;
 	}
-	else if (mode[0] == '-' && this->_mode['i'] != false)
+	else if (mode[0] == '-' && this->_mode['l'] != false)
 	{
-		this->_mode['i'] = false;
+		this->_mode['l'] = false;
+		_limit = 0;
 	}
 	else
 	{

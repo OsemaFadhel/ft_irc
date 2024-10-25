@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 12:15:48 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/24 15:08:56 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 22:38:21 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ void	Server::setOrRemoveMode(std::string channelName, std::string mode, std::str
 			channel->iMode(mode, hypotheticalArgs, clientSocket);
 			break;
 		case 't':
-			
+
 			break;
 		case 'k':
-			//key
+			channel->kMode(mode, hypotheticalArgs, clientSocket);
 			break;
 		case 'o':
 			//operator
@@ -111,6 +111,13 @@ void	Server::Mode(std::string args, int clientSocket)
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
+	Channel *channel = getChannel(channelName);
+	if (isInServer(*channel) == -1)
+	{
+		std::string	errMessage = constructMessage(ERR_NOTONCHANNEL, channelName);
+		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+		return ;
+	}
 	args = args.erase(0, channelName.size() + 1);
 	std::string mode = modeParser(args);
 	// std::cout<<"what we have channel: "<<channelName<<std::endl;
@@ -119,6 +126,6 @@ void	Server::Mode(std::string args, int clientSocket)
 	size_t	i = args.find_first_not_of(" ");
 	if (i != std::string::npos)
 		args.erase(0, i);
-	setOrRemoveMode(channelName, mode, hypotheticalArgs, clientSocket);
 	std::cout<<"args after mode parsing "<<args<<std::endl;
+	setOrRemoveMode(channelName, mode, hypotheticalArgs, clientSocket);
 }

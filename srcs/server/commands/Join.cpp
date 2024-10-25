@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/25 21:27:44 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:59:45 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,7 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 		{
 			// Aggiungi il client al canale esistente
 			//check della password
+			//tomorrow check of the password
 			if (!_channels[channelIndex].getPassword().empty() && _channels[channelIndex].checkKey(keys[channelIndex], clientToInsert))
 			{
 				_channels[channelIndex].addClient(clientToInsert);

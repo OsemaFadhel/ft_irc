@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/25 20:38:34 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/25 22:36:32 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ class Server
 		//seing that I'm working mostly with that when parsing channels
 		bool		checkIfChannelExists(std::string channelName);
 		Client*		getClientByNickname(std::string nickname);
+		int			isInServer(Channel channel);
 };
 
 void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
