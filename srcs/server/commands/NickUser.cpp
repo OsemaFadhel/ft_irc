@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:19:05 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/07 16:45:40 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/25 11:01:14 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,22 @@ void Server::Nick(std::string args, int clientSocket)
 		}
 	}
 
+	std::string messageToSend = ":" + client->getNickname() + " NICK " + args + "\r\n";
+
 	//MAYbe add broadcast to all channels
-	//for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-	//{
-	//	if ((*it)->isInChannel(client->getNickname()))
-	//	{
-	//		std::string message = ":" + client->getNickname() + " NICK " + args + "\r\n";
-	//		(*it)->broadcast(clientSocket, message);
-	//	}
-	//}
+	for (std::vector<Channel>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if (it->isInChannel(*client) != -1)
+		{
+			std::vector<std::pair<Client, int> >	usrData = it->getUsrData();
+
+			for (size_t i = 0; i < usrData.size(); i++)
+			{
+				if (usrData[i].first.getFd() != client->getFd())
+					send(usrData[i].first.getFd(), messageToSend.c_str(), messageToSend.size(), 0);
+			}
+		}
+	}
 
 	client->setNickname(args);
 
