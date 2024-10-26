@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 16:12:46 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/25 11:05:18 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void Client::appendBuffer(const char* buffer, int readsize)
 {
 	if (_buffer.size() + readsize > 512)
 	{
-		std::cerr << "Error: Buffediscarding excess data.r overflow detected. Message to long" << std::endl;
+		std::cerr << "Error: Buffer discarding excess data. Message to long" << std::endl;
 		return;
 	}
 	_buffer += buffer;

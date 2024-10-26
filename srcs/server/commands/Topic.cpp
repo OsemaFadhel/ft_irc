@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:30:20 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/21 13:36:52 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/26 15:32:51 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,6 @@ int checkErrors2(std::string chan, int fd, Channel *channel, Client *client)
 		return send(fd, errMessage.c_str(), errMessage.size(), 0), 1;
 	}
 
-	//mode +t is set to false
-	if (channel->getMode().find('t')->second == false)
-	{
-		std::string	errMessage = constructMessage(ERR_NOCHANMODES, chan.c_str());
-		return send(fd, errMessage.c_str(), errMessage.size(), 0), 1;
-	}
-
-	//check if the user is an operator
-
-	if (channel->isOperator(*client) == 0)
-	{
-		std::string	errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, chan.c_str());
-		return send(fd, errMessage.c_str(), errMessage.size(), 0), 1;
-	}
-
 	return 0;
 }
 
@@ -87,6 +72,17 @@ void Server::Topic(std::string args, Client *client)
 
 		if (checkErrors2(chan, fd, channel, client))
 			return;
+
+		//mode +t is set to false only the operator can change the topic
+		if (channel->getMode().find('t')->second == false)
+		{
+			//check if the user is an operator
+			if (channel->isOperator(*client) == 0) //user is not an operator
+			{
+				std::string	errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, chan.c_str());
+				return send(fd, errMessage.c_str(), errMessage.size(), 0), 1, void();
+			}
+		}
 
 		std::string	message = extractMessage(args);
 		message.erase(0, message.find_first_not_of(" \t"));
