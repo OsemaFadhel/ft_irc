@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/25 20:30:44 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:02:12 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,3 +87,14 @@ Client	*Channel::getClientByfd(int fd)
 
 
 
+bool	Channel::isInviterOp()
+{
+	std::vector< std::pair < Client, int > >::iterator it;
+
+	for (it = this->_usrData.begin(); it != this->_usrData.end(); it++)
+	{
+		if (it->first.getFd() == this->_whoInvited && isOperator(it->first))
+			return true;
+	}
+	return false;
+}

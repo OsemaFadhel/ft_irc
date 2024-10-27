@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/27 21:58:49 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 22:28:05 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,6 @@ bool Server::verifyPassword(const std::string& password) const
 {
 	return password ==_password;
 }
-	return hashPassword(password) ==_password;
-}
-
-std::string Server::hashPassword(const std::string& password) const
-{
-	unsigned long hash = 5381;
-	for (size_t i = 0; i < password.size(); ++i) {
-		hash = ((hash << 5) + hash) + password[i]; // hash * 33 + c
-	}
-
-	std::ostringstream oss;
-	oss << std::hex << hash;
-	return oss.str();
-}
-
-
 
 // Method to remove and delete a client by socket
 void Server::removeClient(int clientSocket)
@@ -191,11 +175,11 @@ Channel*	Server::getChannel(std::string& channelName)
 }
 
 
-int	Server::isInServer(Channel *channel)
+int	Server::isInServer(Channel channel)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
-		if (_channels[i].getName() == channel->getName())
+		if (_channels[i].getName() == channel.getName())
 			return 1;
 	}
 	return 0;

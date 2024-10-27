@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/27 21:50:59 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:03:00 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Chann
 
 void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys)
 {
-	if (!_channels[channelIndex].getModeValue('i'))
+	if (!_channels[channelIndex].getModeValue('i') || _channels[channelIndex].isInviterOp())
 	{
 		if (_channels[channelIndex].isInChannel(clientToInsert))
 		{
@@ -202,6 +202,7 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
 			}
 		}
+		_channels[channelIndex].setWhoInvited(-1);
 	}
 	else
 	{

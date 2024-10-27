@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/10/27 21:46:43 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 22:09:28 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,9 +158,10 @@ class Server
 		int			isInServer(Channel channel);
 };
 
-void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
-int		isChannel(std::string channelName);
-
+void		checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+int			isChannel(std::string channelName);
+std::string extractMessage(const std::string& input);
+std::string extractChannelName(const std::string& input);
 // Macros for ANSI escape codes
 #define RESET      "\033[0m"   // Reset all attributes
 #define BOLD       "\033[1m"   // Bold text

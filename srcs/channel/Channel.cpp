@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/27 21:49:37 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 22:51:05 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ Channel::Channel(Client firstClient, std::string channelName)
 	this->_mode['k'] = false;
 	// this->_mode['o'] = false;
 	this->_mode['l'] = false;
+	_whoInvited = -1;
 }
 
 
@@ -237,33 +238,6 @@ bool	Channel::getModeValue(char mode)
 	return it->second;
 }
 
-/* to implement:
-		void		join should i save the channel that are passed? how though
-		void		kick(Client* client); // kick client
-		void		invite(Client* client); // invite client
-		void		topic(Client* client, const std::string& topic); // change or view topic
-		void		mode(Client* client, const std::string& mode); // change mode
-		mode:
-		 i: Set/remove Invite-only channel
-		 m: Set/remove moderated channel
-		 n: Set/remove channel name changes
-		 p: Set/remove private channel
-		 s: Secret channel
-		 t: Set/remove topic set by channel operator only
-		 k <key>: Set/remove the channel key (password)
-		 l <limit>: Set the user limit to channel
-
-		PRIVMSG
-
-*/
-
-
-
-/*
-messaggio esempio:
-
-:ciao come stai?\r\n
-*/
 
 Client	Channel::getClientByNickname(std::string nickname)
 {
@@ -295,4 +269,14 @@ int	Channel::checkKey(std::string keyToCheck, Client clientToInsert)
 	std::string errMessage = constructMessage(ERR_BADCHANNELKEY, this->_name.c_str());
 	send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
 	return 0;
+}
+
+int		Channel::getWhoInvited()
+{
+	return _whoInvited;
+}
+
+void	Channel::setWhoInvited(int whoInvited)
+{
+	_whoInvited = whoInvited;
 }

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:04:35 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/22 19:24:54 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 22:51:18 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 //<nickname> <channel>
 //how it should be sent
 //:<inviter> INVITE <target> <channel>
+
 void	Server::Invite(std::string args, int clientSocket)
 {
 	std::vector<std::string> channelName = keyParser(args);
@@ -59,6 +60,7 @@ void	Server::Invite(std::string args, int clientSocket)
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
+	channelWhereInvited->setWhoInvited(clientSocket);
 	std::string success = constructMessage(RPL_INVITING, inviter->getNickname().c_str(), invitedClient->getNickname().c_str(), channelWhereInvited->getName().c_str());
 	std::cout<<"first success check "<<success<<std::endl;
 	send(clientSocket, success.c_str(), success.size(), 0);
@@ -66,3 +68,9 @@ void	Server::Invite(std::string args, int clientSocket)
 	std::cout<<"second success check "<<success<<std::endl;
 	send(invitedClient->getFd(), success.c_str(), success.size(), 0);
 }
+
+/*
+!Bigass problem:
+	invite triggers join automatically but how can i tell if the inviter
+	is the operator????
+*/
