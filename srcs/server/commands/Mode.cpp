@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 12:15:48 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/25 22:38:21 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 19:17:36 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	Server::setOrRemoveMode(std::string channelName, std::string mode, std::str
 			channel->iMode(mode, hypotheticalArgs, clientSocket);
 			break;
 		case 't':
-
+			channel->tMode(mode, hypotheticalArgs, clientSocket);
 			break;
 		case 'k':
 			channel->kMode(mode, hypotheticalArgs, clientSocket);
