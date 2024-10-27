@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:22:56 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/25 21:58:00 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:12:10 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	Channel::kMode(std::string mode, std::string hypotheticalArgs, int clientSo
 {
 	Client	*isOp = getClientByfd(clientSocket);
 
+	std::cout<<"hypotheticalArgs "<<hypotheticalArgs<<std::endl;
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());

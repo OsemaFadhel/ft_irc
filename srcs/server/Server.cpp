@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/27 22:28:05 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:19:24 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,11 +175,11 @@ Channel*	Server::getChannel(std::string& channelName)
 }
 
 
-int	Server::isInServer(Channel channel)
+int	Server::isInServer(Channel* channel)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
-		if (_channels[i].getName() == channel.getName())
+		if (_channels[i].getName() == channel->getName())
 			return 1;
 	}
 	return 0;

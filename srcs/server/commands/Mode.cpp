@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 12:15:48 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/27 19:17:36 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:19:14 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	Server::Mode(std::string args, int clientSocket)
 		return ;
 	}
 	Channel *channel = getChannel(channelName);
-	if (isInServer(*channel) == -1)
+	if (isInServer(channel) == -1)
 	{
 		std::string	errMessage = constructMessage(ERR_NOTONCHANNEL, channelName);
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
@@ -127,5 +127,7 @@ void	Server::Mode(std::string args, int clientSocket)
 	if (i != std::string::npos)
 		args.erase(0, i);
 	std::cout<<"args after mode parsing "<<args<<std::endl;
+	if (!args.empty())
+		hypotheticalArgs = args;
 	setOrRemoveMode(channelName, mode, hypotheticalArgs, clientSocket);
 }

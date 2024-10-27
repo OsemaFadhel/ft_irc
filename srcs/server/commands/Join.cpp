@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/27 23:03:00 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:10:41 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,6 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 		{
 			// Aggiungi il client al canale esistente
 			//check della password
-			//tomorrow check of the password
 			if (!_channels[channelIndex].getPassword().empty() && _channels[channelIndex].checkKey(keys[channelIndex], clientToInsert))
 			{
 				_channels[channelIndex].addClient(clientToInsert);
@@ -200,6 +199,11 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 				std::cout << GREEN << "Client aggiunto correttamente al canale"
 						<< RESET << std::endl;
 				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+			}
+			else
+			{
+				std::string errMessage = constructMessage(ERR_BADCHANNELKEY, _channels[channelIndex].getName().c_str());
+				send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
 			}
 		}
 		_channels[channelIndex].setWhoInvited(-1);
