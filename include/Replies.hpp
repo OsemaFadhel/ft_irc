@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/24 17:25:38 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 21:48:08 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@ std::string constructMessage(const std::string& format, ...);
 #define RPL_INVITING ":ft_irc 341 %s %s %s\r\n" // Static size: 23
 
 #define RPL_CHANNELMODEIS ":ft_irc 324 %s %s %s\r\n" // Static size: 23 sometimes it doesn't have arguments
+
+#define RPL_NOTOPIC ":ft_irc 331 %s :No topic is set\r\n" // Static size: 34 channel
+
+#define RPL_TOPIC ":ft_irc 332 %s :%s\r\n" // Static size: 21 channel, topic
 
 //ERROR REPLIES
 #define ERR_KEYSET ":ft_irc 467 %s :Channel key already set\r\n" // Static size: 35

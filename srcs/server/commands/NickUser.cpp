@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:19:05 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 14:12:42 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 21:51:15 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,23 @@ bool isSpecial(char c)
 int checkNickvalidity(std::string args, int clientSocket)
 {
 	if (args.find_first_of(" \t") != std::string::npos) //if there is a space or tab
-		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args).c_str(), 37 + args.size(), 0), -1;
+		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args.c_str()).c_str(), 37 + args.size(), 0), -1;
 
 	if (args == "") //if the nickname is empty
 		return send(clientSocket, ERR_NONICKNAMEGIVEN, 33, 0), -1;
 
 	if (args.size() > 9) //if the nickname is too long or empty
-		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args).c_str(), 37 + args.size(), 0), -1;
+		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args.c_str()).c_str(), 37 + args.size(), 0), -1;
 
 	char first = args[0];
 	if (!std::isalpha(first) && !isSpecial(first)) //if the first character is not a letter or a special character
-		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args).c_str(), 37 + args.size(), 0), -1;
+		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args.c_str()).c_str(), 37 + args.size(), 0), -1;
 
 	for (size_t i = 1; i < args.length(); ++i)
 	{
 		char c = args[i];
 		if (!std::isalnum(c) && !isSpecial(c) && c != '-') //if the character is not alphanumeric, special or a dash
-		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args).c_str(), 37 + args.size(), 0), -1;
+		return send(clientSocket, constructMessage(ERR_ERRONEUSNICKNAME, args.c_str()).c_str(), 37 + args.size(), 0), -1;
 	}
 
 	return 0;
@@ -56,7 +56,7 @@ void Server::Nick(std::string args, int clientSocket)
 	{
 		if ((*itnick)->getNickname() == args)
 		{
-			std::string message = constructMessage(ERR_NICKNAMEINUSE, args);
+			std::string message = constructMessage(ERR_NICKNAMEINUSE, args.c_str());
 			send(clientSocket, message.c_str(), message.size(), 0);
 			return;
 		}

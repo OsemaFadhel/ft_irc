@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/27 19:25:24 by lnicoter         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/10/27 21:46:43 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
@@ -65,7 +66,6 @@ class Server
 		//how to server that is the main object iteracts with the channels?
 		std::vector < Channel > _channels;
 		std::vector < socketdata > _newfds;
-		std::string hashPassword(const std::string& password) const;
 		struct sockaddr_in _serverAddr;
 
 	public:
@@ -80,6 +80,10 @@ class Server
 		void removeClient(int clientSocket);
 		//is not being used because it would change a lot of stuff
 		Channel*	getChannel(std::string& channelName);
+		void killServer();
+
+
+
 		void run();
 		void createSocket();
 		void setMaxfds(int &maxfds, fd_set &readfds);
@@ -95,6 +99,8 @@ class Server
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
 		void processCommand(std::string buffer, int clientSocket, size_t &i);
 
+		void sendToChannel(Channel *channel, Client *sender, std::string chan, std::string message);
+
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
@@ -102,6 +108,7 @@ class Server
 		void Pass(std::string args, int clientSocket);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
+		void Topic(std::string args, Client *client);
 
 		/*Join command and functions by lnicoter*/
 		/* Join behaviour
@@ -178,6 +185,7 @@ int		isChannel(std::string channelName);
 #define BG_MAGENTA "\033[45m"
 #define BG_CYAN    "\033[46m"
 #define BG_WHITE   "\033[47m"
+
 
 #endif
 

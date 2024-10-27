@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/25 21:59:45 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 21:50:59 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,7 @@ void	Server::listOfUsersMsg(std::string channelName, Client &newUsr)
 		{
 			std::string serverMessage = ":" + SERVERNAME + " 353 " + SERVERNAME + " = " + channelName + " :";
 			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
-			{
 				serverMessage += _channels[i].getUsrData()[j].first.getNickname() + " ";
-			}
 			serverMessage += "\r\n";
 			send(newUsr.getFd(), serverMessage.c_str(), serverMessage.length(), 0);
 

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/25 22:37:26 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 21:58:49 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,16 @@ int Server::getClientIndex(int clientSocket)
 
 void Server::setPassword(const std::string& password)
 {
-	_password = hashPassword(password);
+	_password = password;
 }
 
 
-/* HASH PASSWORD************************************************************* */
+/* Check PASSWORD************************************************************* */
 
 bool Server::verifyPassword(const std::string& password) const
 {
+	return password ==_password;
+}
 	return hashPassword(password) ==_password;
 }
 
@@ -174,7 +176,7 @@ void Server::run()
 	std::cout<<"limit defined "<<maxfds<<std::endl;
 	std::cout << BOLD << CYAN << "IRC SERVER UP! WAITING FOR CLIENTS" << RESET << std::endl;
 	startLoop(readfds, maxfds);
-	//killServer();  //kill server close all sockets and free memory
+	killServer();  //kill server close all sockets and free memory
 }
 
 //per dopo da sistemare le interazioni qua
