@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/27 23:10:41 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/28 00:38:15 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,12 +186,21 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 		{
 			// Aggiungi il client al canale esistente
 			//check della password
-			if (!_channels[channelIndex].getPassword().empty() && _channels[channelIndex].checkKey(keys[channelIndex], clientToInsert))
+			//segfault
+			if (!_channels[channelIndex].getPassword().empty() && keys.size() > 0 && keys.size() >= channelIndex)
 			{
-				_channels[channelIndex].addClient(clientToInsert);
-				std::cout << GREEN << "Client aggiunto correttamente al canale"
-						<< RESET << std::endl;
-				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+				if (_channels[channelIndex].getPassword() == keys[channelIndex])
+				{
+					_channels[channelIndex].addClient(clientToInsert);
+					std::cout << GREEN << "Client aggiunto correttamente al canale"
+							<< RESET << std::endl;
+					joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+				}
+				else
+				{
+					std::string errMessage = constructMessage(ERR_BADCHANNELKEY, _channels[channelIndex].getName().c_str());
+					send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+				}
 			}
 			else if (_channels[channelIndex].getPassword().empty())
 			{
