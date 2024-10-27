@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/25 22:36:32 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/27 19:25:24 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,7 @@ int		isChannel(std::string channelName);
 
 /*
 Commands to update the forked repo with the other branches
+git remote add upstream <URL_del_repository_originale>
 git fetch upstream
 git checkout <branch_to_update>
 git merge upstream/<branch_to_update>
