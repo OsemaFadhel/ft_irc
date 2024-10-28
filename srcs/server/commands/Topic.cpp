@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:30:20 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 11:50:54 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:52:30 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int checkErrors2(std::string chan, int fd, Channel *channel, Client *client)
 	//user is not in the channel
 	if (channel->isInChannel(*client) == 0)
 	{
-		std::string	errMessage = constructMessage(ERR_USERNOTINCHANNEL, client->getNickname(), chan);
+		std::string	errMessage = constructMessage(ERR_USERNOTINCHANNEL, client->getNickname().c_str(), chan);
 		return send(fd, errMessage.c_str(), errMessage.size(), 0), 1;
 	}
 
@@ -60,6 +60,10 @@ void Server::Topic(std::string args, Client *client)
 {
 	int	fd = client->getFd();
 	std::string	chan = extractChannelName(args);
+	chan.erase(chan.find_last_not_of(" \t") + 1);
+
+	std::cout << GREEN << "TOPIC command" << RESET << std::endl;
+	std::cout << "Channel: " << chan << std::endl;
 
 	if (checkErrors1(chan, fd))
 		return;
@@ -88,19 +92,16 @@ void Server::Topic(std::string args, Client *client)
 		message.erase(0, message.find_first_not_of(" \t"));
 		message.erase(message.find_last_not_of(" \t") + 1);
 
-		std::cout << "channel: " << chan << std::endl;
-		std::cout << "message: " << message << std::endl;
-
 		if (message.empty())
 		{
 			if (channel->getTopic() == "")
 			{
-				std::string	errMessage = constructMessage(RPL_NOTOPIC, chan);
+				std::string	errMessage = constructMessage(RPL_NOTOPIC, chan.c_str());
 				send(fd, errMessage.c_str(), errMessage.size(), 0);
 			}
 			else
 			{
-				std::string	errMessage = constructMessage(RPL_TOPIC, chan, channel->getTopic());
+				std::string	errMessage = constructMessage(RPL_TOPIC, chan.c_str(), channel->getTopic().c_str());
 				send(fd, errMessage.c_str(), errMessage.size(), 0);
 			}
 		}
@@ -111,19 +112,19 @@ void Server::Topic(std::string args, Client *client)
 			sendToChannel(channel, client, chan, message);
 			message.erase(0, 1);
 			channel->setTopic(message);
-			std::string	errMessage = constructMessage(RPL_TOPIC, chan, message);
+			std::string	errMessage = constructMessage(RPL_TOPIC, chan.c_str(), message.c_str());
 			send(fd, errMessage.c_str(), errMessage.size(), 0);
 		}
 		else
 		{
 			channel->setTopic(message);
-			std::string	errMessage = constructMessage(RPL_TOPIC, chan, message);
+			std::string	errMessage = constructMessage(RPL_TOPIC, chan.c_str(), message.c_str());
 			send(fd, errMessage.c_str(), errMessage.size(), 0);
 		}
 	}
 	else
 	{
-		std::string	errMessage = constructMessage(ERR_NOSUCHCHANNEL, chan);
+		std::string	errMessage = constructMessage(ERR_NOSUCHCHANNEL, chan.c_str());
 		send(fd, errMessage.c_str(), errMessage.size(), 0);
 	}
 	std::cout << RESET;

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 11:59:58 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:27:56 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ void Server::checkClientActivity(fd_set& readfds)
 			}
 
 			this->_newfds[i].buffer.append(buffer);
+			if (this->_newfds[i].buffer.size() >= 512) {
+				std::cout << RED << "[DEBUG LOOP] Message size too big. FD = " << clientSocket << std::endl;
+				this->_newfds[i].buffer.clear();
+				break; // Handle buffer overflow scenario
+			}
 			if (findCarriageReturn(buffer, readSize) != 0) // Check if carriage return is found
 			{
 				handleMessage(this->_newfds[i].buffer, this->_newfds[i].buffer.length(), clientSocket, i); // Handle the message
@@ -58,10 +63,6 @@ void Server::checkClientActivity(fd_set& readfds)
 				break; // Handle buffer overflow scenario
 			}
 			// Check if the command length exceeds 512
-			if (this->_newfds[i].buffer.size() >= 512) {
-				std::cout << RED << "[DEBUG LOOP] Buffer overflow. FD = " << clientSocket << std::endl;
-				break; // Handle buffer overflow scenario
-			}
 		}
 	}
 }
@@ -79,7 +80,7 @@ void Server::clientDisconnect(int clientSocket, size_t &i)
 			if (_channels[i].isInChannel(*client))
 				_channels[i].removeClient(*client);
 		}
-
+		deleteEmptyChannels();
 		// Remove the client from the clients vector
 		removeClient(clientSocket);
 	}

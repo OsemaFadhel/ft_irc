@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:31:48 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 14:47:31 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ Channel::Channel(Client firstClient, std::string channelName)
 	this->_mode['k'] = false;
 	// this->_mode['o'] = false;
 	this->_mode['l'] = false;
+	this->_limit = -1;
 	_whoInvited = -1;
 }
 
@@ -108,6 +109,7 @@ Channel::Channel(const Channel& obj)
 	_password = obj._password;
 	_limit = obj._limit;
 	_usrData = obj._usrData;
+	_whoInvited = obj._whoInvited;
 }
 
 Channel&		Channel::operator=(const Channel& obj)
@@ -120,6 +122,7 @@ Channel&		Channel::operator=(const Channel& obj)
 	_password = obj._password;
 	_limit = obj._limit;
 	_usrData = obj._usrData;
+	_whoInvited = obj._whoInvited;
 	return *this;
 }
 

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 11:36:55 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:09:03 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void Server::killServer()
 	std::vector<Client*>().swap(_clients);
 
 	_channels.clear();
+	std::vector<Channel>().swap(_channels);
 
 	std::cout << GREEN << "Server closed" <<  RESET << std::endl;
 

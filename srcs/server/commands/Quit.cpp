@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:08:31 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 12:00:21 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 12:03:09 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void Server::Quit(std::string args, int clientSocket, size_t &i)
 			if (_channels[i].isInChannel(*client))
 				_channels[i].removeClient(*client);
 		}
+		deleteEmptyChannels();
 		removeClient(clientSocket);
 	}
 
