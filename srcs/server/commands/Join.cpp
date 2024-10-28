@@ -111,9 +111,10 @@ std::vector< std::string >	Server::keyParser(std::string args)
 	return (keys);
 }
 
-//there's something else
-//channel created but the messages are not well translated
 
+/*
+Function to make the other user in the channels that a new user has joined
+*/
 void	Server::listOfUsersMsg(std::string channelName, Client &newUsr)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
@@ -137,11 +138,9 @@ void	Server::listOfUsersMsg(std::string channelName, Client &newUsr)
 	}
 }
 
-//the user is not joining the channel
-//allora ho capito il messaggio ha questo tipo di formattazione
-//:ft_irc <usr> :
-//però... ft_irc sbaglia perché sarebbe una cosa globale e pare che
-//facendo :ft_irc <usr> per il join non funzioni correttamente
+/*
+A simple function to send the join message when the client joins
+*/
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 {
 	std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
@@ -170,7 +169,33 @@ void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Chann
 }
 
 
-//un po' confusionario se mai trovassi soluzioni migliori lo ritoccherò
+/*
+*This is one of the most important functions of the channel management
+Pratically it's an handler (as described by the name of the method itself) that
+handles the case where a user wanted to JOIN a channel that already exist
+in fact the already existing channels has some checks to do before _ACTUALLY_
+inserting a new user to it
+
+In order of ifs (until changes) we check:
+	1. If the channels that the user wants to JOIN has the l mode active
+	and if the channel can accept the new user based on his own users capacity
+	2. Checking if the i channel mode is/isn't active that means that the channel
+	can only accept users that are invited by the channel operators (if there's any)
+	as you can see i check if the i mode ISN'T active but if it is i check if the user
+	JOIN command is actually triggered by INVITE command by checking the _whoInvited flag
+	in the "isInviterOp" method
+	3. I check if the user that want to JOIN the channel is already in it in case
+	it is i send the apropriate error
+	4.I check if the channel has a password setted thanks to the k mode
+	NOTE that i don't check that if the user has been invited by the channel operator
+	!This check shouldn't be nested in the INVITE check in the future i will take make a change
+	!If i wanted too for now it works so i'll keep it just like that
+	Obviously if the password is wrong i will send the error to the client
+	And that's all the checks i do on a channel that already exist of course most of checks
+	passes by if the modes are not active
+
+
+*/
 void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys)
 {
 	std::cout<<"limit and size "<<_channels[channelIndex].getLimit()<<" "<<_channels[channelIndex].getUsrData().size()<<std::endl;
@@ -207,8 +232,6 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 			else if (_channels[channelIndex].getPassword().empty())
 			{
 				_channels[channelIndex].addClient(clientToInsert);
-				std::cout << GREEN << "Client aggiunto correttamente al canale"
-						<< RESET << std::endl;
 				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
 			}
 			else
@@ -225,6 +248,15 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 		send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
 	}
 }
+
+/*
+This methos is a caller for te other methods and works as a glue
+to make the other function work.
+pratically checks every channel that was parsed during the
+elaboration of the JOIN command where you can have multiple channels and keys
+and in order it checks if a channel exists already or not making the respecitve functions handle
+the cases
+*/
 
 void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client clientToInsert, std::vector< std::string > keys)
 {
@@ -256,32 +288,7 @@ void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client
 
 
 
-/*
 
-
-** Troubleshooting
-** The parsing of the keys is on point and it works very well
-** I should do the same checks for the keyparser
-** Following another irc it seems the keys are ignored if the channel doesn't exist and it's
-** the first time
-
-** I must create a channel section in the irc client reference
-** the answers are hidden in the RFC
-
-
-   If a JOIN is successful, the user receives a JOIN message as
-   confirmation and is then sent the channel's topic (using RPL_TOPIC) and
-   the list of users who are on the channel (using RPL_NAMREPLY), which
-   MUST include the user joining.
-
-! the modes defines if there's a password or not
-
-*/
-
-/*
-I need a checker for the channel and see if it has the key up
-if it is i need to put it in a map where every time someone joins is checked
-*/
 
 void	Server::Join(std::string args, int	clientSocket)
 {

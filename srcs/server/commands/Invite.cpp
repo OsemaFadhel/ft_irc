@@ -69,8 +69,3 @@ void	Server::Invite(std::string args, int clientSocket)
 	send(invitedClient->getFd(), success.c_str(), success.size(), 0);
 }
 
-/*
-!Bigass problem:
-	invite triggers join automatically but how can i tell if the inviter
-	is the operator????
-*/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 11:10:30 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:47:40 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,13 +168,8 @@ void Server::run()
 Channel*	Server::getChannel(std::string& channelName)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
-	{
-		std::cout<<"what channel do we have here "<<_channels[i].getName()<<std::endl;
-		std::cout<<"and what channel i've passed here? "<<channelName<<std::endl;
 		if (_channels[i].getName() == channelName)
 			return (&_channels[i]);
-	}
-	std::cout<<"death reached?"<<std::endl;
 	return 0;
 }
 

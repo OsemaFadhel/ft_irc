@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extraMethods.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/28 10:31:26 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 14:10:07 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,13 @@ Client	*Channel::getClientByfd(int fd)
 bool	Channel::isInviterOp()
 {
 	std::vector< std::pair < Client, int > >::iterator it;
-
+	it = this->_usrData.begin();
+	if (!this->_whoInvited)
+		return false;
+	std::cout<<"who invited: "<<this->_whoInvited<<std::endl;
+	std::cout<<"channel size: "<<this->_usrData.size()<<std::endl;
+	std::cout<<"it->first fd: "<<it->first.getFd()<<std::endl;
+	std::cout<<"it->second: "<<it->second<<std::endl;
 	for (it = this->_usrData.begin(); it != this->_usrData.end(); it++)
 	{
 		if (it->first.getFd() == this->_whoInvited && isOperator(it->first))

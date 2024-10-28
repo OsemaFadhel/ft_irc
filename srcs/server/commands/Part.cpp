@@ -12,18 +12,12 @@
 
 #include "../../../include/Server.hpp"
 
-//ci devo ripensare a come farla
-//here i need to work with the clients vector<pair<client, int>> and the channel vector<pair<channel, int>>
+
+
 /*
-		void		partLeavingMessage(Client	usr, std::string channelName);
-		void		partLeavingMessageAll(std::string channelName);
-
+This method simply tells the other user of the channel who left it so
+The referent client would change thanks for the messages
 */
-
-
-
-
-
 void	Server::partLeavingMessageAll(std::string channelName, std::string usrName, std::string partMessage)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
@@ -43,19 +37,22 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName,
 	}
 }
 
+/*
+This method make the user tell that is leaving the channel
++ calls the method to tell the other users on the channel too that is leaving
+*/
 void	Server::partLeavingMessage(Client usr, std::string channelName, std::string reason)
 {
 	std::string	partMessage = ":" + usr.getNickname() + " PART " + channelName;
 	if (!reason.empty())
 		partMessage += " "+reason;
 	partMessage += "\r\n";
-	std::cout<<"message I'm going to send "<<partMessage<<std::endl;
 	send(usr.getFd(), partMessage.c_str(), partMessage.length(), 0);
 	partLeavingMessageAll(channelName, usr.getNickname(), partMessage);
 }
 
 //this functions should return the index of the
-//k
+//found user
 int	Channel::findUsr(std::string usrNickname)
 {
 	for (size_t i = 0; i < _usrData.size(); i++)
@@ -66,8 +63,11 @@ int	Channel::findUsr(std::string usrNickname)
 	return -1;
 }
 
-//_usrs.erase(std::remove(_usrs.begin(), _usrs.end(), usr), _usrs.end());
-//if there more clients it deletes more than one why thought
+/*
+This method removes the usr from the vector _usrData
+it checks if the usr is actually on the channel too
+sending an error message in case it is not in
+*/
 void	Channel::removeClient(Client& client)
 {
 	std::string	partMessage = "";
@@ -91,8 +91,10 @@ void	Channel::removeClient(Client& client)
 	}
 }
 
-//PART #channel, cmldffk :reason
-//the substring
+/*
+A reason Parser, made in case in the PART command is added a reason
+for the leaving
+*/
 std::string	Server::takeReason(std::string &args)
 {
 	try
@@ -115,8 +117,9 @@ std::string	Server::takeReason(std::string &args)
 
 
 
-//args = #channel1,&channel2,&channel3(find_firs_of)     (last_not_of ' ') <reason>
-//pos
+/*
+
+*/
 void	Server::Part(std::string args, int clientSocket)
 {
 	std::vector<std::string>	numOfChannels = channelParser(args);

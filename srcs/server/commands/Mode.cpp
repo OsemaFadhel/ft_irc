@@ -72,7 +72,7 @@ int	checkMode(std::string mode)
 void	Server::setOrRemoveMode(std::string channelName, std::string mode, std::string hypotheticalArgs, int clientSocket)
 {
 	Channel	*channel = getChannel(channelName);
-
+	std::cout<<"gotten mode "<<mode<<std::endl;
 	if ((mode[0] != '+' || mode[0] != '-') && !checkMode(mode))
 	{
 		std::string	errMessage = constructMessage(ERR_UNKNOWNMODE, mode.c_str(), channelName.c_str());
@@ -120,6 +120,12 @@ void	Server::Mode(std::string args, int clientSocket)
 	}
 	args = args.erase(0, channelName.size() + 1);
 	std::string mode = modeParser(args);
+	if (mode.empty())
+	{
+		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
+		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+		return ;
+	}
 	// std::cout<<"what we have channel: "<<channelName<<std::endl;
 	// std::cout<<"mode: "<<mode<<std::endl;
 	args.erase(0, mode.size());

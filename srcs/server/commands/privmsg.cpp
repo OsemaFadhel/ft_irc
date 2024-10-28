@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/28 10:44:11 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:58:59 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg
 {
 	Client	receivingUser(0);
 
-	// std::cout<<"usrAndMsg[0] "<<usrAndMsg[0]<<std::endl;
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
 		if (_clients[i]->getNickname().compare(usrAndMsg[0]) == 0 && _clients[i]->getFd() != clientSocket)

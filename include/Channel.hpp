@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:23:35 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 14:19:27 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ class Channel
 		void		addClient(Client client);
 		void		channelContentSize();
 		int			findUsr(std::string usrNickname);
+		// void		printChanValues();
 };
 
 #endif
