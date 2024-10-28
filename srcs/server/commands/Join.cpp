@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/28 02:47:48 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/28 02:57:40 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,3 +310,8 @@ void	Server::Join(std::string args, int	clientSocket)
 
 
 
+/* error notes
+pare che se la seconda password sia sbagliata
+il join non conti neanche la prima? non facendo entrare l'utente
+nell'apposito canale ma è giusta sta cosa?
+*/
