@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/28 00:38:15 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/28 02:47:48 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,31 +169,33 @@ void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Chann
 	}
 }
 
+
+//un po' confusionario se mai trovassi soluzioni migliori lo ritoccherò
 void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys)
 {
+	std::cout<<"limit and size "<<_channels[channelIndex].getLimit()<<" "<<_channels[channelIndex].getUsrData().size()<<std::endl;
+	if (_channels[channelIndex].getModeValue('l') && _channels[channelIndex].getLimit() <= (int)_channels[channelIndex].getUsrData().size())
+	{
+		std::string errMessage = constructMessage(ERR_CHANNELISFULL, _channels[channelIndex].getName().c_str());
+		send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+		return ;
+	}
 	if (!_channels[channelIndex].getModeValue('i') || _channels[channelIndex].isInviterOp())
 	{
 		if (_channels[channelIndex].isInChannel(clientToInsert))
 		{
-			std::cout << RED << "Questo client è già nel canale, Client: "
-						<< clientToInsert.getNickname()
-						<< " Chan: " << _channels[channelIndex].getName()
-						<< RESET << std::endl;
 			std::string errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname().c_str());
 			send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
 		}
 		else
 		{
-			// Aggiungi il client al canale esistente
-			//check della password
-			//segfault
-			if (!_channels[channelIndex].getPassword().empty() && keys.size() > 0 && keys.size() >= channelIndex)
+			//check della password solo se l'utente non è stato invitato per ora è una casistica
+			//che mi serve in questo caso specifico volendo potrei controllare le modalità separatamente
+			if ((!_channels[channelIndex].getPassword().empty() && keys.size() > 0 && keys.size() >= channelIndex) || _channels[channelIndex].isInviterOp())
 			{
 				if (_channels[channelIndex].getPassword() == keys[channelIndex])
 				{
 					_channels[channelIndex].addClient(clientToInsert);
-					std::cout << GREEN << "Client aggiunto correttamente al canale"
-							<< RESET << std::endl;
 					joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
 				}
 				else

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:22:56 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/27 23:12:10 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/28 02:43:46 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	Channel::iMode(std::string mode, std::string hypotheticalArgs, int clientSo
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	if (!hypotheticalArgs.empty())
+	if (hypotheticalArgs.empty())
 	{
 		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
@@ -99,39 +99,46 @@ void	Channel::kMode(std::string mode, std::string hypotheticalArgs, int clientSo
 }
 
 
-void	Channel::oMode(std::string hypotheticalArgs, int clientSocket)
+void	Channel::oMode(std::string mode, std::string hypotheticalArgs, int clientSocket)
 {
 	Client	*isOp = getClientByfd(clientSocket);
 	std::vector< std::pair < Client, int > >::iterator it;
 
+	std::cout << "hypotheticalArgs " << hypotheticalArgs << std::endl;
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	if (!hypotheticalArgs.empty())
+	if (hypotheticalArgs.empty())
 	{
 		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	for (it = _usrData.begin(); it != _usrData.end(); it++)
+	if (mode[0] == '+' && mode[1] == 'o')
 	{
-		if (it->first.getNickname() == hypotheticalArgs)
+		for (it = _usrData.begin(); it != _usrData.end(); it++)
 		{
-			it->second = 1;
-			std::string modeMessage = constructMessage(RPL_CHANNELMODEIS, this->_name.c_str(), "+o", hypotheticalArgs.c_str());
-			return ;
+			if (it->first.getNickname() == hypotheticalArgs)
+			{
+				it->second = 1;
+				std::string modeMessage = constructMessage(RPL_CHANNELMODEIS, this->_name.c_str(), "+o", hypotheticalArgs.c_str());
+				return ;
+			}
 		}
 	}
-	for (it = _usrData.begin(); it != _usrData.end(); it++)
+	else if (mode[0] == '-' && mode[1] == 'o')
 	{
-		if (it->first.getNickname() == hypotheticalArgs)
+		for (it = _usrData.begin(); it != _usrData.end(); it++)
 		{
-			it->second = 0;
-			std::string modeMessage = constructMessage(RPL_CHANNELMODEIS, this->_name.c_str(), "-o", hypotheticalArgs.c_str());
-			return ;
+			if (it->first.getNickname() == hypotheticalArgs)
+			{
+				it->second = 0;
+				std::string modeMessage = constructMessage(RPL_CHANNELMODEIS, this->_name.c_str(), "-o", hypotheticalArgs.c_str());
+				return ;
+			}
 		}
 	}
 	//case where the hypotheticalArgs is not in the channel
@@ -149,7 +156,7 @@ void	Channel::tMode(std::string mode, std::string hypotheticalArgs, int clientSo
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	if (!hypotheticalArgs.empty())
+	if (hypotheticalArgs.empty())
 	{
 		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
@@ -175,13 +182,14 @@ void	Channel::lMode(std::string mode, std::string hypotheticalArgs, int clientSo
 {
 	Client	*isOp = getClientByfd(clientSocket);
 
+	std::cout<<"hypotheticalArgs "<<hypotheticalArgs<<std::endl;
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	if (!hypotheticalArgs.empty())
+	if (hypotheticalArgs.empty())
 	{
 		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
@@ -192,6 +200,13 @@ void	Channel::lMode(std::string mode, std::string hypotheticalArgs, int clientSo
 	{
 		std::stringstream ss(hypotheticalArgs);
 		ss >> this->_limit;
+		std::cout<<"limit "<<this->_limit<<std::endl;
+		if (this->_limit <= 0)
+		{
+			std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
+			send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+			return ;
+		}
 		this->_mode['l'] = true;
 	}
 	else if (mode[0] == '-' && this->_mode['l'] != false)

@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:11:54 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/27 23:02:19 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/28 01:03:30 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ class Channel
 		void		tMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
 		void		kMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
 		int			checkKey(std::string keyToChekck, Client clientToInsert);
-		void		oMode(std::string hypotheticalArgs, int clientSocket);
+		void		oMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
 		void		lMode(std::string mode, std::string hypotheticalArgs, int clientSocket);
 		void		broadcastMessage(std::string message, int clientSocket);
 

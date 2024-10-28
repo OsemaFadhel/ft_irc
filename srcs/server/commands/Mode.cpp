@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 12:15:48 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/27 23:19:14 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/10/28 02:32:32 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ void	Server::setOrRemoveMode(std::string channelName, std::string mode, std::str
 			channel->kMode(mode, hypotheticalArgs, clientSocket);
 			break;
 		case 'o':
-			//operator
+			channel->oMode(mode, hypotheticalArgs, clientSocket);
 			break;
 		case 'l':
-			//limit
+			channel->lMode(mode, hypotheticalArgs, clientSocket);
 			break;
 	}
 }
@@ -112,9 +112,9 @@ void	Server::Mode(std::string args, int clientSocket)
 		return ;
 	}
 	Channel *channel = getChannel(channelName);
-	if (isInServer(channel) == -1)
+	if (!isInServer(channel))
 	{
-		std::string	errMessage = constructMessage(ERR_NOTONCHANNEL, channelName);
+		std::string	errMessage = constructMessage(ERR_NOTONCHANNEL, channelName.c_str());
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
@@ -129,5 +129,6 @@ void	Server::Mode(std::string args, int clientSocket)
 	std::cout<<"args after mode parsing "<<args<<std::endl;
 	if (!args.empty())
 		hypotheticalArgs = args;
+	std::cout<<"hypotheticalArgs "<<hypotheticalArgs<<std::endl;
 	setOrRemoveMode(channelName, mode, hypotheticalArgs, clientSocket);
 }
