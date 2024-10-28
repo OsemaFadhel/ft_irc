@@ -6,12 +6,13 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 16:12:35 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:32:38 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
+
 
 #include "iostream"
 #include "Server.hpp"
@@ -39,6 +40,7 @@ class Client
 		std::string getUsername() const;
 		std::string getRealName() const;
 		std::string getBuffer() const;
+		std::string getHostname() const;
 		int getIsRegistered() const;
 
 		void setNickname(const std::string& nickname);

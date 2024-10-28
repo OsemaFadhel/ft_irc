@@ -6,7 +6,7 @@
 #    By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/29 16:43:20 by ofadhel           #+#    #+#              #
-#    Updated: 2024/10/02 20:22:04 by ofadhel          ###   ########.fr        #
+#    Updated: 2024/10/28 10:22:34 by ofadhel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ clean:
 	rm -rf  $(NAME) $(OBJS)
 
 fclean: clean
-	rm -rf objs
+	rm -rf objs .vscode
 
 re: fclean all
 

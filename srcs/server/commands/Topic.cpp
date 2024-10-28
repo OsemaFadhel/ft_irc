@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:30:20 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/26 15:32:51 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:48:39 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void Server::Topic(std::string args, Client *client)
 			if (channel->isOperator(*client) == 0) //user is not an operator
 			{
 				std::string	errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, chan.c_str());
-				return send(fd, errMessage.c_str(), errMessage.size(), 0), 1, void();
+				return send(fd, errMessage.c_str(), errMessage.size(), 0), void();
 			}
 		}
 

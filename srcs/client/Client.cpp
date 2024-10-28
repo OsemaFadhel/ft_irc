@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/25 11:05:18 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:34:05 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ std::string Client::getUsername() const
 std::string Client::getRealName() const
 {
 	return _realname;
+}
+
+std::string Client::getHostname() const
+{
+	return _hostname;
 }
 
 std::string Client::getBuffer() const
@@ -103,6 +108,7 @@ std::ostream&	operator<<(std::ostream& os, const Client& client)
 	os << "Nickname: " << client.getNickname() << std::endl;
 	os << "Username: " << client.getUsername() << std::endl;
 	os << "Realname: " << client.getRealName() << std::endl;
+	os << "Hostname: " << client.getHostname() << std::endl;
 
 	return os;
 }

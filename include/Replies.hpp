@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/21 12:24:48 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:24:04 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,16 @@ std::string constructMessage(const std::string& format, ...);
 
 #define RPL_NAMREPLY ":ft_irc 353 %s = %s :%s\r\n" // Static size: 29
 
+#define RPL_INVITING ":ft_irc 341 %s %s %s\r\n" // Static size: 23
+
+#define RPL_CHANNELMODEIS ":ft_irc 324 %s %s %s\r\n" // Static size: 23 sometimes it doesn't have arguments
+
 #define RPL_NOTOPIC ":ft_irc 331 %s :No topic is set\r\n" // Static size: 34 channel
 
 #define RPL_TOPIC ":ft_irc 332 %s :%s\r\n" // Static size: 21 channel, topic
 
 //ERROR REPLIES
+#define ERR_KEYSET ":ft_irc 467 %s :Channel key already set\r\n" // Static size: 35
 
 #define ERR_INPUTTOOLONG ":ft_irc 401 %s :Input line too long\r\n" // Static size: 33
 
@@ -144,7 +149,10 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_USERSDONTMATCH ":ft_irc 502 :Cannot change mode for other users\r\n" // Static size: 36
 
+#define ERR_INVALIDKEY ":ft_irc 525 %s :Invalid channel key\r\n" // Static size: 35
+
 #endif
+
 
 //for more information look at the rfc to know more about the arguments
 //it needs to be used in the constructMessage function

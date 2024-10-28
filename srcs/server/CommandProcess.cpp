@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:36:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 16:09:09 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:38:30 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,14 @@ void Server::processCommand(std::string buffer, int clientSocket, size_t &i)
 			Join(args, clientSocket);
 		else if (command == "PRIVMSG")
 			Privmsg(args, clientSocket);
+		else if (command == "PART")
+			Part(args, clientSocket);
+		else if (command == "KICK")
+			Kick(args, clientSocket);
+		else if (command == "INVITE")
+			Invite(args, clientSocket);
+		else if (command == "MODE")
+			Mode(args, clientSocket);
 		else if (command == "TOPIC")
 			Topic(args, client);
 	}

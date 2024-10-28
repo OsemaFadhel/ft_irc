@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/20 18:26:00 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:35:59 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void Server::run()
 }
 
 //per dopo da sistemare le interazioni qua
-Channel*	Server::getChannel(std::string channelName)
+Channel*	Server::getChannel(std::string& channelName)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
@@ -174,5 +174,15 @@ Channel*	Server::getChannel(std::string channelName)
 			return (&_channels[i]);
 	}
 	std::cout<<"death reached?"<<std::endl;
+	return 0;
+}
+
+int	Server::isInServer(Channel* channel)
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		if (_channels[i].getName() == channel->getName())
+			return 1;
+	}
 	return 0;
 }
