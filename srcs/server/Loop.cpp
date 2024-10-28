@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 11:24:59 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 11:36:55 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 	{
 		setMaxfds(maxfds, readfds);
 
+		//select updates the readfds set to indicate which file descriptors are ready for reading
 		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
 		handle_select_error(selectfd);

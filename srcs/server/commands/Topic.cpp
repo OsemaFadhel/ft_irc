@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:30:20 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:48:39 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 11:50:54 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void Server::Topic(std::string args, Client *client)
 			return;
 
 		//mode +t is set to false only the operator can change the topic
-		if (channel->getMode().find('t')->second == false)
+		if (channel->getMode().find('t')->second == true)
 		{
 			//check if the user is an operator
 			if (channel->isOperator(*client) == 0) //user is not an operator
@@ -87,12 +87,6 @@ void Server::Topic(std::string args, Client *client)
 		std::string	message = extractMessage(args);
 		message.erase(0, message.find_first_not_of(" \t"));
 		message.erase(message.find_last_not_of(" \t") + 1);
-
-		if (message.empty())
-		{
-			std::string	errMessage = constructMessage(RPL_NOTOPIC, chan);
-			std::cout << "errMessage: " << errMessage << std::endl;
-		}
 
 		std::cout << "channel: " << chan << std::endl;
 		std::cout << "message: " << message << std::endl;

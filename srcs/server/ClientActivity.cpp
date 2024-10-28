@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 11:13:26 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 11:59:58 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void Server::checkClientActivity(fd_set& readfds)
 	//The loop iterates over all the client sockets in the _newfds vector.
 	for (size_t i = 0; i < _newfds.size(); ++i)
 	{
-		std::cout << CYAN << "[DEBUG LOOP] Checking client activity. FD = " << _newfds[i].id << std::endl;
 		int clientSocket = _newfds[i].id;
 
 		if (FD_ISSET(clientSocket, &readfds))
@@ -37,8 +36,8 @@ void Server::checkClientActivity(fd_set& readfds)
 
 			if (readSize < 0)
 			{
-				//throw std::runtime_error("Failed to read from the socket");
 				std::cout << RED << "[DEBUG LOOP] Failed to read from the socket. FD = " << clientSocket << std::endl;
+				break;
 			}
 			if (readSize == 0) {
 				std::cout << BLUE << "[DEBUG LOOP] Client disconnected. FD = " << clientSocket << std::endl;
@@ -75,8 +74,12 @@ void Server::clientDisconnect(int clientSocket, size_t &i)
 	{
 		std::cout << RED << "[DEBUG] Client disconnected. Nickname: " << client->getNickname() << std::endl;
 		// Remove the client from all channels
-		/*for (size_t i = 0; i < _channels.size(); ++i)
-			_channels[i]->removeClient(client);*/
+		for (size_t i = 0; i < _channels.size(); ++i)
+		{
+			if (_channels[i].isInChannel(*client))
+				_channels[i].removeClient(*client);
+		}
+
 		// Remove the client from the clients vector
 		removeClient(clientSocket);
 	}
