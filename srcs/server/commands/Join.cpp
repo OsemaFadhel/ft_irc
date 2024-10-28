@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lnicoter <lnicoter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 16:38:08 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/20 18:28:34 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:47:05 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ std::vector<std::string>	Server::channelParser(std::string args)
 	return (numOfChannels);
 }
 
+//for now it seems that the keyparser saves one of the keys two times
+//before passing to the next one
 
 std::vector< std::string >	Server::keyParser(std::string args)
 {
@@ -76,14 +78,17 @@ std::vector< std::string >	Server::keyParser(std::string args)
 		if (pos != std::string::npos)
 		{
 			temp = args.substr(i, pos - i);
-			keys.push_back(temp);
+			std::cout << "temp1: " << temp << std::endl;
+			// keys.push_back(temp);
 			i = pos + 1;
 		}
 		else
 		{
-			temp = args.substr(i, pos - i);
-			keys.push_back(temp);
-			break;
+			temp = args.substr(i);
+			std::cout << "temp2: " << temp << std::endl;
+			i = std::string::npos;
+			// keys.push_back(temp);
+			// break;
 		}
 
 		temp.erase(0, temp.find_first_not_of(" "));
@@ -109,7 +114,7 @@ std::vector< std::string >	Server::keyParser(std::string args)
 //there's something else
 //channel created but the messages are not well translated
 
-void	Server::listOfUsersMsg(std::string channelName)
+void	Server::listOfUsersMsg(std::string channelName, Client &newUsr)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
@@ -119,18 +124,17 @@ void	Server::listOfUsersMsg(std::string channelName)
 			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
 				serverMessage += _channels[i].getUsrData()[j].first.getNickname() + " ";
 			serverMessage += "\r\n";
+			send(newUsr.getFd(), serverMessage.c_str(), serverMessage.length(), 0);
 
-			//to make the new user know who's in the channel i need to send the message to the other users as well
-			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
-				send(_channels[i].getUsrData()[j].first.getFd(), serverMessage.c_str(), serverMessage.length(), 0);
-
-			//i do the message to tell the client i've finished listing the users in the channel
 			std::string endOfListMessage = ":" + SERVERNAME + " 366 " + channelName + " :End of NAMES list\r\n";
-			send(_channels[0].getUsrData()[0].first.getFd(), endOfListMessage.c_str(), endOfListMessage.size(), 0);
+			send(newUsr.getFd(), endOfListMessage.c_str(), endOfListMessage.size(), 0);
+
+			std::string joinMessage = ":" + newUsr.getNickname() + "!127.0.0.1" + " JOIN :" + channelName + "\r\n";
+			for (size_t j = 0; j < _channels[i].getUsrData().size(); j++)
+				send(_channels[i].getUsrData()[j].first.getFd(), joinMessage.c_str(), joinMessage.size(), 0);
+
 		}
 	}
-
-
 }
 
 //the user is not joining the channel
@@ -146,7 +150,7 @@ void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
 	serverMessage = ":" + SERVERNAME + " " + clientToInsert.getNickname() + " JOIN " + channelName + "\r\n";
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
-	listOfUsersMsg(channelName);
+	listOfUsersMsg(channelName, clientToInsert);
 }
 
 //function for checkChannelList
@@ -165,28 +169,64 @@ void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Chann
 	}
 }
 
-void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert)
+
+//un po' confusionario se mai trovassi soluzioni migliori lo ritoccherò
+void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys)
 {
-	if (_channels[channelIndex].isInChannel(clientToInsert))
+	std::cout<<"limit and size "<<_channels[channelIndex].getLimit()<<" "<<_channels[channelIndex].getUsrData().size()<<std::endl;
+	if (_channels[channelIndex].getModeValue('l') && _channels[channelIndex].getLimit() <= (int)_channels[channelIndex].getUsrData().size())
 	{
-		std::cout << RED << "Questo client è già nel canale, Client: "
-					<< clientToInsert.getNickname()
-					<< " Chan: " << _channels[channelIndex].getName()
-					<< RESET << std::endl;
-		std::string errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname().c_str());
+		std::string errMessage = constructMessage(ERR_CHANNELISFULL, _channels[channelIndex].getName().c_str());
 		send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+		return ;
+	}
+	if (!_channels[channelIndex].getModeValue('i') || _channels[channelIndex].isInviterOp())
+	{
+		if (_channels[channelIndex].isInChannel(clientToInsert))
+		{
+			std::string errMessage = constructMessage(ERR_NICKNAMEINUSE, clientToInsert.getNickname().c_str());
+			send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+		}
+		else
+		{
+			//check della password solo se l'utente non è stato invitato per ora è una casistica
+			//che mi serve in questo caso specifico volendo potrei controllare le modalità separatamente
+			if ((!_channels[channelIndex].getPassword().empty() && keys.size() > 0 && keys.size() >= channelIndex) || _channels[channelIndex].isInviterOp())
+			{
+				if (_channels[channelIndex].getPassword() == keys[channelIndex])
+				{
+					_channels[channelIndex].addClient(clientToInsert);
+					joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+				}
+				else
+				{
+					std::string errMessage = constructMessage(ERR_BADCHANNELKEY, _channels[channelIndex].getName().c_str());
+					send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+				}
+			}
+			else if (_channels[channelIndex].getPassword().empty())
+			{
+				_channels[channelIndex].addClient(clientToInsert);
+				std::cout << GREEN << "Client aggiunto correttamente al canale"
+						<< RESET << std::endl;
+				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+			}
+			else
+			{
+				std::string errMessage = constructMessage(ERR_BADCHANNELKEY, _channels[channelIndex].getName().c_str());
+				send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+			}
+		}
+		_channels[channelIndex].setWhoInvited(-1);
 	}
 	else
 	{
-		// Aggiungi il client al canale esistente
-		_channels[channelIndex].addClient(clientToInsert);
-		std::cout << GREEN << "Client aggiunto correttamente al canale"
-					<< RESET << std::endl;
-		joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+		std::string errMessage = constructMessage(ERR_INVITEONLYCHAN, _channels[channelIndex].getName().c_str());
+		send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
 	}
 }
 
-void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client clientToInsert)
+void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client clientToInsert, std::vector< std::string > keys)
 {
 	for (size_t i = 0; i < numberOfChannels.size(); i++)
 	{
@@ -197,7 +237,7 @@ void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client
 		checkExistence(channelExists, channelIndex, _channels, numberOfChannels, i);
 
 		if (channelExists)
-			channelHandling(_channels, channelIndex, clientToInsert);
+			channelHandling(_channels, channelIndex, clientToInsert, keys);
 		else
 		{
 			// Se il canale non esiste, creane uno nuovo
@@ -238,18 +278,32 @@ void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client
 
 */
 
+/*
+I need a checker for the channel and see if it has the key up
+if it is i need to put it in a map where every time someone joins is checked
+*/
+
 void	Server::Join(std::string args, int	clientSocket)
 {
 	Client	*clientToInsert = getClient(clientSocket);
+	std::vector < Channel > _tmpChannels;
 	std::vector < std::string > numOfChannels;
 	std::vector < std::string > keys;
+
 
 	numOfChannels = channelParser(args);
 	//the keys works only if the channel already exists
 	//the check of the keys must be put in the checkChannelExist function
-	// keys = keyParser(args);
+	if (args.find_first_of(" ") != std::string::npos)
+	{
+		args = args.erase(0, args.find_first_of(" ") + 1);
+		keys = keyParser(args);
+	}
+	else
+		keys.clear();
+
 	// for (size_t k = 0; k < keys.size(); k++)
 	// 	std::cout << "keys: " << keys[k] << std::endl;
 	std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;
-	checkChannelExist(numOfChannels, *clientToInsert);
+	checkChannelExist(numOfChannels, *clientToInsert, keys);
 }

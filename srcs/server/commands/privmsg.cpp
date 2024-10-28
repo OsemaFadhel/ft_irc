@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Privmsg.cpp                                        :+:      :+:    :+:   */
+/*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/20 18:28:50 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:44:11 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 	channelName = channelName.erase(channelName.find_first_of(' '));
 	std::cout<<"channelName "<<channelName<<std::endl;
 	Client	*sender = getClient(clientSocket);
-	std::string	message = ":"+sender->getNickname()+"!"+sender->getUsername()+"@host PRIVMSG "+channelName+" :"+usrMessage+"\r\n";
+	std::string	message = ":"+sender->getNickname()+"!"+sender->getUsername()+"@host PRIVMSG "+channelName+" "+usrMessage+"\r\n";
 
 	for (size_t i = 0; i < _channels.size(); i++)
 	{
@@ -183,6 +183,11 @@ void	Server::Privmsg(std::string args, int clientSocket)
 		sendPrivateMsg(clientSocket, usrAndMsg);
 	}
 }
+
+
+
+
+
 
 /*
 

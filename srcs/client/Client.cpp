@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:19 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/02 18:17:53 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:34:05 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ std::string Client::getRealName() const
 	return _realname;
 }
 
+std::string Client::getHostname() const
+{
+	return _hostname;
+}
+
 std::string Client::getBuffer() const
 {
 	return _buffer;
@@ -71,6 +76,11 @@ void Client::setBuffer(const std::string& buffer)
 	_buffer = buffer;
 }
 
+void Client::setHostname(const std::string& hostname)
+{
+	_hostname = hostname;
+}
+
 void Client::setIsRegistered(int isRegistered)
 {
 	_isRegistered = isRegistered;
@@ -85,7 +95,7 @@ void Client::appendBuffer(const char* buffer, int readsize)
 {
 	if (_buffer.size() + readsize > 512)
 	{
-		std::cerr << "Error: Buffediscarding excess data.r overflow detected. Message to long" << std::endl;
+		std::cerr << "Error: Buffer discarding excess data. Message to long" << std::endl;
 		return;
 	}
 	_buffer += buffer;
@@ -98,6 +108,7 @@ std::ostream&	operator<<(std::ostream& os, const Client& client)
 	os << "Nickname: " << client.getNickname() << std::endl;
 	os << "Username: " << client.getUsername() << std::endl;
 	os << "Realname: " << client.getRealName() << std::endl;
+	os << "Hostname: " << client.getHostname() << std::endl;
 
 	return os;
 }

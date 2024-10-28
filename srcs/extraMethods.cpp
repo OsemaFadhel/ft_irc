@@ -6,18 +6,17 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/20 18:40:36 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:31:26 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/Server.hpp"
+#include "../include/Server.hpp"
 
 void	Server::valuesCheck(Client clientToInsert)
 {
 	std::cout<<"Client nickname: "<<clientToInsert.getNickname()<<std::endl;
 	std::cout<<"Client fd: "<<clientToInsert.getFd()<<std::endl;
 }
-
 
 void	Server::channelCheck()
 {
@@ -59,6 +58,45 @@ bool	Channel::isOperator(Client client)
 			if (_usrData[i].second == 1)
 				return true;
 		}
+	}
+	return false;
+}
+
+Client*	Server::getClientByNickname(std::string nickname)
+{
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (_clients[i]->getNickname() == nickname)
+			return _clients[i];
+	}
+	return 0;
+}
+
+Client	*Channel::getClientByfd(int fd)
+{
+	std::vector< std::pair < Client, int > > test = getUsrData();
+	std::vector< std::pair < Client, int > >::iterator it;
+
+	if (test.empty())
+		return (0);
+	for (it = test.begin(); it != test.end(); it++)
+	{
+		if (it->first.getFd() == fd)
+			return &it->first;
+	}
+	return (0);
+}
+
+
+
+bool	Channel::isInviterOp()
+{
+	std::vector< std::pair < Client, int > >::iterator it;
+
+	for (it = this->_usrData.begin(); it != this->_usrData.end(); it++)
+	{
+		if (it->first.getFd() == this->_whoInvited && isOperator(it->first))
+			return true;
 	}
 	return false;
 }

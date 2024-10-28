@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/20 18:40:22 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:31:48 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ Missing checks:
 It seems the channel is not inserted correctly but i'm building it and i'm
 sure of it so i should isolate and check better
 */
+
+Channel::Channel()
+{
+	_name = "";
+	_topic = "";
+	_password = "";
+	_limit = 0;
+}
+
+
 Channel::Channel(Client firstClient, std::string channelName)
 {
 	//check name
@@ -33,7 +43,9 @@ Channel::Channel(Client firstClient, std::string channelName)
 	std::string	badCharCheck = BAD_CHAR_FOR_CHANNEL;
 	int			syntaxFlag = 0;
 	//setting the first user as an operator
-	if (_usrData.size() == 0)
+	if (_usrData.size() == 0 && channelName[0] == '!')
+		_usrData.push_back(std::make_pair(firstClient, 0));
+	else if (_usrData.size() == 0)
 		_usrData.push_back(std::make_pair(firstClient, 1));
 	else
 		_usrData.push_back(std::make_pair(firstClient, 0));
@@ -42,7 +54,7 @@ Channel::Channel(Client firstClient, std::string channelName)
 	{
 		for (size_t i = 0; i < charCheck.size(); i++)
 		{
-			std::cout<<"testing channel name checks!!!! "<<static_cast<int>(channelName[0])<<std::endl;
+			// std::cout<<"testing channel name checks!!!! "<<static_cast<int>(channelName[0])<<std::endl;
 			if (channelName[0] == charCheck[i])
 				syntaxFlag = 1;
 			this->_name = channelName;
@@ -69,13 +81,14 @@ Channel::Channel(Client firstClient, std::string channelName)
 		std::string errMess = constructMessage(ERR_BADCHANMASK, channelName.c_str());
 		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 	}
-	//porco due prossima volta usa this oppure metti un altro nome per la variabile passata
 	this->_topic = "";
 	this->_password = "";
-	this->_mode['i'] = false;
 	this->_mode['t'] = false;
+	this->_mode['i'] = false;
 	this->_mode['k'] = false;
+	// this->_mode['o'] = false;
 	this->_mode['l'] = false;
+	_whoInvited = -1;
 }
 
 
@@ -151,6 +164,7 @@ void	Channel::printClients()
 	for (begin = _usrData.begin(); begin != end; ++begin)
 	{
 		std::cout<<"Read value in the channel "<<_name<<" "<<begin->first<<std::endl;
+		std::cout<<"operators privileges "<<RED<<begin->second<<RESET<<std::endl;
 	}
 }
 
@@ -165,7 +179,7 @@ void	Channel::setTopic(const std::string& topic)
 	_topic = topic;
 }
 
-void	Channel::setMode(const std::map<char, bool> & mode)
+void	Channel::setMode(const std::map<char, bool> &mode)
 {
 	_mode = mode;
 }
@@ -189,9 +203,6 @@ int			Channel::isInChannel(Client client)
 {
 	for (size_t i = 0; i < _usrData.size(); i++)
 	{
-		std::cout<<"nickname "<<_usrData[i].first.getNickname()<<std::endl;
-		std::cout<<"i number "<<i<<std::endl;
-		std::cout<<"size??? "<<_usrData.size()<<std::endl;
 		if (_usrData[i].first.getNickname() == client.getNickname())
 			return 1;
 	}
@@ -202,23 +213,70 @@ int			Channel::isInChannel(Client client)
 void	Channel::addClient(Client client)
 {
 	_usrData.push_back(std::make_pair(client, 0));
+	channelContentSize();
 }
-/* to implement:
-		void		join should i save the channel that are passed? how though
-		void		kick(Client* client); // kick client
-		void		invite(Client* client); // invite client
-		void		topic(Client* client, const std::string& topic); // change or view topic
-		void		mode(Client* client, const std::string& mode); // change mode
-		mode:
-		 i: Set/remove Invite-only channel
-		 m: Set/remove moderated channel
-		 n: Set/remove channel name changes
-		 p: Set/remove private channel
-		 s: Secret channel
-		 t: Set/remove topic set by channel operator only
-		 k <key>: Set/remove the channel key (password)
-		 l <limit>: Set the user limit to channel
 
-		PRIVMSG
 
-*/
+
+void	Channel::channelContentSize()
+{
+	std::vector<std::pair <Client, int> >::iterator	it;
+
+	for (it = this->_usrData.begin(); it != this->_usrData.end(); it++)
+	{
+		std::cout<<"Client nickname -> "<<it->first.getNickname()<<std::endl;
+	}
+	std::cout<<"channel size btw "<<this->_usrData.size()<<std::endl;
+}
+
+
+bool	Channel::getModeValue(char mode)
+{
+	std::map<char, bool>::iterator	it = _mode.find(mode);
+	if (it == _mode.end())
+		return false;
+	return it->second;
+}
+
+
+Client	Channel::getClientByNickname(std::string nickname)
+{
+	std::vector<std::pair <Client, int> >::iterator	it;
+
+	for (it = _usrData.begin(); it != _usrData.end(); it++)
+	{
+		if (it->first.getNickname() == nickname)
+			return it->first;
+	}
+	return Client(0);
+}
+
+void	Channel::broadcastMessage(std::string message, int clientSocket)
+{
+	std::vector<std::pair <Client, int> >::iterator	it;
+
+	for (it = _usrData.begin(); it != _usrData.end(); it++)
+	{
+		if (it->first.getFd() != clientSocket)
+			send(it->first.getFd(), message.c_str(), message.size(), 0);
+	}
+}
+int	Channel::checkKey(std::string keyToCheck, Client clientToInsert)
+{
+	if (!keyToCheck.empty() && this->_password.compare(keyToCheck) == 0)
+		return 1;
+
+	std::string errMessage = constructMessage(ERR_BADCHANNELKEY, this->_name.c_str());
+	send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+	return 0;
+}
+
+int		Channel::getWhoInvited()
+{
+	return _whoInvited;
+}
+
+void	Channel::setWhoInvited(int whoInvited)
+{
+	_whoInvited = whoInvited;
+}

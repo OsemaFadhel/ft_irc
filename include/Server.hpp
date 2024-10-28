@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/20 18:44:04 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:29:45 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,13 @@
 #include "Replies.hpp"
 #include <arpa/inet.h>
 #include <csignal>
+#include <algorithm>
 
 # define SERVERNAME std::string("FT_IRC")
 # define VERSION std::string("1.0.0")
 # define DATE std::string("2024/08/01")
+# define MODES std::string("itkol")
+
 
 
 class Client;
@@ -50,6 +53,7 @@ class Channel;
 typedef struct socketdata
 {
 	int id;
+	std::string ip;
 	std::string buffer;
 } socketdata;
 
@@ -75,7 +79,8 @@ class Server
 		int getClientIndex(int clientSocket);;
 		void removeClient(int clientSocket);
 		void killServer();
-		Channel	*getChannel(std::string channelName);
+		Channel	*getChannel(std::string& channelName);
+
 
 
 		void run();
@@ -93,11 +98,13 @@ class Server
 		int handleCarriageReturn(char* buffer, int fd, int readSize, size_t &i);
 		void processCommand(std::string buffer, int clientSocket, size_t &i);
 
+		void sendToChannel(Channel *channel, Client *sender, std::string chan, std::string message);
+
 		/*commands maybe create static class*/
 		void Cap(int clientSocket);
 		void Ping(Client *client, int clientSocket, std::string &message);
 		void Quit(std::string args, int clientSocket, size_t &i);
-		void Pass(std::string args, int clientSocket);
+		void Pass(std::string args, int clientSocket, size_t &i);
 		void Nick(std::string args, int clientSocket);
 		void User(std::string args, int clientSocket);
 		void Topic(std::string args, Client *client);
@@ -109,33 +116,52 @@ class Server
 				JOIN <channel>,....  <key>,....
 				between channel and key there is a space that's how we can differentiate them
 		*/
+
+		//join command
 		void						Join(std::string args, int	clientSocket);
 		std::vector< std::string >	channelParser(std::string args);
 		std::vector< std::string >	keyParser(std::string args);
-		void						channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert);
-		void						checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert);
+		void						channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys);
+		void						checkChannelExist(std::vector< std::string > numberOfChannels, Client clientToInsert, std::vector< std::string > keys);
 		//checking functions of server by lnicoter
 		void						valuesCheck(Client clientToInsert);
 		void						channelCheck();
 		void						joinCreateChanMsg(Client clientToInsert, std::string channelName);
-		void						listOfUsersMsg(std::string channelName);
+		void						listOfUsersMsg(std::string channelName, Client &newUser);
 
 		/*Privmsg command and functions by lnicoter*/
 		void						Privmsg(std::string args, int clientSocket);
 		void						privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage);
 		void						sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg);
 
-		void deleteEmptyChannels();
+		/*Part command and functions by lnicoter*/
+		void						Part(std::string args, int clientSocket);
+		std::string					takeReason(std::string &args);
+		void						partLeavingMessage(Client	usr, std::string channelName, std::string reason);
+		void						partLeavingMessageAll(std::string channelName, std::string usrName, std::string partMessage);
+		void						deleteEmptyChannels();
 
+		//super user commands:
+		void	Kick(std::string args, int clientSocket);
+		void	Invite(std::string args, int clientSocket);
 
+		//mode section
+		void		Mode(std::string args, int clientSocket);
+		std::string	modeParser(std::string args);
+		void		setOrRemoveMode(std::string channelName, std::string mode, std::string hypotheticalArgs, int clientSocket);
 		//check functions
 		//check if channel exists for now i'll do it with the strings vector
 		//seing that I'm working mostly with that when parsing channels
-		bool	checkIfChannelExists(std::string channelName);
+		bool		checkIfChannelExists(std::string channelName);
+		Client*		getClientByNickname(std::string nickname);
+		int			isInServer(Channel *channel);
 
 };
 
-void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+void		checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Channel>& _channels, std::vector<std::string>& numberOfChannels, int i);
+int			isChannel(std::string channelName);
+std::string extractMessage(const std::string& input);
+std::string extractChannelName(const std::string& input);
 
 
 // Macros for ANSI escape codes

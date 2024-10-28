@@ -6,12 +6,13 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:31:45 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/02 18:14:49 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:32:38 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
+
 
 #include "iostream"
 #include "Server.hpp"
@@ -28,6 +29,7 @@ class Client
 		std::string _nickname;
 		std::string _username;
 		std::string _realname;
+		std::string _hostname;
 		int _isRegistered; // 0 if not registered (only pass inserted), 1 if registered (nick and user inserted)
 
 	public:
@@ -38,11 +40,13 @@ class Client
 		std::string getUsername() const;
 		std::string getRealName() const;
 		std::string getBuffer() const;
+		std::string getHostname() const;
 		int getIsRegistered() const;
 
 		void setNickname(const std::string& nickname);
 		void setUsername(const std::string& username);
 		void setRealName(const std::string& realname);
+		void setHostname(const std::string& hostname);
 		void setBuffer(const std::string& buffer);
 		void setIsRegistered(int isRegistered);
 		void clearBuffer();
