@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:37:58 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 11:24:59 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 		}
 		else
 		{
-			if (FD_ISSET(_serverSocket, &readfds) && acceptClient(&selectfd) == 1)
+			if (FD_ISSET(_serverSocket, &readfds) && acceptClient() == 1)
 				continue;
 
 			checkClientActivity(readfds);

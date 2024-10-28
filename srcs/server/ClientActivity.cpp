@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:40:20 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 11:13:26 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 void Server::checkClientActivity(fd_set& readfds)
 {
 	//The loop iterates over all the client sockets in the _newfds vector.
-	for (size_t i = 1; i < _newfds.size(); ++i)
+	for (size_t i = 0; i < _newfds.size(); ++i)
 	{
 		std::cout << CYAN << "[DEBUG LOOP] Checking client activity. FD = " << _newfds[i].id << std::endl;
 		int clientSocket = _newfds[i].id;
