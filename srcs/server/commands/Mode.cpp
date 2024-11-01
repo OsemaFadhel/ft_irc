@@ -132,10 +132,8 @@ void	Server::Mode(std::string args, int clientSocket)
 	size_t	i = args.find_first_not_of(" ");
 	if (i != std::string::npos)
 		args.erase(0, i);
-	std::cout<<"args after mode parsing "<<args<<std::endl;
 	if (!args.empty())
 		hypotheticalArgs = args;
-	std::cout<<"hypotheticalArgs "<<hypotheticalArgs<<std::endl;
 	if (mode.empty())
 	{
 		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");

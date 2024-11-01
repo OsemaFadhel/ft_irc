@@ -12,6 +12,8 @@
 
 #include "../../../include/Server.hpp"
 
+//! good join the most updated
+
 
 //substr e find per spostare il puntatore alla prima virgola
 //new error: 2 channels that are going to be inserted with
@@ -218,15 +220,18 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 			//che mi serve in questo caso specifico volendo potrei controllare le modalità separatamente
 			if ((!_channels[channelIndex].getPassword().empty() && keys.size() > 0 && keys.size() >= channelIndex) || _channels[channelIndex].isInviterOp())
 			{
-				if (_channels[channelIndex].getPassword() == keys[channelIndex])
+				if (!_channels[channelIndex].getPassword().empty())
 				{
-					_channels[channelIndex].addClient(clientToInsert);
-					joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
-				}
-				else
-				{
-					std::string errMessage = constructMessage(ERR_BADCHANNELKEY, _channels[channelIndex].getName().c_str());
-					send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+					if (_channels[channelIndex].getPassword() == keys[channelIndex])
+					{
+						_channels[channelIndex].addClient(clientToInsert);
+						joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
+					}
+					else
+					{
+						std::string errMessage = constructMessage(ERR_BADCHANNELKEY, _channels[channelIndex].getName().c_str());
+						send(clientToInsert.getFd(), errMessage.c_str(), errMessage.size(), 0);
+					}
 				}
 			}
 			else if (_channels[channelIndex].getPassword().empty())
