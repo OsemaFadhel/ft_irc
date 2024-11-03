@@ -61,6 +61,7 @@ void	Server::Invite(std::string args, int clientSocket)
 		return ;
 	}
 	channelWhereInvited->setWhoInvited(clientSocket);
+	std::cout<<"whoInvited updated-> "<<channelWhereInvited->getWhoInvited()<<std::endl;
 	std::string success = constructMessage(RPL_INVITING, inviter->getNickname().c_str(), invitedClient->getNickname().c_str(), channelWhereInvited->getName().c_str());
 	std::cout<<"first success check "<<success<<std::endl;
 	send(clientSocket, success.c_str(), success.size(), 0);

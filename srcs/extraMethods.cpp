@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/28 14:10:07 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/11/03 19:39:11 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,13 @@ Client*	Server::getClientByNickname(std::string nickname)
 	return 0;
 }
 
-Client	*Channel::getClientByfd(int fd)
+Client*	Channel::getClientByfd(int fd)
 {
-	std::vector< std::pair < Client, int > > test = getUsrData();
 	std::vector< std::pair < Client, int > >::iterator it;
 
-	if (test.empty())
+	if (this->_usrData.empty())
 		return (0);
-	for (it = test.begin(); it != test.end(); it++)
+	for (it = this->_usrData.begin(); it != this->_usrData.end(); it++)
 	{
 		if (it->first.getFd() == fd)
 			return &it->first;

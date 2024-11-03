@@ -6,7 +6,7 @@
 /*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 18:29:47 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/11/02 22:06:13 by lnicoter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ Channel::Channel()
 	this->_mode['k'] = false;
 	// this->_mode['o'] = false;
 	this->_mode['l'] = false;
+	this->_whoInvited = -1;
+	
 }
 
 

@@ -25,6 +25,11 @@ void	Channel::iMode(std::string mode, std::string hypotheticalArgs, int clientSo
 	(void) hypotheticalArgs;
 	Client	*isOp = getClientByfd(clientSocket);
 
+	if (!isOp)
+	{
+		std::cout<<"the user does not exist "<<std::endl;
+		return ;
+	}
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());
