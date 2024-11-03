@@ -130,5 +130,11 @@ void	Server::Mode(std::string args, int clientSocket)
 	if (!args.empty())
 		hypotheticalArgs = args;
 	std::cout<<"hypotheticalArgs "<<hypotheticalArgs<<std::endl;
+	if (mode.empty())
+	{
+		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
+		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+		return ;
+	}
 	setOrRemoveMode(channelName, mode, hypotheticalArgs, clientSocket);
 }

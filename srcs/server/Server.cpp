@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:35:59 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 11:10:30 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,9 +146,10 @@ void Server::createSocket()
 
 	// Add the server socket to the list of file descriptors to monitor
 
-	socketdata newfd;
+	/*socketdata newfd;
 	newfd.id = _serverSocket;
 	_newfds.push_back(newfd);
+	*/
 }
 
 void Server::run()

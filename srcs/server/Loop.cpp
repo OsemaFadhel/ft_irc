@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:39:40 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:37:58 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:09:03 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 	{
 		setMaxfds(maxfds, readfds);
 
+		//select updates the readfds set to indicate which file descriptors are ready for reading
 		int selectfd = select(maxfds + 1, &readfds, NULL, NULL, NULL);
 
 		handle_select_error(selectfd);
@@ -84,7 +85,7 @@ void Server::startLoop(fd_set& readfds, int& maxfds)
 		}
 		else
 		{
-			if (FD_ISSET(_serverSocket, &readfds) && acceptClient(&selectfd) == 1)
+			if (FD_ISSET(_serverSocket, &readfds) && acceptClient() == 1)
 				continue;
 
 			checkClientActivity(readfds);
@@ -110,6 +111,7 @@ void Server::killServer()
 	std::vector<Client*>().swap(_clients);
 
 	_channels.clear();
+	std::vector<Channel>().swap(_channels);
 
 	std::cout << GREEN << "Server closed" <<  RESET << std::endl;
 
