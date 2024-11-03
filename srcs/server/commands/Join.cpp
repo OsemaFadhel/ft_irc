@@ -200,6 +200,7 @@ In order of ifs (until changes) we check:
 */
 void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys)
 {
+	std::cout<<"no changes!? "<<_channels[channelIndex].getWhoInvited()<<std::endl;
 	std::cout<<"limit and size "<<_channels[channelIndex].getLimit()<<" "<<_channels[channelIndex].getUsrData().size()<<std::endl;
 	if (_channels[channelIndex].getModeValue('l') && _channels[channelIndex].getLimit() <= (int)_channels[channelIndex].getUsrData().size())
 	{
@@ -234,7 +235,7 @@ void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelInd
 					}
 				}
 			}
-			else if (_channels[channelIndex].getPassword().empty())
+			if (_channels[channelIndex].getPassword().empty())
 			{
 				_channels[channelIndex].addClient(clientToInsert);
 				joinCreateChanMsg(clientToInsert, _channels[channelIndex].getName());
