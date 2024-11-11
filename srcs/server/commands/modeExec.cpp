@@ -153,6 +153,7 @@ void	Channel::oMode(std::string mode, std::string hypotheticalArgs, int clientSo
 
 void	Channel::tMode(std::string mode, std::string hypotheticalArgs, int clientSocket)
 {
+	(void)hypotheticalArgs;
 	Client	*isOp = getClientByfd(clientSocket);
 
 	if (!isOperator(*isOp))
@@ -161,18 +162,18 @@ void	Channel::tMode(std::string mode, std::string hypotheticalArgs, int clientSo
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	if (hypotheticalArgs.empty())
-	{
-		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
-		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
-		return ;
-	}
+	// if (hypotheticalArgs.empty())
+	// {
+	// 	std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
+	// 	send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+	// 	return ;
+	// }
 	//i need to tell the others that the channel is invite only
 	if (mode[0] == '+' && this->_mode['t'] != true)
 	{
 		this->_mode['t'] = true;
 	}
-	else if (mode[0] == '-' && this->_mode['r'] != false)
+	else if (mode[0] == '-' && this->_mode['t'] != false)
 	{
 		this->_mode['t'] = false;
 	}
