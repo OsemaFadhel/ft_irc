@@ -109,7 +109,7 @@ void	Channel::oMode(std::string mode, std::string hypotheticalArgs, int clientSo
 	Client	*isOp = getClientByfd(clientSocket);
 	std::vector< std::pair < Client, int > >::iterator it;
 
-	std::cout << "hypotheticalArgs " << hypotheticalArgs << std::endl;
+	// std::cout << "hypotheticalArgs " << hypotheticalArgs << std::endl;
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());
