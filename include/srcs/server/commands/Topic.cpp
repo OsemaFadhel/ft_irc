@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:30:20 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 16:52:30 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 11:53:31 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int checkErrors2(std::string chan, int fd, Channel *channel, Client *client)
 	//user is not in the channel
 	if (channel->isInChannel(*client) == 0)
 	{
-		std::string	errMessage = constructMessage(ERR_USERNOTINCHANNEL, client->getNickname().c_str(), chan);
+		std::string	errMessage = constructMessage(ERR_USERNOTINCHANNEL, client->getNickname().c_str(), chan.c_str());
 		return send(fd, errMessage.c_str(), errMessage.size(), 0), 1;
 	}
 
@@ -62,13 +62,8 @@ void Server::Topic(std::string args, Client *client)
 	std::string	chan = extractChannelName(args);
 	chan.erase(chan.find_last_not_of(" \t") + 1);
 
-	std::cout << GREEN << "TOPIC command" << RESET << std::endl;
-	std::cout << "Channel: " << chan << std::endl;
-
 	if (checkErrors1(chan, fd))
 		return;
-
-	std::cout << CYAN;
 
 	if (isChannel(chan))
 	{
@@ -127,5 +122,4 @@ void Server::Topic(std::string args, Client *client)
 		std::string	errMessage = constructMessage(ERR_NOSUCHCHANNEL, chan.c_str());
 		send(fd, errMessage.c_str(), errMessage.size(), 0);
 	}
-	std::cout << RESET;
 }

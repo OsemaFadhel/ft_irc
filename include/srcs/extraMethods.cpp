@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extraMethods.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 11:13:40 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/11/03 19:39:11 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/11/12 11:59:03 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	Server::deleteEmptyChannels()
 		if (this->_channels[i].getUsrData().empty())
 		{
 			this->_channels.erase(this->_channels.begin() + i);
-			std::cout<<"the channel was empty so i eliminated it"<<std::endl;
+			//std::cout<<"the channel was empty so i eliminated it"<<std::endl;
 			i--;
 		}
 	}
@@ -94,10 +94,10 @@ bool	Channel::isInviterOp()
 	it = this->_usrData.begin();
 	if (!this->_whoInvited)
 		return false;
-	std::cout<<"who invited: "<<this->_whoInvited<<std::endl;
-	std::cout<<"channel size: "<<this->_usrData.size()<<std::endl;
-	std::cout<<"it->first fd: "<<it->first.getFd()<<std::endl;
-	std::cout<<"it->second: "<<it->second<<std::endl;
+	//std::cout<<"who invited: "<<this->_whoInvited<<std::endl;
+	//std::cout<<"channel size: "<<this->_usrData.size()<<std::endl;
+	//std::cout<<"it->first fd: "<<it->first.getFd()<<std::endl;
+	//std::cout<<"it->second: "<<it->second<<std::endl;
 	for (it = this->_usrData.begin(); it != this->_usrData.end(); it++)
 	{
 		if (it->first.getFd() == this->_whoInvited && isOperator(it->first))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 16:47:40 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/11/12 11:49:10 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void Server::createSocket()
 
 	// We then tell the application to listen to the socket refffered by the serverSocket.
 
-	if (listen(_serverSocket, 50) == -1)
+	if (listen(_serverSocket, 150) == -1)
 		throw std::runtime_error("Failed to listen for connections");
 
 	// Add the server socket to the list of file descriptors to monitor

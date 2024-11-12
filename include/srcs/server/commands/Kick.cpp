@@ -69,7 +69,7 @@ void Server::Kick(std::string args, int clientSocket)
 			}
 			for (size_t j = 0; j < numOfClient.size(); j++)
 			{
-				std::cout<<RED<<"usr to kick "<<numOfClient[j]<<RESET<<std::endl;
+				//std::cout<<RED<<"usr to kick "<<numOfClient[j]<<RESET<<std::endl;
 				int	usrIndex = channel->findUsr(numOfClient[j]);
 				Client clientToKick = channel->getClientByNickname(numOfClient[j]);
 				//checks if the client exists

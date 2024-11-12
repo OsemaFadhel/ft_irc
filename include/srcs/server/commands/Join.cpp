@@ -56,10 +56,10 @@ std::vector<std::string>	Server::channelParser(std::string args)
 			numOfChannels.push_back(temp);
 			// std::cout << "Channel added: " << temp << std::endl;
 		}
-		else
+		/*else
 		{
 			std::cout << "Invalid channel ignored: " << temp << std::endl;
-		}
+		}*/
 	}
 	return (numOfChannels);
 }
@@ -80,14 +80,14 @@ std::vector< std::string >	Server::keyParser(std::string args)
 		if (pos != std::string::npos)
 		{
 			temp = args.substr(i, pos - i);
-			std::cout << "temp1: " << temp << std::endl;
+			//std::cout << "temp1: " << temp << std::endl;
 			// keys.push_back(temp);
 			i = pos + 1;
 		}
 		else
 		{
 			temp = args.substr(i);
-			std::cout << "temp2: " << temp << std::endl;
+			//std::cout << "temp2: " << temp << std::endl;
 			i = std::string::npos;
 			// keys.push_back(temp);
 			// break;
@@ -100,16 +100,16 @@ std::vector< std::string >	Server::keyParser(std::string args)
 		if (!temp.empty() && temp.find(' ') == std::string::npos)
 		{
 			keys.push_back(temp);
-			std::cout << "Key added: " << temp << std::endl;
+			//std::cout << "Key added: " << temp << std::endl;
 		}
-		else
+		/*else
 		{
 			std::cout << "Invalid Key ignored: " << temp << std::endl;
-		}
+		}*/
 	}
 
-	for (size_t i = 0; i < keys.size(); i++)
-		std::cout << "keys: " << keys[i] << std::endl;
+	/*for (size_t i = 0; i < keys.size(); i++)
+		std::cout << "keys: " << keys[i] << std::endl;*/
 	return (keys);
 }
 
@@ -145,8 +145,8 @@ A simple function to send the join message when the client joins
 */
 void	Server::joinCreateChanMsg(Client clientToInsert, std::string channelName)
 {
-	std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
-	std::cout<<"channel to create/join: "<<channelName<<std::endl;
+	//std::cout<<GREEN<<"joinCreateChanMsg"<<RESET<<std::endl;
+	//std::cout<<"channel to create/join: "<<channelName<<std::endl;
 	std::string serverMessage = ":" + clientToInsert.getNickname() + " JOIN " + channelName + "\r\n";
 	send(clientToInsert.getFd(), serverMessage.c_str(), serverMessage.size(), 0);
 	serverMessage = ":" + SERVERNAME + " " + clientToInsert.getNickname() + " JOIN " + channelName + "\r\n";
@@ -200,8 +200,8 @@ In order of ifs (until changes) we check:
 */
 void	Server::channelHandling(std::vector<Channel>& _channels, size_t& channelIndex, Client clientToInsert, std::vector< std::string > keys)
 {
-	std::cout<<"no changes!? "<<_channels[channelIndex].getWhoInvited()<<std::endl;
-	std::cout<<"limit and size "<<_channels[channelIndex].getLimit()<<" "<<_channels[channelIndex].getUsrData().size()<<std::endl;
+	//std::cout<<"no changes!? "<<_channels[channelIndex].getWhoInvited()<<std::endl;
+	//std::cout<<"limit and size "<<_channels[channelIndex].getLimit()<<" "<<_channels[channelIndex].getUsrData().size()<<std::endl;
 	if (_channels[channelIndex].getModeValue('l') && _channels[channelIndex].getLimit() <= (int)_channels[channelIndex].getUsrData().size())
 	{
 		std::string errMessage = constructMessage(ERR_CHANNELISFULL, _channels[channelIndex].getName().c_str());
@@ -283,9 +283,9 @@ void Server::checkChannelExist(std::vector<std::string> numberOfChannels, Client
 			if (!newChannel.getName().empty())
 			{
 				_channels.push_back(newChannel);
-				std::cout << GREEN << "Nuovo canale creato e client aggiunto: "
-							<< newChannel.getName()
-							<< RESET << std::endl;
+				//std::cout << GREEN << "Nuovo canale creato e client aggiunto: "
+				//			<< newChannel.getName()
+				//			<< RESET << std::endl;
 				joinCreateChanMsg(clientToInsert, newChannel.getName());
 			}
 		}
@@ -317,6 +317,6 @@ void	Server::Join(std::string args, int	clientSocket)
 
 	// for (size_t k = 0; k < keys.size(); k++)
 	// 	std::cout << "keys: " << keys[k] << std::endl;
-	std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;
+	//std::cout<<"channel parsed "<<numOfChannels.size()<<std::endl;
 	checkChannelExist(numOfChannels, *clientToInsert, keys);
 }

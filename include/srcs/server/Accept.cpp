@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:57:35 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 11:28:12 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:10:28 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int Server::acceptClient()
 	_newfds.push_back(newfd);
 
 	//_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
-	std::cout << GREEN << "[DEBUG] New client accepted. FD is: " << BOLD << clientSocket << " with Address: " << newfd.ip << ":" << clientPort << RESET << std::endl;
+	std::cout << YELLOW << BOLD << "[DEBUG]" << RESET << YELLOW << " New client accepted. FD is: " << BOLD << clientSocket << " with Address: " << newfd.ip << ":" << clientPort << RESET << std::endl;
 
 	return 0;
 }

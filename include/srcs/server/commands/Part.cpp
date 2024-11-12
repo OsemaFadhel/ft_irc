@@ -28,8 +28,8 @@ void	Server::partLeavingMessageAll(std::string channelName, std::string usrName,
 			{
 				if (_channels[i].getUsrData()[j].first.getNickname() != usrName)
 				{
-					std::cout<<"Allerting others that someone is leaving the channel"<<std::endl;
-					std::cout<<"allerting "<<_channels[i].getUsrData()[j].first.getNickname()<<std::endl;
+					//std::cout<<"Allerting others that someone is leaving the channel"<<std::endl;
+					//std::cout<<"allerting "<<_channels[i].getUsrData()[j].first.getNickname()<<std::endl;
 					send(_channels[i].getUsrData()[j].first.getFd(), partMessage.c_str(), partMessage.length(), 0);
 				}
 			}
@@ -72,7 +72,7 @@ void	Channel::removeClient(Client& client)
 {
 	std::string	partMessage = "";
 
-	std::cout<<RED<<"Target Client nickname -> "<<client.getNickname()<<RESET<<std::endl;
+	//std::cout<<RED<<"Target Client nickname -> "<<client.getNickname()<<RESET<<std::endl;
 	for (size_t i = 0; i < _usrData.size(); i++)
 	{
 		//i must change the condition
@@ -103,7 +103,7 @@ std::string	Server::takeReason(std::string &args)
 		if (i != std::string::npos)
 		{
 			std::string	reason = args.substr(i, args.size());
-			std::cout<<"reason gained is wrong for sure "<<reason<<std::endl;
+			//std::cout<<"reason gained is wrong for sure "<<reason<<std::endl;
 			//il parsing di reason è sbagliato
 			return reason;
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/11/02 22:06:13 by lnicoter         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:16:00 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ Channel::Channel()
 	// this->_mode['o'] = false;
 	this->_mode['l'] = false;
 	this->_whoInvited = -1;
-	
+
 }
 
 
@@ -227,7 +227,7 @@ int			Channel::isInChannel(Client client)
 void	Channel::addClient(Client client)
 {
 	_usrData.push_back(std::make_pair(client, 0));
-	channelContentSize();
+	//channelContentSize();
 }
 
 

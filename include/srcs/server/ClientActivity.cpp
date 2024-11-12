@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 16:27:56 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:12:45 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void Server::checkClientActivity(fd_set& readfds)
 				break;
 			}
 			if (readSize == 0) {
-				std::cout << BLUE << "[DEBUG LOOP] Client disconnected. FD = " << clientSocket << std::endl;
+				std::cout << YELLOW << BOLD << "[QUIT 1]" << RESET << YELLOW << " Client disconnected. FD = " << clientSocket << std::endl;
 				clientDisconnect(clientSocket, i);
 				break;
 			}
@@ -73,7 +73,7 @@ void Server::clientDisconnect(int clientSocket, size_t &i)
 	Client *client = getClient(clientSocket);
 	if (client)
 	{
-		std::cout << RED << "[DEBUG] Client disconnected. Nickname: " << client->getNickname() << std::endl;
+		std::cout << RED << "[QUIT 2] Client disconnected. Nickname: " << client->getNickname() << " FD = " << clientSocket << std::endl;
 		// Remove the client from all channels
 		for (size_t i = 0; i < _channels.size(); ++i)
 		{
