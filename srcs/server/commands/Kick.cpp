@@ -33,17 +33,6 @@ Parameters: <channel> *( "," <channel> ) <user> *( "," <user> )
    compatibility with old client software.
 */
 
-
-
-/*
-*missing checks:
-	! the user that sends the kick command must be an operator
-*/
-
-
-//#channel user1,user2
-
-
 void Server::Kick(std::string args, int clientSocket)
 {
 	std::string	tmpArgs = args;
@@ -80,7 +69,7 @@ void Server::Kick(std::string args, int clientSocket)
 			}
 			for (size_t j = 0; j < numOfClient.size(); j++)
 			{
-				std::cout<<RED<<"usr to kick "<<numOfClient[j]<<RESET<<std::endl;
+				//std::cout<<RED<<"usr to kick "<<numOfClient[j]<<RESET<<std::endl;
 				int	usrIndex = channel->findUsr(numOfClient[j]);
 				Client clientToKick = channel->getClientByNickname(numOfClient[j]);
 				//checks if the client exists

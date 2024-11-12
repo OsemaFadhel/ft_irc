@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:34:51 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:40:20 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:12:45 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,8 @@
 void Server::checkClientActivity(fd_set& readfds)
 {
 	//The loop iterates over all the client sockets in the _newfds vector.
-	for (size_t i = 1; i < _newfds.size(); ++i)
+	for (size_t i = 0; i < _newfds.size(); ++i)
 	{
-		std::cout << CYAN << "[DEBUG LOOP] Checking client activity. FD = " << _newfds[i].id << std::endl;
 		int clientSocket = _newfds[i].id;
 
 		if (FD_ISSET(clientSocket, &readfds))
@@ -37,16 +36,21 @@ void Server::checkClientActivity(fd_set& readfds)
 
 			if (readSize < 0)
 			{
-				//throw std::runtime_error("Failed to read from the socket");
 				std::cout << RED << "[DEBUG LOOP] Failed to read from the socket. FD = " << clientSocket << std::endl;
+				break;
 			}
 			if (readSize == 0) {
-				std::cout << BLUE << "[DEBUG LOOP] Client disconnected. FD = " << clientSocket << std::endl;
+				std::cout << YELLOW << BOLD << "[QUIT 1]" << RESET << YELLOW << " Client disconnected. FD = " << clientSocket << std::endl;
 				clientDisconnect(clientSocket, i);
 				break;
 			}
 
 			this->_newfds[i].buffer.append(buffer);
+			if (this->_newfds[i].buffer.size() >= 512) {
+				std::cout << RED << "[DEBUG LOOP] Message size too big. FD = " << clientSocket << std::endl;
+				this->_newfds[i].buffer.clear();
+				break; // Handle buffer overflow scenario
+			}
 			if (findCarriageReturn(buffer, readSize) != 0) // Check if carriage return is found
 			{
 				handleMessage(this->_newfds[i].buffer, this->_newfds[i].buffer.length(), clientSocket, i); // Handle the message
@@ -59,10 +63,6 @@ void Server::checkClientActivity(fd_set& readfds)
 				break; // Handle buffer overflow scenario
 			}
 			// Check if the command length exceeds 512
-			if (this->_newfds[i].buffer.size() >= 512) {
-				std::cout << RED << "[DEBUG LOOP] Buffer overflow. FD = " << clientSocket << std::endl;
-				break; // Handle buffer overflow scenario
-			}
 		}
 	}
 }
@@ -73,10 +73,14 @@ void Server::clientDisconnect(int clientSocket, size_t &i)
 	Client *client = getClient(clientSocket);
 	if (client)
 	{
-		std::cout << RED << "[DEBUG] Client disconnected. Nickname: " << client->getNickname() << std::endl;
+		std::cout << RED << "[QUIT 2] Client disconnected. Nickname: " << client->getNickname() << " FD = " << clientSocket << std::endl;
 		// Remove the client from all channels
-		/*for (size_t i = 0; i < _channels.size(); ++i)
-			_channels[i]->removeClient(client);*/
+		for (size_t i = 0; i < _channels.size(); ++i)
+		{
+			if (_channels[i].isInChannel(*client))
+				_channels[i].removeClient(*client);
+		}
+		deleteEmptyChannels();
 		// Remove the client from the clients vector
 		removeClient(clientSocket);
 	}

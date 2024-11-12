@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 21:37:21 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/07 16:58:39 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:40:19 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,5 @@ std::string constructMessage(const std::string& format, ...)
 	vsnprintf(buffer, sizeof(buffer), format.c_str(), args);
 	va_end(args);
 
-	std::cout << "Constructed message: " << buffer << std::endl;
 	return std::string(buffer);
 }

@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/10/28 10:44:11 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 17:17:22 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ std::vector<std::string> extractUsrMsgToSend(const std::string& input)
 		std::vector<std::string>	usrAndMessage;
 		usrAndMessage.push_back(usr);
 		usrAndMessage.push_back(message);
-		std::cout<<"death"<<std::endl;
+		//std::cout<<"death"<<std::endl;
 		return usrAndMessage;
 	}
 	usr = usr.erase(usr.find_last_of(' '));
@@ -89,7 +89,7 @@ std::string extractChannelName(const std::string& input)
 void	Server::privmsgChannel(std::string channelName, int clientSocket, std::string usrMessage)
 {
 	channelName = channelName.erase(channelName.find_first_of(' '));
-	std::cout<<"channelName "<<channelName<<std::endl;
+	//std::cout<<"channelName "<<channelName<<std::endl;
 	Client	*sender = getClient(clientSocket);
 	std::string	message = ":"+sender->getNickname()+"!"+sender->getUsername()+"@host PRIVMSG "+channelName+" "+usrMessage+"\r\n";
 
@@ -101,7 +101,7 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 			{
 				if (_channels[i].getUsrData()[j].first.getNickname().compare(sender->getNickname()))
 				{
-					std::cout<<"sending message to the others"<<std::endl;
+					//std::cout<<"sending message to the others"<<std::endl;
 					send(_channels[i].getUsrData()[j].first.getFd(), message.c_str(), message.length(), 0);
 				}
 			}
@@ -109,7 +109,7 @@ void	Server::privmsgChannel(std::string channelName, int clientSocket, std::stri
 		}
 		else
 		{
-			std::cout<<"wrong one here we have "<<channelName<<std::endl;
+			//std::cout<<"wrong one here we have "<<channelName<<std::endl;
 			break;
 		}
 	}
@@ -124,7 +124,6 @@ void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg
 {
 	Client	receivingUser(0);
 
-	// std::cout<<"usrAndMsg[0] "<<usrAndMsg[0]<<std::endl;
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
 		if (_clients[i]->getNickname().compare(usrAndMsg[0]) == 0 && _clients[i]->getFd() != clientSocket)
@@ -146,7 +145,7 @@ void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg
 void	Server::Privmsg(std::string args, int clientSocket)
 {
 	std::string	realChannel = extractChannelName(args);
-	std::cout<<"args received "<<args<<std::endl;
+	//std::cout<<"args received "<<args<<std::endl;
 
 	if (isChannel(realChannel))
 	{

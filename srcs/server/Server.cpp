@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:39 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:35:59 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 11:49:10 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,14 +141,15 @@ void Server::createSocket()
 
 	// We then tell the application to listen to the socket refffered by the serverSocket.
 
-	if (listen(_serverSocket, 50) == -1)
+	if (listen(_serverSocket, 150) == -1)
 		throw std::runtime_error("Failed to listen for connections");
 
 	// Add the server socket to the list of file descriptors to monitor
 
-	socketdata newfd;
+	/*socketdata newfd;
 	newfd.id = _serverSocket;
 	_newfds.push_back(newfd);
+	*/
 }
 
 void Server::run()
@@ -167,13 +168,8 @@ void Server::run()
 Channel*	Server::getChannel(std::string& channelName)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
-	{
-		std::cout<<"what channel do we have here "<<_channels[i].getName()<<std::endl;
-		std::cout<<"and what channel i've passed here? "<<channelName<<std::endl;
 		if (_channels[i].getName() == channelName)
 			return (&_channels[i]);
-	}
-	std::cout<<"death reached?"<<std::endl;
 	return 0;
 }
 

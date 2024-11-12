@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:35:37 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:29:45 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 11:25:16 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ class Server
 		void createSocket();
 		void setMaxfds(int &maxfds, fd_set &readfds);
 		void startLoop(fd_set &readfds, int &maxfds);
-		int acceptClient(int *selectfd);
+		int acceptClient();
 		void clientDisconnect(int clientSocket, size_t &i);
 		void checkClientActivity(fd_set& readfds);
 

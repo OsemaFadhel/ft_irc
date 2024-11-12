@@ -22,20 +22,26 @@
 //change this to accept a client so you can compare it and tell if it is an operator too
 void	Channel::iMode(std::string mode, std::string hypotheticalArgs, int clientSocket)
 {
+	(void) hypotheticalArgs;
 	Client	*isOp = getClientByfd(clientSocket);
 
+	if (!isOp)
+	{
+		std::cout<<"the user does not exist "<<std::endl;
+		return ;
+	}
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	if (hypotheticalArgs.empty())
-	{
-		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
-		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
-		return ;
-	}
+	// if (hypotheticalArgs.empty())
+	// {
+	// 	std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
+	// 	send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+	// 	return ;
+	// }
 	//i need to tell the others that the channel is invite only
 	if (mode[0] == '+' && this->_mode['i'] != true)
 	{
@@ -61,7 +67,6 @@ void	Channel::kMode(std::string mode, std::string hypotheticalArgs, int clientSo
 {
 	Client	*isOp = getClientByfd(clientSocket);
 
-	std::cout<<"hypotheticalArgs "<<hypotheticalArgs<<std::endl;
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());
@@ -104,7 +109,7 @@ void	Channel::oMode(std::string mode, std::string hypotheticalArgs, int clientSo
 	Client	*isOp = getClientByfd(clientSocket);
 	std::vector< std::pair < Client, int > >::iterator it;
 
-	std::cout << "hypotheticalArgs " << hypotheticalArgs << std::endl;
+	// std::cout << "hypotheticalArgs " << hypotheticalArgs << std::endl;
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());
@@ -148,6 +153,7 @@ void	Channel::oMode(std::string mode, std::string hypotheticalArgs, int clientSo
 
 void	Channel::tMode(std::string mode, std::string hypotheticalArgs, int clientSocket)
 {
+	(void)hypotheticalArgs;
 	Client	*isOp = getClientByfd(clientSocket);
 
 	if (!isOperator(*isOp))
@@ -156,18 +162,18 @@ void	Channel::tMode(std::string mode, std::string hypotheticalArgs, int clientSo
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
-	if (hypotheticalArgs.empty())
-	{
-		std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
-		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
-		return ;
-	}
+	// if (hypotheticalArgs.empty())
+	// {
+	// 	std::string	errMessage = constructMessage(ERR_NEEDMOREPARAMS, "MODE");
+	// 	send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
+	// 	return ;
+	// }
 	//i need to tell the others that the channel is invite only
 	if (mode[0] == '+' && this->_mode['t'] != true)
 	{
 		this->_mode['t'] = true;
 	}
-	else if (mode[0] == '-' && this->_mode['r'] != false)
+	else if (mode[0] == '-' && this->_mode['t'] != false)
 	{
 		this->_mode['t'] = false;
 	}
@@ -182,7 +188,6 @@ void	Channel::lMode(std::string mode, std::string hypotheticalArgs, int clientSo
 {
 	Client	*isOp = getClientByfd(clientSocket);
 
-	std::cout<<"hypotheticalArgs "<<hypotheticalArgs<<std::endl;
 	if (!isOperator(*isOp))
 	{
 		std::string errMessage = constructMessage(ERR_CHANOPRIVSNEEDED, isOp->getNickname().c_str());

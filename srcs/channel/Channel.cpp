@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 18:13:55 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:31:48 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 17:16:00 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,29 @@ Channel::Channel()
 	_topic = "";
 	_password = "";
 	_limit = 0;
+	_password = "";
+	_whoInvited = -1;
+	this->_mode['t'] = false;
+	this->_mode['i'] = false;
+	this->_mode['k'] = false;
+	// this->_mode['o'] = false;
+	this->_mode['l'] = false;
+	this->_whoInvited = -1;
+
 }
 
 
 Channel::Channel(Client firstClient, std::string channelName)
 {
+	this->_topic = "";
+	this->_password = "";
+	this->_mode['t'] = false;
+	this->_mode['i'] = false;
+	this->_mode['k'] = false;
+	// this->_mode['o'] = false;
+	this->_mode['l'] = false;
+	this->_whoInvited = -1;
+	this->_limit = -1;
 	//check name
 	//You should empty the data from the attributes
 	//that do not appear here
@@ -81,14 +99,6 @@ Channel::Channel(Client firstClient, std::string channelName)
 		std::string errMess = constructMessage(ERR_BADCHANMASK, channelName.c_str());
 		send(_usrData[0].first.getFd(), errMess.c_str(), errMess.size(), 0);
 	}
-	this->_topic = "";
-	this->_password = "";
-	this->_mode['t'] = false;
-	this->_mode['i'] = false;
-	this->_mode['k'] = false;
-	// this->_mode['o'] = false;
-	this->_mode['l'] = false;
-	_whoInvited = -1;
 }
 
 
@@ -108,6 +118,8 @@ Channel::Channel(const Channel& obj)
 	_password = obj._password;
 	_limit = obj._limit;
 	_usrData = obj._usrData;
+	_whoInvited = obj._whoInvited;
+	_mode = obj._mode;
 }
 
 Channel&		Channel::operator=(const Channel& obj)
@@ -120,6 +132,8 @@ Channel&		Channel::operator=(const Channel& obj)
 	_password = obj._password;
 	_limit = obj._limit;
 	_usrData = obj._usrData;
+	_whoInvited = obj._whoInvited;
+	_mode = obj._mode;
 	return *this;
 }
 
@@ -213,7 +227,7 @@ int			Channel::isInChannel(Client client)
 void	Channel::addClient(Client client)
 {
 	_usrData.push_back(std::make_pair(client, 0));
-	channelContentSize();
+	//channelContentSize();
 }
 
 

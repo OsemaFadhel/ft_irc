@@ -6,19 +6,22 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 14:57:35 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 14:21:57 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:10:28 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 
-int Server::acceptClient(int *selectfd)
+int Server::acceptClient()
 {
 	struct sockaddr_in _clientAddr;
 	socklen_t clientAddrSize = sizeof(_clientAddr);
 	int clientSocket = accept(_serverSocket, (struct sockaddr*)&_clientAddr, &clientAddrSize);
 	if (clientSocket == -1)
-		std::cout << RED << "Failed to accept the connection" << RESET << std::endl;
+	{
+		std::cout << RED << "oh NOOO" << RESET << std::endl;
+		return 1;
+	}
 
 	char *clientIP = inet_ntoa(_clientAddr.sin_addr);  // Non-thread-safe
 	if (clientIP == NULL) {
@@ -35,9 +38,7 @@ int Server::acceptClient(int *selectfd)
 	_newfds.push_back(newfd);
 
 	//_clients.push_back(new Client(clientSocket)); //maybe after recv so can receive password, check and then can add
-	std::cout << GREEN << "[DEBUG] New client accepted. FD is: " << BOLD << clientSocket << " with Address: " << newfd.ip << ":" << clientPort << RESET << std::endl;
-	(*selectfd)--;
-	if (!(*selectfd))
-		return 1;
+	std::cout << YELLOW << BOLD << "[DEBUG]" << RESET << YELLOW << " New client accepted. FD is: " << BOLD << clientSocket << " with Address: " << newfd.ip << ":" << clientPort << RESET << std::endl;
+
 	return 0;
 }

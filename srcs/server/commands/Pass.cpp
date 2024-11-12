@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:16:23 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/23 16:12:56 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:23:05 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void Server::Pass(std::string args, int clientSocket, size_t &i)
 	{
 		if (args == "")
 		{
-			send(clientSocket, constructMessage(ERR_NEEDMOREPARAMS, "PASS").c_str(), 46, 0);
+			std::string message = constructMessage(ERR_NEEDMOREPARAMS, "PASS");
+			send(clientSocket, message.c_str(), message.size(), 0);
 			return;
 		}
 		if (args[0] == ':')

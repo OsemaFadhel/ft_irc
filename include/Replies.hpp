@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 14:18:11 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/28 10:24:04 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:21:43 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ std::string constructMessage(const std::string& format, ...);
 
 #define ERR_NOTREGISTERED ":ft_irc 451 :You have not registered\r\n" // Static size: 39
 
-#define ERR_NEEDMOREPARAMS ":ft_irc 461 %s :Not enough parameters\r\n" // Static size: 41
+#define ERR_NEEDMOREPARAMS ":ft_irc 461 %s :Not enough parameters\r\n" // Static size: 40
 
 #define ERR_ALREADYREGISTRED ":ft_irc 462 :Unauthorized command (already registered)\r\n" // Static size: 57
 
