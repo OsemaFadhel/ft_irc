@@ -126,11 +126,11 @@ void	Server::Part(std::string args, int clientSocket)
 	bool						channelExist = false;
 	Client						*client = getClient(clientSocket);
 	std::string					reason = takeReason(args);
-	size_t						channelIndex;
+	size_t						channelIndex = 0;
 
 	// std::cout<<"numOfChannels "<<numOfChannels.size()<<std::endl;
 	//main for
-	for (size_t i = 0; i < _channels.size(); i++)
+	for (size_t i = 0; i < numOfChannels.size(); i++)
 	{
 		checkExistence(channelExist, channelIndex, _channels, numOfChannels, i);
 		//non capisco come mai il messaggio viene mandato due volte causando l'errore guardo dopo

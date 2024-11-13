@@ -61,6 +61,7 @@ std::vector<std::string>	Server::channelParser(std::string args)
 			std::cout << "Invalid channel ignored: " << temp << std::endl;
 		}*/
 	}
+
 	return (numOfChannels);
 }
 
@@ -169,7 +170,6 @@ void	checkExistence(bool& channelExists, size_t& channelIndex, std::vector<Chann
 		}
 	}
 }
-
 
 /*
 *This is one of the most important functions of the channel management
