@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:43:18 by ofadhel           #+#    #+#             */
-/*   Updated: 2024/10/04 11:46:00 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/14 10:16:14 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ int main(int ac, char **av)
 		return 1;
 	}
 	// Try to run the server
+	Server server;
 	try
 	{
 		std::string port = av[1];
-		Server server;
 		server.setPort(std::atoi(port.c_str()));
 		if (server.getPort() < 1024 || server.getPort() > 65535)
 			throw std::runtime_error("Invalid port number");
@@ -35,7 +35,7 @@ int main(int ac, char **av)
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
-		//killServer();
+		server.killServer();
 		return 1;
 	}
 	return 0;

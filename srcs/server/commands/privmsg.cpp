@@ -6,7 +6,7 @@
 /*   By: ofadhel <ofadhel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:05:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2024/11/12 17:17:22 by ofadhel          ###   ########.fr       */
+/*   Updated: 2024/11/14 10:14:04 by ofadhel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,12 @@ std::vector<std::string> extractUsrMsgToSend(const std::string& input)
 		//std::cout<<"death"<<std::endl;
 		return usrAndMessage;
 	}
-	usr = usr.erase(usr.find_last_of(' '));
+	try
+	{
+		usr = usr.erase(usr.find_last_of(' '));
+	}
+	catch(const std::exception& e){}
+
 	std::vector<std::string>	usrAndMessage;
 	usrAndMessage.push_back(usr);
 	usrAndMessage.push_back(message);
@@ -134,7 +139,7 @@ void	Server::sendPrivateMsg(int clientSocket, std::vector<std::string> usrAndMsg
 	}
 	if (receivingUser.getFd() == 0)
 	{
-		std::string	errMessage = constructMessage(ERR_NOSUCHNICK, usrAndMsg[0]);
+		std::string	errMessage = constructMessage(ERR_NOSUCHNICK, usrAndMsg[0].c_str());
 		send(clientSocket, errMessage.c_str(), errMessage.size(), 0);
 		return ;
 	}
